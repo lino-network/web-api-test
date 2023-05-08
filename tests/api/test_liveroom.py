@@ -8,7 +8,7 @@ def test_follow_user(api_url, auth_header):
     body = {
         "operationName": "FollowUser",
         "variables": {
-            "streamer": "vanguardkek"
+            "streamer": "dlive-olkddeunbc"
         },
         "extensions": {
             "persistedQuery": {
@@ -49,4 +49,28 @@ def test_follow_user(api_url, auth_header):
     followee_list = response.json()["data"]["me"]["private"]["followeeFeed"]["list"]
     assert any(streamer["id"] == "user:vanguardkek" for streamer in followee_list)
 
+    #Unfollow主播，恢复数据
+    # 请求的body
+    body = {
+        "operationName": "UnfollowUser",
+        "variables": {
+            "streamer": "dlive-olkddeunbc"
+        },
+        "extensions": {
+            "persistedQuery": {
+            "version": 1,
+            "sha256Hash": "681ef3737bb34799ffe779b420db05b7f83bc8c3f17cdd17c7181bd7eca9859c"
+            }
+        }
+    }
     
+    # 发送请求
+    response = requests.post(api_url, headers=auth_header, json=body)
+    
+    # 解析响应
+    data = response.json()
+    
+    # 断言响应结果
+    response_data = response.json()['data']
+    assert response.status_code == 200
+    assert response_data['follow']['err'] is None
