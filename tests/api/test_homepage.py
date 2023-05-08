@@ -1,6 +1,6 @@
 import requests
 import json
-
+#轮播检查
 def test_homepage_carousels(api_url, api_headers):
     payload = {
         "operationName": "HomePageCarousels",
