@@ -1,4 +1,5 @@
 # 一些常用的钩子函数和fixture如下：
+import os
 
 # pytest_configure(config)：在pytest的配置初始化时执行，可以用来设置全局的pytest配置。
 # pytest_sessionstart(session)：在pytest测试会话开始时执行，可以用来初始化一些测试环境。
@@ -11,6 +12,26 @@
 
 import pytest
 import requests
+import yaml
+
+
+@pytest.fixture(scope='session')
+def get_config_data():
+    # 获取当前脚本所在文件夹路径
+    print('44444444')
+    print(os.getcwd())
+    curPath = os.path.abspath(os.path.join(os.getcwd(), "../../config"))
+    # 获取yaml文件路径
+    print(curPath)
+    yamlPath = os.path.join(curPath, "config.yaml")
+
+    # open方法打开直接读出来
+    with open(yamlPath, 'r', encoding='utf-8') as f:
+        config = f.read()
+    print(config)
+    testData = yaml.load(config, Loader=yaml.FullLoader)  # 用load方法转字典
+    return testData['apiData']
+
 
 @pytest.fixture(scope='session')
 def api_headers():
@@ -20,16 +41,17 @@ def api_headers():
     }
     return headers
 
+
 @pytest.fixture(scope='session')
 def api_url():
     return 'https://graphigo.prd.dlive.tv/'
     # return 'https://graphigo.stg.dlive.tv/'
 
 
-import pytest
+@pytest.fixture(scope='session')
+def auth_header(get_config_data):
+    token = {'authorization': get_config_data['auth_token']}
+    return token
 
-@pytest.fixture()
-def auth_header():
-    # return {"Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF1dG9tYXRpb24iLCJkaXNwbGF5bmFtZSI6ImF1dG9tYXRpb24iLCJhdmF0YXIiOiJodHRwczovL2ltYWdlLmRsaXZlY2RuLmNvbS9hdmF0YXIvZGVmYXVsdDgucG5nIiwicGFydG5lcl9zdGF0dXNfc3RyaW5nIjoiR0xPQkFMX1BBUlRORVIiLCJpZCI6IiIsImxpZCI6MCwidHlwZSI6ImVtYWlsIiwicm9sZSI6Ik5vbmUiLCJvYXV0aF9hcHBpZCI6IiIsImV4cCI6MTY4NjAxODA0MiwiaWF0IjoxNjgzMzM5NjQyLCJpc3MiOiJETGl2ZSJ9.bKZLy8k5iCrUpVOcyx0xuSII-a-Yhcbxws5ZB0AQZpk"}
-    return {"Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGVudmlld2VyIiwiZGlzcGxheW5hbWUiOiJIZWxlbnN0cmVhbWVyIiwiYXZhdGFyIjoiaHR0cHM6Ly9pbWFnZXMucHJkLmRsaXZlY2RuLmNvbS9hdmF0YXIvOWYxNzdhN2QtYzdjNy0xMWVkLThkNTEtZDIxM2FjZDZmYTY5IiwicGFydG5lcl9zdGF0dXNfc3RyaW5nIjoiVkVSSUZJRURfUEFSVE5FUiIsImlkIjoiIiwibGlkIjowLCJ0eXBlIjoiZW1haWwiLCJyb2xlIjoiTm9uZSIsIm9hdXRoX2FwcGlkIjoiIiwiZXhwIjoxNjg2MDE5MjMwLCJpYXQiOjE2ODMzNDA4MzAsImlzcyI6IkRMaXZlIn0.mDnV-Ija4pVaf_AdWH49RirK1eBL0UKYU5PYs9Jyxcg"}
+
 
