@@ -19,11 +19,11 @@ def login(username, password):
     return payload
 
 
-def follow_user(userId):
+def follow_user(user_id):
     payload = {
         "operationName": "FollowUser",
         "variables": {
-            "streamer": userId
+            "streamer": user_id
         },
         "extensions": {
             "persistedQuery": {
@@ -35,7 +35,7 @@ def follow_user(userId):
     return payload
 
 
-def sidebar_follow_user_list():
+def sidebar_follow_user_list():    # 获取sidebar following list
     payload = {
         "operationName": "MeSidebar",
         "variables": {
@@ -52,3 +52,197 @@ def sidebar_follow_user_list():
 
     return payload
 
+
+def unfollow_user(user_id):
+    payload = {
+        "operationName": "UnfollowUser",
+        "variables": {
+            "streamer": user_id
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "681ef3737bb34799ffe779b420db05b7f83bc8c3f17cdd17c7181bd7eca9859c"
+            }
+        }
+    }
+    return payload
+
+
+def send_chat(stream_name, message):    # 直播间发信息
+    payload = {
+        "operationName": "SendStreamChatMessage",
+        "variables": {
+            "input": {
+                "streamer": stream_name,
+                "message": message,
+                "roomRole": "Member",
+                "subscribing": True,
+                "emojis": []
+            }
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "848cbe91a57458ed402716e7b57b7a128c3b5a8385a6ebe14d9deff8d1eda73c"
+            }
+        }
+    }
+    return payload
+
+
+def Live_stream_profile_followers(streamer_display_name):      #其他关注主播的主播
+    payload = {
+        "operationName": "LivestreamProfileFollowers",
+        "variables": {
+            "displayname": streamer_display_name,
+            "sortedBy": "AZ",
+            "first": 20,
+            "isLoggedIn": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "698db968db04e78c79fe1d48461a5af4596a1337e33386f45cad1cb7d4da3dce"
+            }
+        }
+    }
+    return payload
+
+
+def Live_stream_profile_following(streamer_display_name):  # 主播关注的直播间
+    payload = {
+        "operationName": "LivestreamProfileFollowing",
+        "variables": {
+            "displayname": streamer_display_name,
+            "sortedBy": "AZ",
+            "first": 20,
+            "isLoggedIn": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "76690ef91938871b85d1155bd9061d6bce3dec7f375db20160c4ce14bf2ff9ad"
+            }
+        }
+    }
+    return payload
+
+
+def top_contributors(streamer_display_name, time='THIS_MONTH'):    #最杰出贡献者
+    payload = {
+        "operationName": "TopContributors",
+        "variables": {
+            "displayname": streamer_display_name,
+            "first": 3,
+            "rule": time,
+            "queryStream": False
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "41f574b3d8a3d0e81c28546c4cebeb2d7179a7dbfa1fc3469e6d681e19fb49d5"
+            }
+        }
+    }
+    return payload
+
+
+def donate_lemon(streamer_permlink):    #打赏lemon
+    payload = {
+        "operationName": "StreamDonate",
+        "variables": {
+            "input": {
+                "permlink": streamer_permlink,
+                "type": "LEMON",
+                "count": 1,
+                "message": ""
+            }
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "42dbd0f6f50503b37cd48e4cc76aa7d0bb9f6c3f3dea48567951e856b4d93788"
+            }
+        }
+    }
+    return payload
+
+
+def add_gift_sub(streamer_name, count):    #分发gift sub
+    payload = {
+        "operationName": "AddGiftSub",
+        "variables": {
+            "streamer": streamer_name,
+            "count": count
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "4f14249cf00d8548aa75c5f992a3ddc741833ee9b4317f5a4c897c1e5743666d"
+            }
+        }
+    }
+    return payload
+
+
+def add_gift_sub_claim(streamer_name):    #领取gift sub
+    payload = {
+        "operationName": "AddGiftSubClaim",
+        "variables": {
+            "streamer": streamer_name
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "21f80889b2afd31652216b1e80abb69467fa20853e8529bfbb78ed1fe0c9d069"
+            }
+        }
+    }
+    return payload
+
+
+def chest_user_transfer(amount):    # 加lemon进宝箱
+    payload = {
+        "operationName": "ChestUserTransfer",
+        "variables": {
+            "amount": amount
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "c4812157f22bbaef70ac21a3a2800bd0e94110f3b011abf4766d1d5f0a28c950"
+            }
+        }
+    }
+    return payload
+
+
+def give_away_start():      # 开启宝箱
+    payload = {
+        "operationName": "GiveawayStart",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "71fb36c294173f06f0755ab2cecf724e58ad6e135d3bfddbcb2f57eab6e773bf"
+            }
+        }
+    }
+    return payload
+
+
+def give_away_claim(streamer_name): #用户抢宝箱
+    payload = {
+        "operationName": "GiveawayClaim",
+        "variables": {
+            "streamer": streamer_name
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "9f013d22643dc9363fe89cc20f0e8d45e3141859907f8d5bbadae713be5a2332"
+            }
+        }
+    }
+    return payload
