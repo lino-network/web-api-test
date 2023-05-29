@@ -1,5 +1,12 @@
 # 一些常用的钩子函数和fixture如下：
 import os
+import sys
+curlPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curlPath)[0]
+print(rootPath)
+sys.path.append(os.path.split(rootPath)[0])
+from loadData import payloadData
+import loadData.payloadData as Payload
 
 # pytest_configure(config)：在pytest的配置初始化时执行，可以用来设置全局的pytest配置。
 # pytest_sessionstart(session)：在pytest测试会话开始时执行，可以用来初始化一些测试环境。

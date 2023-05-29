@@ -1,47 +1,22 @@
 import requests
 import json
-#轮播检查
-def test_homepage_carousels(api_url, api_headers):
-    payload = {
-        "operationName": "HomePageCarousels",
-        "variables": {
-            "count": 5,
-            "userLanguageCode": "en"
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
-            }
-        }
-    }
+import loadData.payloadData as Payload
 
-    response = requests.post(api_url, headers=api_headers, json=payload)
 
+
+def test_homepage_carousels(get_config_data, api_headers): #轮播检查
+    response = requests.post(get_config_data['url'], headers=api_headers,
+                            json=Payload.homepage_carousels())
+    response_json = json.loads(response.text)
+    print(response_json)
     assert response.status_code == 200
     assert "data" in response.json()
 
-def test_homepage_livestream(api_url, api_headers):
-    payload = {
-        "operationName": "HomePageLivestream",
-        "variables": {
-            "first": 20,
-            "languageID": None,
-            "categoryID": None,
-            "showNSFW": True,
-            "order": "TRENDING",
-            "userLanguageCode": "en",
-            "showMatureContent": True
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
-            }
-        }
-    }
-
-    response = requests.post(api_url, headers=api_headers, json=payload)
+def test_homepage_livestream(get_config_data, api_headers): #画廊直播间检查
+    response = requests.post(get_config_data['url'], headers=api_headers,
+                            json=Payload.homepage_livestream())
+    response_json = json.loads(response.text)
+    print(response_json)
 
     assert response.status_code == 200
     assert "data" in response.json()
