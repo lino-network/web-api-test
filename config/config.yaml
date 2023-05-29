@@ -1,6 +1,7 @@
 apiData:
   url: https://graphigo.stg.dlive.tv/
   login_user: apple.zhang@dlive.tv
+  pwd: password1234
   auth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhaGExNiIsImRpc3BsYXluYW1lIjoiaGFoYTE2IiwiYXZhdGFyIjoiaHR0cHM6Ly9pbWFnZS5kbGl2ZWNkbi5jb20vYXZhdGFyL2RlZmF1bHQwLnBuZyIsInBhcnRuZXJfc3RhdHVzX3N0cmluZyI6Ik5PTkUiLCJpZCI6IiIsImxpZCI6MCwidHlwZSI6ImVtYWlsIiwicm9sZSI6Ik5vbmUiLCJvYXV0aF9hcHBpZCI6IiIsImV4cCI6MTY4NjgxODEyMSwiaWF0IjoxNjg0MTM5NzIxLCJpc3MiOiJETGl2ZSJ9.4DKq-wzvF_ULWMTgwLBd5yLWEVFMCegLkNrQW8E9U4o
   follow_user:
     -
