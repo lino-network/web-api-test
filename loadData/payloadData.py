@@ -282,3 +282,267 @@ def homepage_livestream(): #查看画廊列表
             }
         }
     }
+
+
+def me_clips_of_me():
+    payload = {
+        "operationName": "MeClipsOfMe",
+        "variables": {
+            "first": 20,
+            "order": "Upvotes",
+            "showUnpicked": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "18dd1600a3edf816e14823421c8b5bce5c1549bb7a6e5d0435464e12d23252f4"
+            }
+        }
+    }
+    return payload
+
+
+def me_clips_by_me():
+    payload = {
+        "operationName": "MeClipsByMe",
+        "variables": {
+            "first": 20,
+            "order": "Upvotes",
+            "showUnpicked": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "ed003aaf2752edee54bf2ae51c074ba65fdb6eaa603db9ba3d17d0bb288bb761"
+            }
+        }
+    }
+    return payload
+
+
+def get_today_token_limit(): # 获取体现额度
+    payload = {
+        "operationName": "GetTodayTokenLimit",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "30f628ded36de5fdc2d3be5a8b1c45287333c7a2f940e6bbfe23f8310ce2d76f"
+            }
+        }
+    }
+    return payload
+
+
+def nav_search_result(search_text):
+    payload = {
+        "operationName": "NavSearchResult",
+        "variables": {
+            "text": search_text,
+            "userFirst": 8,
+            "categoryFirst": 3
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "4943f85b80688382280a7ffb895f49baa099c624e6878da93c13a433438b6d81"
+            }
+        }
+    }
+    return payload
+
+
+def home_page_list_recommendation():
+    payload = {
+        "operationName": "HomePageListRecommendation",
+        "variables": {
+            "first": 40,
+            "after": "0",
+            "languageID": NULL,
+            "categoryID": NULL,
+            "showNSFW": True,
+            "userLanguageCode": "",
+            "showMatureContent": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "35160b344e48b47fbc781b60f92f7e6bf1bfcdea1ba1a08b311be56fef38b7d2"
+            }
+        }
+    }
+    return payload
+
+
+def home_page_livestream():
+    payload = {
+        "operationName": "HomePageLivestream",
+        "variables": {
+            "first": 20,
+            "after": "0",
+            "languageID": NULL,
+            "categoryID": NULL,
+            "showNSFW": True,
+            "order": "TRENDING",
+            "userLanguageCode": "",
+            "showMatureContent": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
+            }
+        }
+    }
+    return payload
+
+
+def home_page_carousels():
+    payload = {
+        "operationName": "HomePageCarousels",
+        "variables": {
+            "count": 5,
+            "userLanguageCode": ""
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
+            }
+        }
+    }
+    return payload
+
+
+def global_information_recommend():# 主页左边的推荐列表
+    payload = {
+        "operationName": "GlobalInformationRecommend",
+        "variables": {
+            "limit": 5
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "3cffbf525fc41b7b8d6472e28b1b0a30ed94d3dc2d6a0f22bcb779d5361506bf"
+            }
+        }
+    }
+    return payload
+
+
+def home_page_categories():
+    payload = {
+        "operationName": "HomePageCategories",
+        "variables": {
+            "first": 15,
+            "languageID": NULL
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "386f2dbb71fa1d28e3c9bbff30e41beb7c09dd845b02dcf01c35856076e354dc"
+            }
+        }
+    }
+    return payload
+
+
+def live_streams_languages():
+    payload = {
+        "operationName": "LivestreamsLanguages",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "5a2ac0ba175c8e440b5eb1441a75c3cdececd213a33712ad14a12bd67ab1b9df"
+            }
+        }
+    }
+    return payload
+
+
+def advertises():
+    payload = {
+        "operationName": "advertises",
+        "variables": {
+            "info": {
+                "positions": [
+                    "carousel_left",
+                    "carousel_right",
+                    "livestream"]
+            }
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "e191582dab63048caae40cc6ee7d0a43fa14f6f3666a4dfa0fa47dc1b1981546"
+            }
+        }
+    }
+    return payload
+
+
+def me_global(): #个人的一些信息
+    payload = {
+        "operationName": "MeGlobal",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "34f843ef6ae287e477e08dc0a6a21f8fd7cb96f7fce9806492ddde45db6ab8e1"
+            }
+        }
+    }
+    return payload
+
+
+def global_information():
+    payload = {
+        "operationName": "GlobalInformation",
+        "variables": {
+            "limit": 10,
+            "languageCode": ""
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "8492b145b14af44ec710eba6c57071cff98d9508f10b59bfaec1ea9b3384f3c7"
+            }
+        }
+    }
+    return payload
+
+
+def me_livestream():
+    payload = {
+        "operationName": "MeLivestream",
+        "variables": {
+            "isLoggedIn": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "9f719304dbe7a32983da173d9ba737bc4c4d5b4bdc558163e01afad91be6db9c"
+            }
+        }
+    }
+    return payload
+
+
+def browser_register_notification(token):
+    payload = {
+        "operationName": "BrowserRegisterNotification",
+        "variables": {
+            "token": token
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "20d6ecfcdb7dc10b4008037e9eee326755b370e69dc9cfce2a407718cb2e5eff"
+            }
+        }
+    }
+    return payload
+
+
+
