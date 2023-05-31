@@ -384,7 +384,7 @@ def homepage_list_recommendation():# 推荐系统
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "6599f75497ed257945f4f1240a2af4aa6b72d00ef52eb6f2b1f7b1ae8fa2b57b"
+                "sha256Hash": "35160b344e48b47fbc781b60f92f7e6bf1bfcdea1ba1a08b311be56fef38b7d2"
             }
         }
     }
@@ -399,7 +399,7 @@ def homepage_global_information_recommend():# 主页左边的推荐列表
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "53e196d8aca4c63e0b699419eca6638aee106ec46ef1cf8c456e121896d81992"
+                "sha256Hash": "f58123b70a8319382f44c077489e4fca285c2b06bc318e46605eb79644a6b0f3"
             }
         }
     }
@@ -416,7 +416,7 @@ def homepage_nav_search_result(): #搜索automation主播
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "5347493e375e6d0fcd4e409e6a75d73d738e43c29e2a8a939c3b1fa8b3ff1a2a"
+                "sha256Hash": "4943f85b80688382280a7ffb895f49baa099c624e6878da93c13a433438b6d81"
             }
         }
     }
