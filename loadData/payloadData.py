@@ -1,3 +1,4 @@
+from docutils.parsers import null
 
 
 def login(username, password):
@@ -247,6 +248,7 @@ def give_away_claim(streamer_name): #用户抢宝箱
     }
     return payload
 
+
 def homepage_carousels(): #查看轮播
     payload = {
         "operationName": "HomePageCarousels",
@@ -358,8 +360,8 @@ def home_page_list_recommendation():
         "variables": {
             "first": 40,
             "after": "0",
-            "languageID": NULL,
-            "categoryID": NULL,
+            "languageID": null,
+            "categoryID": null,
             "showNSFW": True,
             "userLanguageCode": "",
             "showMatureContent": True
@@ -380,8 +382,8 @@ def home_page_livestream():
         "variables": {
             "first": 20,
             "after": "0",
-            "languageID": NULL,
-            "categoryID": NULL,
+            "languageID": null,
+            "categoryID": null,
             "showNSFW": True,
             "order": "TRENDING",
             "userLanguageCode": "",
@@ -435,7 +437,7 @@ def home_page_categories():
         "operationName": "HomePageCategories",
         "variables": {
             "first": 15,
-            "languageID": NULL
+            "languageID": null
         },
         "extensions": {
             "persistedQuery": {
