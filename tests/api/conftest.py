@@ -63,6 +63,12 @@ def auth_header(get_config_data):
 
 
 @pytest.fixture(scope='session')
+def viewer1_auth_header(get_config_data):
+    token = {'authorization': get_config_data['viewer1_auth']}
+    return token
+
+
+@pytest.fixture(scope='session')
 def get_login_auth(api_headers, get_config_data):
     response = requests.session().post(get_config_data['url'], headers=api_headers,
                                        json=payloadData.login(get_config_data['login_user'], get_config_data['pwd']))
