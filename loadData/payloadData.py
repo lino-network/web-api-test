@@ -313,22 +313,7 @@ def get_today_token_limit():  # 获取体现额度
     return payload
 
 
-def nav_search_result(search_text):
-    payload = {
-        "operationName": "NavSearchResult",
-        "variables": {
-            "text": search_text,
-            "userFirst": 8,
-            "categoryFirst": 3
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "4943f85b80688382280a7ffb895f49baa099c624e6878da93c13a433438b6d81"
-            }
-        }
-    }
-    return payload
+
 
 
 def homepage_carousels():
@@ -337,8 +322,6 @@ def homepage_carousels():
         "variables": {
             "first": 40,
             "after": "0",
-            "languageID": NULL,
-            "categoryID": NULL,
             "showNSFW": True,
             "userLanguageCode": "",
             "showMatureContent": True
@@ -359,8 +342,6 @@ def homepage_livestream():
         "variables": {
             "first": 20,
             "after": "0",
-            "languageID": NULL,
-            "categoryID": NULL,
             "showNSFW": True,
             "order": "TRENDING",
             "userLanguageCode": "en",
@@ -428,13 +409,13 @@ def homepage_global_information_recommend():  # 主页左边的推荐列表
     }
     return payload
 
-
-def homepage_nav_search_result():  # 搜索automation主播
+def homepage_nav_search_result(search_text):
     payload = {
         "operationName": "NavSearchResult",
         "variables": {
-            "first": 15,
-            "languageID": NULL
+            "text": search_text,
+            "userFirst": 8,
+            "categoryFirst": 3
         },
         "extensions": {
             "persistedQuery": {
@@ -444,7 +425,6 @@ def homepage_nav_search_result():  # 搜索automation主播
         }
     }
     return payload
-
 
 def live_streams_languages():
     payload = {
