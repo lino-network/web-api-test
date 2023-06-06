@@ -78,6 +78,40 @@ class TestHomePage:
         # 检查结果
         assert found_user == True
 
+
+    @allure.title('test_homepage_nav_search_category')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_homepage_nav_search_category(self, get_config_data, api_headers):
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.homepage_nav_search_result("qatest"))
+        assert response.status_code == 200
+        # 解析返回结果
+        data = json.loads(response.text)
+
+        # 检查返回的数据中的"search"字段是否为字典类型
+        assert isinstance(data["data"]["search"], dict), "'search' field is not a dictionary"
+
+        # 检查返回的数据中的"liveCategories"字段是否为字典类型
+        assert isinstance(data["data"]["search"]["liveCategories"], dict), "'liveCategories' field is not a dictionary"
+
+        # 检查返回的数据中的"liveCategories"字段中的"list"字段是否为列表类型
+        assert isinstance(data["data"]["search"]["liveCategories"]["list"], list), "'list' field is not a list"
+
+        # 获取分类列表
+        categories = data["data"]["search"]["liveCategories"]["list"]
+
+        # 检查是否存在"title": "qaTest"
+        found_category = False
+        for category in categories:
+            if category.get("title") == "qaTest":
+                found_category = True
+                break
+
+        # 检查结果
+        assert found_category == True, "Category 'qaTest' not found"
+
+
+
     @allure.title('test_me_global')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_me_global(self, get_config_data, api_headers):
@@ -107,6 +141,26 @@ class TestHomePage:
 
         # 检查用户语言设置是否为英文
         assert data['data']['me']['private']['language'] == 'en', "Language is not English"
+
+
+    @allure.title('test_live_streams_languages')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_live_streams_languages(self, get_config_data, api_headers):
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.live_streams_languages())
+        assert response.status_code == 200
+        # 解析返回结果
+        data = json.loads(response.text)
+
+        # 检查返回的数据中的"languages"列表是否包含至少一个元素
+        assert len(data["data"]["languages"]) > 0, "'languages' list is empty"
+
+        #检查返回的数据中的每个语言对象是否包含"id"、"backendID"、"language"和"code"字段
+        for language in data["data"]["languages"]:
+            assert "id" in language, "Language object does not contain 'id' field"
+            assert "backendID" in language, "Language object does not contain 'backendID' field"
+            assert "language" in language, "Language object does not contain 'language' field"
+            assert "code" in language, "Language object does not contain 'code' field"
 
 
 
