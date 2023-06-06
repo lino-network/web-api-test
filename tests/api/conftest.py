@@ -21,6 +21,13 @@ import pytest
 import requests
 import yaml
 from loadData import payloadData
+import os
+import sys
+curlPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curlPath)[0]
+print(rootPath)
+sys.path.append(os.path.split(rootPath)[0])
+from loadData import payloadData
 
 
 @pytest.fixture(scope='session')
