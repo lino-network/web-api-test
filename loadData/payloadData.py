@@ -247,21 +247,8 @@ def give_away_claim(streamer_name):  # 用户抢宝箱
     }
     return payload
 
-def homepage_carousels(): #查看轮播
-    payload = {
-        "operationName": "HomePageCarousels",
-        "variables": {
-            "count": 5,
-            "userLanguageCode": "en"
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
-            }
-        }
-    }
-    return payload
+
+
 
 def me_clips_of_me():
     payload = {
@@ -316,12 +303,14 @@ def get_today_token_limit():  # 获取体现额度
 
 
 
-def homepage_carousels():
+def home_page_list_recommendation():
     payload = {
-        "operationName": "HomePageCarousels",
+        "operationName": "HomePageListRecommendation",
         "variables": {
             "first": 40,
             "after": "0",
+            "languageID": null,
+            "categoryID": null,
             "showNSFW": True,
             "userLanguageCode": "",
             "showMatureContent": True
@@ -329,22 +318,24 @@ def homepage_carousels():
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
+                "sha256Hash": "35160b344e48b47fbc781b60f92f7e6bf1bfcdea1ba1a08b311be56fef38b7d2"
             }
         }
     }
     return payload
 
 
-def homepage_livestream():
+def home_page_livestream():
     payload = {
         "operationName": "HomePageLivestream",
         "variables": {
             "first": 20,
             "after": "0",
+            "languageID": null,
+            "categoryID": null,
             "showNSFW": True,
             "order": "TRENDING",
-            "userLanguageCode": "en",
+            "userLanguageCode": "",
             "showMatureContent": True
         },
         "extensions": {
@@ -357,24 +348,7 @@ def homepage_livestream():
     return payload
 
 
-def homepage_categories():
-    payload = {
-        "operationName": "HomePageCategories",
-        "variables": {
-            "first": 15,
-            "languageID": 'null'
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "386f2dbb71fa1d28e3c9bbff30e41beb7c09dd845b02dcf01c35856076e354dc"
-            }
-        }
-    }
-    return payload
-
-
-def homepage_list_recommendation():  # 推荐系统
+def home_page_carousels():
     payload = {
         "operationName": "HomePageListRecommendation",
         "variables": {
@@ -394,16 +368,16 @@ def homepage_list_recommendation():  # 推荐系统
     return payload
 
 
-def homepage_global_information_recommend():  # 主页左边的推荐列表
+def global_information_recommend():# 主页左边的推荐列表
     payload = {
-        "operationName": "GlobalInformationRecommend",
+        "operationName": "HomePageLivestream",
         "variables": {
-            "limit": 30
+            "limit": 5
         },
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "f58123b70a8319382f44c077489e4fca285c2b06bc318e46605eb79644a6b0f3"
+                "sha256Hash": "3cffbf525fc41b7b8d6472e28b1b0a30ed94d3dc2d6a0f22bcb779d5361506bf"
             }
         }
     }
@@ -425,6 +399,7 @@ def homepage_nav_search_result(search_text):
         }
     }
     return payload
+
 
 def live_streams_languages():
     payload = {
