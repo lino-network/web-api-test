@@ -268,8 +268,8 @@ def homepage_livestream(): #查看画廊列表
         "operationName": "HomePageLivestream",
         "variables": {
             "first": 20,
-            "languageID": None,
-            "categoryID": None,
+            # "languageID": null,
+            # "categoryID": null,
             "showNSFW": True,
             "order": "TRENDING",
             "userLanguageCode": "en",
@@ -278,7 +278,61 @@ def homepage_livestream(): #查看画廊列表
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
+                "sha256Hash": "d05159513d606d518a17a542ce607ccb55831bb57bc057524410a36d1387adce"
             }
         }
     }
+    return payload
+
+def homepage_list_recommendation():# 推荐系统
+    payload = {
+        "operationName": "HomePageListRecommendation",
+        "variables": {
+            "first": 40,
+            "after": "0",
+            "showNSFW": True,
+            "userLanguageCode": "en",
+            "showMatureContent": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "6599f75497ed257945f4f1240a2af4aa6b72d00ef52eb6f2b1f7b1ae8fa2b57b"
+            }
+        }
+    }
+    return payload
+
+def homepage_global_information_recommend():# 推荐系统
+    payload = {
+        "operationName": "GlobalInformationRecommend",
+        "variables": {
+            "limit": 30
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "53e196d8aca4c63e0b699419eca6638aee106ec46ef1cf8c456e121896d81992"
+            }
+        }
+    }
+    return payload
+
+
+def homepage_nav_search_result(): #搜索automation主播
+
+    payload = {
+        "operationName": "NavSearchResult",
+        "variables": {
+            "text": "automation",
+            "userFirst": 8,
+            "categoryFirst": 3
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "5347493e375e6d0fcd4e409e6a75d73d738e43c29e2a8a939c3b1fa8b3ff1a2a"
+            }
+        }
+    }
+    return payload
