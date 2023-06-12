@@ -249,41 +249,6 @@ def give_away_claim(streamer_name): #用户抢宝箱
     return payload
 
 
-def homepage_carousels(): #查看轮播
-    payload = {
-        "operationName": "HomePageCarousels",
-        "variables": {
-            "count": 5,
-            "userLanguageCode": "en"
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
-            }
-        }
-    }
-    return payload
-
-def homepage_livestream(): #查看画廊列表
-    payload = {
-        "operationName": "HomePageLivestream",
-        "variables": {
-            "first": 20,
-            "languageID": None,
-            "categoryID": None,
-            "showNSFW": True,
-            "order": "TRENDING",
-            "userLanguageCode": "en",
-            "showMatureContent": True
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
-            }
-        }
-    }
 
 
 def me_clips_of_me():
@@ -354,52 +319,8 @@ def nav_search_result(search_text):
     return payload
 
 
-def home_page_list_recommendation():
-    payload = {
-        "operationName": "HomePageListRecommendation",
-        "variables": {
-            "first": 40,
-            "after": "0",
-            "languageID": null,
-            "categoryID": null,
-            "showNSFW": True,
-            "userLanguageCode": "",
-            "showMatureContent": True
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "35160b344e48b47fbc781b60f92f7e6bf1bfcdea1ba1a08b311be56fef38b7d2"
-            }
-        }
-    }
-    return payload
 
-
-def home_page_livestream():
-    payload = {
-        "operationName": "HomePageLivestream",
-        "variables": {
-            "first": 20,
-            "after": "0",
-            "languageID": null,
-            "categoryID": null,
-            "showNSFW": True,
-            "order": "TRENDING",
-            "userLanguageCode": "",
-            "showMatureContent": True
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
-            }
-        }
-    }
-    return payload
-
-
-def home_page_carousels():
+def homepage_carousels():
     payload = {
         "operationName": "HomePageCarousels",
         "variables": {
@@ -415,24 +336,26 @@ def home_page_carousels():
     }
     return payload
 
-
-def global_information_recommend():# 主页左边的推荐列表
+def homepage_livestream():
     payload = {
-        "operationName": "GlobalInformationRecommend",
+        "operationName": "HomePageLivestream",
         "variables": {
-            "limit": 5
+            "first": 20,
+            "showNSFW": True,
+            "order": "TRENDING",
+            "userLanguageCode": "en",
+            "showMatureContent": True
         },
         "extensions": {
             "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "3cffbf525fc41b7b8d6472e28b1b0a30ed94d3dc2d6a0f22bcb779d5361506bf"
+                "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
             }
         }
     }
     return payload
 
-
-def home_page_categories():
+def homepage_categories():
     payload = {
         "operationName": "HomePageCategories",
         "variables": {
@@ -448,6 +371,56 @@ def home_page_categories():
     }
     return payload
 
+def homepage_list_recommendation():# 推荐系统
+    payload = {
+        "operationName": "HomePageListRecommendation",
+        "variables": {
+            "first": 40,
+            "after": "0",
+            "showNSFW": True,
+            "userLanguageCode": "en",
+            "showMatureContent": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "6599f75497ed257945f4f1240a2af4aa6b72d00ef52eb6f2b1f7b1ae8fa2b57b"
+            }
+        }
+    }
+    return payload
+
+def homepage_global_information_recommend():# 主页左边的推荐列表
+    payload = {
+        "operationName": "GlobalInformationRecommend",
+        "variables": {
+            "limit": 30
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "53e196d8aca4c63e0b699419eca6638aee106ec46ef1cf8c456e121896d81992"
+            }
+        }
+    }
+    return payload
+
+def homepage_nav_search_result(): #搜索automation主播
+    payload = {
+        "operationName": "NavSearchResult",
+        "variables": {
+            "text": "automation",
+            "userFirst": 8,
+            "categoryFirst": 3
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "5347493e375e6d0fcd4e409e6a75d73d738e43c29e2a8a939c3b1fa8b3ff1a2a"
+            }
+        }
+    }
+    return payload
 
 def live_streams_languages():
     payload = {
