@@ -1,6 +1,7 @@
 # 一些常用的钩子函数和fixture如下：
 import os
 import sys
+
 curlPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curlPath)[0]
 print(rootPath)
@@ -23,6 +24,7 @@ import yaml
 from loadData import payloadData
 import os
 import sys
+
 curlPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curlPath)[0]
 print(rootPath)
@@ -83,8 +85,3 @@ def get_login_auth(api_headers, get_config_data):
     print(text)
     auth_token = text['data']['loginWithEmail']['me']['private']['accessToken']
     return auth_token
-
-
-
-
-

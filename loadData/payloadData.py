@@ -1,4 +1,4 @@
-from docutils.parsers import null
+
 
 
 def login(username, password):
@@ -359,7 +359,7 @@ def homepage_categories():
         "operationName": "HomePageCategories",
         "variables": {
             "first": 15,
-            "languageID": null
+            "languageID": 'null'
         },
         "extensions": {
             "persistedQuery": {
