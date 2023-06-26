@@ -35,17 +35,13 @@ from loadData import payloadData
 @pytest.fixture(scope='session')
 def get_config_data():
     # 获取当前脚本所在文件夹路径
-    print('44444444')
-    print(os.getcwd())
     curPath = os.path.abspath(os.path.join(os.getcwd(), "../../config"))
     # 获取yaml文件路径
-    print(curPath)
     yamlPath = os.path.join(curPath, "config.yaml")
 
     # open方法打开直接读出来
     with open(yamlPath, 'r', encoding='utf-8') as f:
         config = f.read()
-    print(config)
     testData = yaml.load(config, Loader=yaml.FullLoader)  # 用load方法转字典
     return testData['apiData']
 
