@@ -1,6 +1,5 @@
 from docutils.parsers import null
 
-
 def login(username, password):
     payload = {
         "operationName": "EmailLogin",
@@ -248,6 +247,21 @@ def give_away_claim(streamer_name): #用户抢宝箱
     }
     return payload
 
+def homepage_carousels(): #查看轮播
+    payload = {
+        "operationName": "HomePageCarousels",
+        "variables": {
+            "count": 5,
+            "userLanguageCode": "en"
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
+            }
+        }
+    }
+    return payload
 
 
 
@@ -324,8 +338,13 @@ def homepage_carousels():
     payload = {
         "operationName": "HomePageCarousels",
         "variables": {
-            "count": 5,
-            "userLanguageCode": ""
+            "first": 40,
+            "after": "0",
+            "languageID": NULL,
+            "categoryID": NULL,
+            "showNSFW": True,
+            "userLanguageCode": "",
+            "showMatureContent": True
         },
         "extensions": {
             "persistedQuery": {
@@ -341,6 +360,9 @@ def homepage_livestream():
         "operationName": "HomePageLivestream",
         "variables": {
             "first": 20,
+            "after": "0",
+            "languageID": NULL,
+            "categoryID": NULL,
             "showNSFW": True,
             "order": "TRENDING",
             "userLanguageCode": "en",
@@ -409,9 +431,8 @@ def homepage_nav_search_result(): #搜索automation主播
     payload = {
         "operationName": "NavSearchResult",
         "variables": {
-            "text": "automation",
-            "userFirst": 8,
-            "categoryFirst": 3
+            "first": 15,
+            "languageID": NULL
         },
         "extensions": {
             "persistedQuery": {
