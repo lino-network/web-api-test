@@ -1,12 +1,12 @@
 import os
 import time
-
 import pytest
 import requests
 import json
 import loadData.payloadData as Payload
 from datetime import datetime
 import allure
+import tests.common as common
 
 
 @allure.feature('test_liveroom_page')
@@ -129,6 +129,59 @@ class TestLivePage:
             print('after donate lemon is: ' + after_donate_lemon)
             lemon = int(origin_lemon) - int(get_config_data['donate_value'])
             assert int(after_donate_lemon) == lemon
+
+    @allure.title('test one viewer gift 5 sub and 5 user to claim')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_give_5_sub_in_channel(self, get_config_data):
+        """
+        one viewer gift 5 sub in channel, and 5 viewer to claim
+        :param get_config_data:
+        :return:
+        """
+        header = common.get_auth_header(get_config_data['gift_sub_info']['give_sub_gift_user_auth'])
+        print('11111111')
+        print(header)
+        with allure.step('viewer ' + str(get_config_data['gift_sub_info']['give_sub_gift_user'])
+                         + ' gift 5 sub in ''channel ' + str(get_config_data['gift_sub_info']['streamer'])):
+            gift_response = requests.post(get_config_data['url'], headers=header,
+                                          json=Payload.add_gift_sub(get_config_data['gift_sub_info']['streamer'], 5))
+            with allure.step('verify give gift sub response error code is 200'):
+                assert gift_response.status_code == 200
+            gift_response_json = json.loads(gift_response.text)
+            print(gift_response_json)
+            with allure.step('verify response error message is null'):
+                assert gift_response_json['data']['giftSub']['err'] is None
+        claim_list = get_config_data['gift_sub_info']['claim_user']
+        for i in claim_list:
+            viewer_header = common.get_auth_header(i['get_gift_sub_user_auth'])
+            with allure.step('viewer' + str(i['get_gift_sub_user']) + ' start to claim gift'):
+                claim_response = requests.post(get_config_data['url'], headers=viewer_header,
+                                        json=Payload.add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
+                with allure.step('verify user ' + str(i['get_gift_sub_user']) + ' claim gift sub response error code is 200'):
+                    assert claim_response.status_code == 200
+                claim_response_json = json.loads(claim_response.text)
+                with allure.step('verify user ' + str(i['get_gift_sub_user']) + ' claim response error message is null'):
+                    assert claim_response_json['data']['giftSubClaim']['err'] is None
+
+    @allure.title('test_streamer_add_lemon_to_chest')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_streamer_add_lemon_to_chest(self, get_config_data):
+        """
+        1. streamer add 20 lemon to chest
+        2. user1: test_streamer_add_lemon_to_chest send message to chat and open chest
+        3. user2: chest_donate_user2_auth donate lemon and open chest
+        4. user3: chest_user_no_point_auth no point to open chest
+        :param get_config_data:
+        :param viewer1_auth_header:
+        :return:
+        """
+        # with allure.step('streamer: automation check chest lemon and add lemon to chest'):
+        #     origin_chest_lemon = requests.post(get_config_data['url'],
+        #                                        headers=])common.get_auth_header(get_config_data['follow_streamer_auth',
+        #                                        json=Payload.sidebar_follow_user_list())
+        #     response_json = json.loads(origin_chest_lemon.text)
+        #     origin_lemon = response_json['data']['me']['wallet']['balance'][:-5]
+        print('origin chest lemon is: ')
 
 
 if __name__ == '__main__':

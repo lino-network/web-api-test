@@ -174,7 +174,7 @@ def add_gift_sub(streamer_name, count):  # 分发gift sub
         "operationName": "AddGiftSub",
         "variables": {
             "streamer": streamer_name,
-            "count": count
+            "count": int(count)
         },
         "extensions": {
             "persistedQuery": {
