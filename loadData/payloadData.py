@@ -149,14 +149,14 @@ def top_contributors(streamer_display_name, time='THIS_MONTH'):  # 最杰出贡�
     return payload
 
 
-def donate_lemon(streamer_permlink):  # 打赏lemon
+def donate_lemon(streamer_permlink, account):  # 打赏lemon
     payload = {
         "operationName": "StreamDonate",
         "variables": {
             "input": {
                 "permlink": streamer_permlink,
                 "type": "LEMON",
-                "count": 1,
+                "count": int(account),
                 "message": ""
             }
         },
