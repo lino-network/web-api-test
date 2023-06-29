@@ -4,6 +4,12 @@ def normal_header():
     }
     return headers
 
+def normal_header():
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    return headers
+
 
 def login(username, password):
     payload = {
@@ -533,4 +539,3 @@ class DaskboardAPI:
               }
             }
         return payload
-

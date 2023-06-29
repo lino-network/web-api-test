@@ -1,8 +1,6 @@
 import os
 import time
 import pytest
-import requests
-import json
 import loadData.payloadData as Payload
 from datetime import datetime
 import allure
@@ -15,39 +13,34 @@ class TestLivePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_follow_user(self, get_config_data, viewer1_auth_header):
         """
-        viewer: viewer1_username follow streamer: automation
+        接口: FollowUser, MeSidebar
+
+        用户: viewer1_username follow 主播: automation
         """
-        print(get_config_data['chest_info'])
-        print(type(get_config_data['chest_info']))
-        with allure.step('before follow streamer: automation not in sidebar following list'):
-            before_response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                        json=Payload.sidebar_follow_user_list())
-            before_side_response_json = json.loads(before_response.text)
-            assert before_response.status_code == 200
+        with allure.step('检查用户follow主播之前，主播不在sidebar列表'):
+            before_side_response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                                        Payload.sidebar_follow_user_list())
             before_side_follow_list = before_side_response_json['data']['me']['private']['followeeFeed']['list']
             print(before_side_follow_list)
             for i in before_side_follow_list:
                 if i['displayname'] == get_config_data['follow_streamer']:
-                    print('follow streamer already on sidebar following list')
+                    print('未follow主播之前，主播已经在左边的sidebar列表')
                     assert False
 
-        with allure.step('start to follow streamer'):
-            follow_response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                            json=Payload.follow_user(get_config_data['follow_streamer']))
-            follow_response_json = json.loads(follow_response.text)
-            assert follow_response.status_code == 200
+        with allure.step('开始follow主播'):
+            follow_response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                                   Payload.follow_user(get_config_data['follow_streamer']))
             assert follow_response_json['data']['follow']['err'] is None
         time.sleep(15)
-        with allure.step('after follow streamer: automation in sidebar following list'):
-            after_response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                           json=Payload.sidebar_follow_user_list())
-            after_side_response_json = json.loads(after_response.text)
+        with allure.step('检查follow主播之后，主播是否在左边的sidebar列表'):
+            after_side_response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                                       Payload.sidebar_follow_user_list())
             after_side_follow_list = after_side_response_json['data']['me']['private']['followeeFeed']['list']
             user_follow_list = False
             for i in after_side_follow_list:
                 print(i['displayname'])
                 if i['displayname'] == get_config_data['follow_streamer']:
-                    print('after follow streamer, streamer in sidebar following list')
+                    print('主播在左边follow 列表')
                     user_follow_list = True
                     break
             assert user_follow_list is True
@@ -56,76 +49,70 @@ class TestLivePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_unfollow_user(self, get_config_data, viewer1_auth_header):
         """
-        viewer: viewer1_username unfollow streamer: automation
+        接口: sidebar_follow_user_list, UnfollowUser
+
+        用户: viewer1_username unfollow 主播: automation
         """
-        with allure.step('start to unfollow streamer'):
-            follow_response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                            json=Payload.unfollow_user(get_config_data['follow_streamer']))
-            follow_response_json = json.loads(follow_response.text)
-            assert follow_response.status_code == 200
+        with allure.step('开始unfollow主播'):
+            follow_response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                                   Payload.unfollow_user(get_config_data['follow_streamer']))
             assert follow_response_json['data']['unfollow']['err'] is None
         time.sleep(10)
-        with allure.step('after unfollow streamer: automation not in sidebar following list'):
-            after_response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                           json=Payload.sidebar_follow_user_list())
-            after_side_response_json = json.loads(after_response.text)
+        with allure.step('检查unfollow主播之后，主播是否在左边的sidebar列表'):
+            after_side_response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                                       Payload.sidebar_follow_user_list())
             after_side_follow_list = after_side_response_json['data']['me']['private']['followeeFeed']['list']
             print(after_side_follow_list)
             for i in after_side_follow_list:
                 if i['displayname'] == get_config_data['follow_streamer']:
-                    print('after unfollow streamer, streamer still in sidebar following list')
+                    print('主播不在左边follow 列表')
                     assert False
 
     @allure.title('test_send_message_and_emo')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_send_message_and_emo(self, get_config_data, viewer1_auth_header):
-        """"
-        viewer1 send message and emo to streamer: automation chat
         """
-        with allure.step('Send message and emo to chat'):
+        接口: SendStreamChatMessage
+
+        用户viewer1发送信息和点赞的表情包给主播: automation
+        """
+        with allure.step('开始发送信息和点赞的表情包给主播'):
             currentDateAndTime = datetime.now()
             currentTime = currentDateAndTime.strftime("%H%M%S")
             print(currentTime)
             message = "AAA " + get_config_data['send_message'] + '_' + currentTime
-            response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                     json=Payload.send_chat(get_config_data['follow_streamer'],
-                                                            message, [0, 2]))
-            assert response.status_code == 200
-            response_json = json.loads(response.text)
+            response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                            Payload.send_chat(get_config_data['follow_streamer'], message, [0, 2]))
             print(response_json)
-        with allure.step('check response error code is null and message is the send message'):
+        with allure.step('检查返回值不报错'):
             assert response_json['data']['sendStreamchatMessage']['err'] is None
+        with allure.step('检查返回的信息就是发送的信息'):
             assert response_json['data']['sendStreamchatMessage']['message']['content'] == message
 
     @allure.title('test_donate_1_lemon')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_donate_1_lemon(self, get_config_data, viewer1_auth_header):
-        """"
-        viewer1 donate 1 lemon to streamer: automation chat
         """
-        with allure.step('Get viewer1 origin total lemon'):
-            all_lemon = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                      json=Payload.sidebar_follow_user_list())
-            assert all_lemon.status_code == 200
-            response_json = json.loads(all_lemon.text)
-            origin_lemon = response_json['data']['me']['wallet']['balance'][:-5]
+        接口: StreamDonate, sidebar_follow_user_list
+
+        用户viewer1 打赏 1 lemon 给直播: automation
+        """
+        with allure.step('获取打赏前用户的总lemon'):
+            origin_lemon = common.get_account_lemon(get_config_data['url'], viewer1_auth_header)
             print('origin lemon is: ' + origin_lemon)
-        with allure.step('Start to donate 1 lemon'):
+        with allure.step('开始打赏 1 lemon'):
             print('donate lemon is: ' + str(get_config_data['donate_value']))
-            response = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                     json=Payload.donate_lemon(get_config_data['follow_streamer_permlink'],
-                                                               get_config_data['donate_value']))
-            response_json = json.loads(response.text)
+            response_json = common.api_post(get_config_data['url'], viewer1_auth_header,
+                                            Payload.donate_lemon(get_config_data['follow_streamer_permlink'],
+                                                                 get_config_data['donate_value']))
             print(response_json)
-            with allure.step('verify no error code in response and account is the as in config file'):
+            with allure.step('检查放回值无报错'):
                 assert response_json['data']['donate']['err'] is None
+            with allure.step('检查打赏的金额是 1 lemon'):
                 assert response_json['data']['donate']['recentCount'] == get_config_data['donate_value']
-        time.sleep(10)
-        with allure.step('Check account reduction lemon is correct'):
-            after_donate_all_lemon = requests.post(get_config_data['url'], headers=viewer1_auth_header,
-                                                   json=Payload.sidebar_follow_user_list())
-            response_json = json.loads(after_donate_all_lemon.text)
-            after_donate_lemon = response_json['data']['me']['wallet']['balance'][:-5]
+        time.sleep(5)
+        with allure.step('检查打赏后用户的总lemon相应的减少'):
+            after_donate_lemon = common.get_account_lemon(get_config_data['url'], viewer1_auth_header)
             print('after donate lemon is: ' + after_donate_lemon)
             lemon = int(origin_lemon) - int(get_config_data['donate_value'])
             assert int(after_donate_lemon) == lemon
@@ -134,33 +121,25 @@ class TestLivePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_give_5_sub_in_channel(self, get_config_data):
         """
-        one viewer gift 5 sub in channel, and 5 viewer to claim
-        :param get_config_data:
-        :return:
+        接口: AddGiftSub, AddGiftSubClaim
+
+        用户viewer在直播间：automation发送5 个gift, 5 个用户领取
         """
         header = common.get_auth_header(get_config_data['gift_sub_info']['give_sub_gift_user_auth'])
-        print('11111111')
-        print(header)
-        with allure.step('viewer ' + str(get_config_data['gift_sub_info']['give_sub_gift_user'])
-                         + ' gift 5 sub in ''channel ' + str(get_config_data['gift_sub_info']['streamer'])):
-            gift_response = requests.post(get_config_data['url'], headers=header,
-                                          json=Payload.add_gift_sub(get_config_data['gift_sub_info']['streamer'], 5))
-            with allure.step('verify give gift sub response error code is 200'):
-                assert gift_response.status_code == 200
-            gift_response_json = json.loads(gift_response.text)
+        with allure.step('用户 ' + str(get_config_data['gift_sub_info']['give_sub_gift_user'])
+                         + ' 发送5 个gift在直播间：' + str(get_config_data['gift_sub_info']['streamer'])):
+            gift_response_json = common.api_post(get_config_data['url'], header,
+                                                 Payload.add_gift_sub(get_config_data['gift_sub_info']['streamer'], 5))
             print(gift_response_json)
-            with allure.step('verify response error message is null'):
+            with allure.step('检查返回值无报错'):
                 assert gift_response_json['data']['giftSub']['err'] is None
         claim_list = get_config_data['gift_sub_info']['claim_user']
         for i in claim_list:
             viewer_header = common.get_auth_header(i['get_gift_sub_user_auth'])
-            with allure.step('viewer' + str(i['get_gift_sub_user']) + ' start to claim gift'):
-                claim_response = requests.post(get_config_data['url'], headers=viewer_header,
-                                        json=Payload.add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
-                with allure.step('verify user ' + str(i['get_gift_sub_user']) + ' claim gift sub response error code is 200'):
-                    assert claim_response.status_code == 200
-                claim_response_json = json.loads(claim_response.text)
-                with allure.step('verify user ' + str(i['get_gift_sub_user']) + ' claim response error message is null'):
+            with allure.step('用户' + str(i['get_gift_sub_user']) + ' 领取gift sub'):
+                claim_response_json = common.api_post(get_config_data['url'], viewer_header,
+                                                      Payload.add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
+                with allure.step('检查用户 ' + str(i['get_gift_sub_user']) + ' 领取gift sub 的时候无报错'):
                     assert claim_response_json['data']['giftSubClaim']['err'] is None
 
     @allure.title('test_streamer_add_lemon_to_chest')
@@ -187,5 +166,5 @@ class TestLivePage:
 if __name__ == '__main__':
     print('e2rwf')
     print(os.getcwd())
-    pytest.main(['./test_liveroom.py', '--alluredir', 'results-20230628'])
-    os.system('allure generate ./results-20230628 -o ./report-20230628 --clean')
+    pytest.main(['./test_liveroom.py', '--alluredir', './report/results-20230627'])
+    os.system('allure generate ./report/results-20230627 -o ./report/report-20230627 --clean')
