@@ -187,5 +187,5 @@ class TestLivePage:
 if __name__ == '__main__':
     print('e2rwf')
     print(os.getcwd())
-    pytest.main(['./test_liveroom.py', '--alluredir', 'results'])
-    os.system('allure generate ./results -o ./report --clean')
+    pytest.main(['./test_liveroom.py', '--alluredir', 'results-20230628'])
+    os.system('allure generate ./results-20230628 -o ./report-20230628 --clean')
