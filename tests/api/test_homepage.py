@@ -1,4 +1,5 @@
 import os
+import pytest
 import requests
 import json
 import loadData.payloadData as Payload
@@ -10,12 +11,13 @@ class TestHomePage:
     @allure.title('test_homepage_carousels')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_carousels(self, get_config_data, api_headers): #轮播检查
-        response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.homepage_carousels())
-        assert response.status_code == 200
-        response_json = json.loads(response.text)
-        print(response_json)
-        assert "data" in response.json()
+        with allure.step('21312415'):
+            response = requests.post(get_config_data['url'], headers=api_headers,
+                                    json=Payload.homepage_carousels())
+            assert response.status_code == 200
+            response_json = json.loads(response.text)
+            print(response_json)
+            assert "data" in response.json()
 
     @allure.title('test_homepage_livestream')
     @allure.severity(allure.severity_level.CRITICAL)
@@ -75,7 +77,6 @@ class TestHomePage:
                 break
         # 检查结果
         assert found_user == True
-
 
     @allure.title('test_me_global')
     @allure.severity(allure.severity_level.CRITICAL)
