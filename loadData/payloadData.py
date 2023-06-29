@@ -1,3 +1,8 @@
+def normal_header():
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    return headers
 
 def normal_header():
     headers = {
@@ -251,21 +256,6 @@ def give_away_claim(streamer_name):  # 用户抢宝箱
     }
     return payload
 
-def homepage_carousels(): #查看轮播
-    payload = {
-        "operationName": "HomePageCarousels",
-        "variables": {
-            "count": 5,
-            "userLanguageCode": "en"
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "1668c6da479e8bf5cbffdff4006228499d14ead02f29cdb53a7a31404e191067"
-            }
-        }
-    }
-    return payload
 
 def me_clips_of_me():
     payload = {
@@ -549,5 +539,3 @@ class DaskboardAPI:
               }
             }
         return payload
-
-
