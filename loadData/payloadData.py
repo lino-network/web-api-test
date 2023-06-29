@@ -526,3 +526,28 @@ def browser_register_notification(token):
         }
     }
     return payload
+
+
+class DaskboardAPI:
+    def MeDashboard(self, username):
+        payload = {
+              "operationName": "MeDashboard",
+              "variables": {
+                "isLoggedIn": True,
+                "input": {
+                  "operator": username,
+                  "operation": "",
+                  "first": 10,
+                  "after": ""
+                }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "fe703ef0933440b5ffdf75c5f7662bd99ce9687f8c7d9e29961c82b244c21704"
+                }
+              }
+            }
+        return payload
+
+
