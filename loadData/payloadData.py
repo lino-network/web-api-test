@@ -519,7 +519,8 @@ def browser_register_notification(token):
 
 
 class DaskboardAPI:
-    def MeDashboard(self, username):
+    @staticmethod
+    def MEDashboard(username):
         payload = {
               "operationName": "MeDashboard",
               "variables": {
@@ -539,3 +540,37 @@ class DaskboardAPI:
               }
             }
         return payload
+
+    @staticmethod
+    def DashBoardSearchTags(searchText):
+        payload = {
+              "operationName": "DashBoardSearchTags",
+              "variables": {
+                "text": searchText
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "6941f74b248c6b1a2045742c053865a91576fd8e03e71ce9982dfa0a781c2d3f"
+                }
+              }
+        }
+        return payload
+
+    @staticmethod
+    def DashboardSearchCategories(searchText):
+        payload = {
+              "operationName": "DashboardSearchCategories",
+              "variables": {
+                "text": searchText
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "4eb124d36b62fa4258d2179ed8f5647b1f5370f32eb7492988dca5b016f6d487"
+                }
+              }
+        }
+        return payload
+
+
