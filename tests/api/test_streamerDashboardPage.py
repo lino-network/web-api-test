@@ -1,10 +1,7 @@
 import os
-
 import allure
 import pytest
-
 import loadData.payloadData as Payload
-
 from tests import common
 
 
@@ -12,15 +9,16 @@ from tests import common
 class TestStreamerDashboardPage:
     @allure.title('test_dashboardLivePanelInfo')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_dashboardLivePanelInfo(self, get_config_data):  # 主播dashboard页面检查
+    def test_dashboardLivePanelInfo(self, get_config_data, get_follow_streamer_auth_header):  # 主播dashboard页面检查
         """
         接口： MeDashboard
 
         检查主播:automation的Dashboard信息是否正确
         """
-        response_json = common.api_post(get_config_data['url'],
-                                        common.get_auth_header(get_config_data['follow_streamer_auth']),
-                                        Payload.DaskboardAPI().MeDashboard(get_config_data['follow_streamer']))
+        print('888888888888888888888')
+        print(get_follow_streamer_auth_header)
+        response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                        Payload.DaskboardAPI().MEDashboard(get_config_data['follow_streamer']))
         print(response_json)
         with allure.step('检查主播的title 是否是：Automation test'):
             assert response_json['data']['me']['private']['streamTemplate'][
@@ -45,15 +43,14 @@ class TestStreamerDashboardPage:
 
     @allure.title('test_dashBoardSearchTags')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_dashBoardSearchTags(self, get_config_data):
+    def test_dashBoardSearchTags(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：DashBoardSearchTags
 
         主播的Dashboard -》Live 页面搜索tag
         """
         tag_name = get_config_data['dashboard_info']['search_tag']
-        response_json = common.api_post(get_config_data['url'],
-                                        common.get_auth_header(get_config_data['follow_streamer_auth']),
+        response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                         Payload.DaskboardAPI().DashBoardSearchTags(tag_name))
         tag_exist = False
         for i in response_json['data']['tags']:
@@ -70,17 +67,17 @@ class TestStreamerDashboardPage:
 
     @allure.title('test_dashBoardSearchCategory')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_dashBoardSearchCategory(self, get_config_data):
+    def test_dashBoardSearchCategory(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：DashboardSearchCategories
 
         主播的Dashboard -》Live 页面搜索category
         """
         cate_name = get_config_data['dashboard_info']['search_category']
-        response_json = common.api_post(get_config_data['url'],
-                                        common.get_auth_header(get_config_data['follow_streamer_auth']),
+        response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                         Payload.DaskboardAPI().DashboardSearchCategories(cate_name))
         category_exist = False
+        print(response_json)
         print(response_json['data'])
         cate_list = response_json['data']['search']['categories']['list']
         for i in cate_list:

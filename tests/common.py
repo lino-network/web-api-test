@@ -4,22 +4,17 @@ import requests
 from loadData import payloadData
 
 
-def get_auth_header(auth_token):
-    token = {'authorization': auth_token}
-    return token
-
-
 def api_post(url, header, payload):
     response = requests.post(url, headers=header, json=payload)
     response_json = json.loads(response.text)
     return response_json
 
 
-def get_login_auth(url, username, password):
+def get_login_auth_header(url, username, password):
     response = api_post(url, payloadData.normal_header(), payloadData.login(username, password))
-    text = response.json()
-    auth_token = text['data']['loginWithEmail']['me']['private']['accessToken']
-    return auth_token
+    print(response)
+    auth_token = response['data']['loginWithEmail']['me']['private']['accessToken']
+    return {'authorization': auth_token}
 
 
 def get_account_lemon(url, header):
@@ -28,4 +23,8 @@ def get_account_lemon(url, header):
     lemon = response_json['data']['me']['wallet']['balance'][:-5]
     return lemon
 
+
+if __name__ == '__main__':
+    print(type(get_login_auth_header('https://graphigo.stg.dlive.tv/', 'automation@nqmo.com', 'Pwd@1234')))
+    print(get_login_auth_header('https://graphigo.stg.dlive.tv/', 'automation@nqmo.com', 'Pwd@1234'))
 
