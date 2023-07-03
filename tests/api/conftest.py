@@ -6,8 +6,7 @@ curlPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curlPath)[0]
 print(rootPath)
 sys.path.append(os.path.split(rootPath)[0])
-from loadData import payloadData
-import loadData.payloadData as Payload
+import tests.common as common
 
 # pytest_configure(config)：在pytest的配置初始化时执行，可以用来设置全局的pytest配置。
 # pytest_sessionstart(session)：在pytest测试会话开始时执行，可以用来初始化一些测试环境。
@@ -24,12 +23,6 @@ import yaml
 from loadData import payloadData
 import os
 import sys
-
-curlPath = os.path.abspath(os.path.dirname(__file__))
-rootPath = os.path.split(curlPath)[0]
-print(rootPath)
-sys.path.append(os.path.split(rootPath)[0])
-from loadData import payloadData
 
 
 @pytest.fixture(scope='session')
@@ -56,28 +49,15 @@ def api_headers():
 
 
 @pytest.fixture(scope='session')
-def api_url():
-    return 'https://graphigo.prd.dlive.tv/'
-    # return 'https://graphigo.stg.dlive.tv/'
+def get_viewer1_login_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['viewer1_username'],
+                                               get_config_data['viewer1_pwd'])
+    return auth_header
 
 
 @pytest.fixture(scope='session')
-def auth_header(get_config_data):
-    token = {'authorization': get_config_data['auth_token']}
-    return token
+def get_follow_streamer_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['follow_streamer_user'],
+                                               get_config_data['follow_streamer_pwd'])
+    return auth_header
 
-
-@pytest.fixture(scope='session')
-def viewer1_auth_header(get_config_data):
-    token = {'authorization': get_config_data['viewer1_auth']}
-    return token
-
-
-# @pytest.fixture(scope='session')
-# def get_login_auth(api_headers, get_config_data):
-#     response = requests.session().post(get_config_data['url'], headers=api_headers,
-#                                        json=payloadData.login(get_config_data['login_user'], get_config_data['pwd']))
-#     text = response.json()
-#     print(text)
-#     auth_token = text['data']['loginWithEmail']['me']['private']['accessToken']
-#     return auth_token

@@ -21,3 +21,8 @@ allure generate ./output-results-20230629 -o ./output-report-20230629 --clean
 
 单独执行某个文件的某个用例
 pytest test_liveroom.py::TestLivePage::test_follow_user
+
+环境配置：
+1. 安装python环境
+2. 运行命令： pip install -r requirements.txt
+3. pip install allure-pytest

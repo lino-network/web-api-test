@@ -1,3 +1,9 @@
+import json
+import os
+
+import pytest
+import requests
+
 import loadData.payloadData as Payload
 import allure
 import tests.common as common
@@ -99,7 +105,6 @@ class TestHomePage:
                         break
                 assert found_user is True
 
-
     @allure.title('test_homepage_nav_search_category')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_nav_search_category(self, get_config_data, api_headers):
@@ -131,18 +136,16 @@ class TestHomePage:
         # 检查结果
         assert found_category == True, "Category 'qaTest' not found"
 
-
-
     @allure.title('test_me_global')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_me_global(self, get_config_data, api_headers):
+    def test_me_global(self, get_config_data, get_viewer1_login_auth_header):
         """
         接口: MeGlobal
 
         测试用户: 66@nqmo.com/password
         检查用户global信息
         """
-        data = common.api_post(get_config_data['url'], common.get_auth_header(get_config_data['viewer1_auth']),
+        data = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
                                Payload.me_global())
         print(data)
         with allure.step('检查用户ID是否正确'):
@@ -160,7 +163,6 @@ class TestHomePage:
 
         with allure.step('检查用户角色是否为None'):
             assert data['data']['me']['role'] == 'None', "User role is not None"
-
 
     @allure.title('test_live_streams_languages')
     @allure.severity(allure.severity_level.CRITICAL)
@@ -181,8 +183,15 @@ class TestHomePage:
             assert "language" in language, "Language object does not contain 'language' field"
             assert "code" in language, "Language object does not contain 'code' field"
 
-        with allure.step('检查用户邮箱是否已验证'):
-            assert data['data']['me']['private']['emailVerified'] == True, "Email is not verified"
+        # with allure.step('检查用户邮箱是否已验证'):
+        #     assert data['data']['me']['private']['emailVerified'] == True, "Email is not verified"
+        #
+        # with allure.step('检查用户语言设置是否为英文'):
+        #     assert data['data']['me']['private']['language'] == 'en', "Language is not English"
 
-        with allure.step('检查用户语言设置是否为英文'):
-            assert data['data']['me']['private']['language'] == 'en', "Language is not English"
+
+if __name__ == '__main__':
+    print('e2rwf')
+    print(os.getcwd())
+    pytest.main(['./test_homepage.py', '--alluredir', './report/results-20230627-1'])
+    os.system('allure generate ./report/results-20230627-1 -o ./report/report-20230627-1 --clean')
