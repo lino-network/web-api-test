@@ -92,6 +92,32 @@ class TestStreamerDashboardPage:
             else:
                 assert False, 'expected category ' + cate_name + ' not exists'
 
+    @allure.title('test_dashBoardSearchCategory')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_enableAutoRun(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：RerunEnableSwitch
+
+        打开auto run 开关
+        """
+        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.DaskboardAPI().RerunEnableSwitch())
+        with allure.step('检查返回值无error code'):
+            assert response['data']['rerunEnable']['err'] is None, 'verify response code is not null'
+
+    @allure.title('test_dashBoardSearchCategory')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_disableAutoRun(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：RerunDisableSwitch
+
+        关闭auto run 开关
+        """
+        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.DaskboardAPI().RerunDisableSwitch())
+        with allure.step('检查返回值无error code'):
+            assert response['data']['rerunDisable']['err'] is None, 'verify response code is not null'
+
 
 if __name__ == '__main__':
     print('e2rwf')

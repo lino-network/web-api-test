@@ -181,6 +181,8 @@ def donate_lemon(streamer_permlink, account):  # 打赏lemon
 def add_gift_sub(streamer_name, count):  # 分发gift sub
     payload = {
         "operationName": "AddGiftSub",
+        # "query": 'mutation AddGiftSub($streamer: String!, $toUser: String, $count: Int) {giftSub(streamer: $streamer, toUser: $toUser, count: $count) '
+        #          '{ err { code message __typename} __typename}}',
         "variables": {
             "streamer": streamer_name,
             "count": int(count)
@@ -570,6 +572,34 @@ class DaskboardAPI:
                   "sha256Hash": "4eb124d36b62fa4258d2179ed8f5647b1f5370f32eb7492988dca5b016f6d487"
                 }
               }
+        }
+        return payload
+
+    @staticmethod
+    def RerunEnableSwitch():
+        payload = {
+          "operationName": "RerunEnableSwitch",
+          "variables": {},
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "c00825f9268b8b4a2c35cb7febae59ae955c6bd704c7e2e49021c0374ba70a40"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def RerunDisableSwitch():
+        payload = {
+          "operationName": "RerunDisableSwitch",
+          "variables": {},
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "40e24830c03e591246e493012a9d290d4f8ca9252f83bb089b2e4c93802f3259"
+            }
+          }
         }
         return payload
 
