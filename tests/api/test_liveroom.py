@@ -128,6 +128,8 @@ class TestLivePage:
         header = common.get_login_auth_header(get_config_data['url'],
                                               get_config_data['gift_sub_info']['give_sub_gift_user'],
                                               get_config_data['gift_sub_info']['give_sub_gift_user_pwd'])
+        origin_lemon = common.get_account_lemon(get_config_data['url'], header)
+        print('origin account lemon is: ' + str(origin_lemon))
         with allure.step('用户 ' + str(get_config_data['gift_sub_info']['give_sub_gift_user'])
                          + ' 发送5 个gift在直播间：' + str(get_config_data['gift_sub_info']['streamer'])):
             gift_response_json = common.api_post(get_config_data['url'], header,
@@ -143,8 +145,13 @@ class TestLivePage:
             with allure.step('用户' + str(i['get_gift_sub_user']) + ' 领取gift sub'):
                 claim_response_json = common.api_post(get_config_data['url'], viewer_header,
                                                       Payload.add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
+                print('claim_response_json')
                 with allure.step('检查用户 ' + str(i['get_gift_sub_user']) + ' 领取gift sub 的时候无报错'):
                     assert claim_response_json['data']['giftSubClaim']['err'] is None
+        after_lemon = common.get_account_lemon(get_config_data['url'], header)
+        print('after gift 5 sub account lemon is: ' + str(after_lemon))
+        with allure.step('检查发送了5 gift sub 帐户的钱相应的减少1490'):
+            assert int(after_lemon) + 1490 == int(origin_lemon), 'lemon减少不是1490, 而是 ' + str(int(origin_lemon)-int(after_lemon))
 
     @allure.title('test_streamer_add_lemon_to_chest')
     @allure.severity(allure.severity_level.CRITICAL)
