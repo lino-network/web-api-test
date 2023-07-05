@@ -65,14 +65,10 @@ def sidebar_follow_user_list():  # 获取sidebar following list
 def unfollow_user(user_id):
     payload = {
         "operationName": "UnfollowUser",
+        "query":  "mutation UnfollowUser($streamer: String!) {\n  unfollow(streamer: $streamer) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n",
+
         "variables": {
             "streamer": user_id
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "681ef3737bb34799ffe779b420db05b7f83bc8c3f17cdd17c7181bd7eca9859c"
-            }
         }
     }
     return payload
