@@ -153,25 +153,52 @@ class TestLivePage:
         with allure.step('检查发送了5 gift sub 帐户的钱相应的减少1490'):
             assert int(after_lemon) + 1490 == int(origin_lemon), 'lemon减少不是1490, 而是 ' + str(int(origin_lemon)-int(after_lemon))
 
-    @allure.title('test_streamer_add_lemon_to_chest')
+    @allure.title('test_streamer_open_chest')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_streamer_add_lemon_to_chest(self, get_config_data):
+    def test_streamer_open_chest(self, get_config_data, get_follow_streamer_auth_header):
         """
+        接口: LivestreamTreasureChestAddCheck, GiveawayStart
+
         1. streamer add 20 lemon to chest
         2. user1: test_streamer_add_lemon_to_chest send message to chat and open chest
         3. user2: chest_donate_user2_auth donate lemon and open chest
         4. user3: chest_user_no_point_auth no point to open chest
-        :param get_config_data:
-        :param viewer1_auth_header:
-        :return:
         """
-        # with allure.step('streamer: automation check chest lemon and add lemon to chest'):
-        #     origin_chest_lemon = requests.post(get_config_data['url'],
-        #                                        headers=])common.get_auth_header(get_config_data['follow_streamer_auth',
-        #                                        json=Payload.sidebar_follow_user_list())
-        #     response_json = json.loads(origin_chest_lemon.text)
-        #     origin_lemon = response_json['data']['me']['wallet']['balance'][:-5]
-        print('origin chest lemon is: ')
+        with allure.step("在加lemon进宝箱之前检查帐户总的lemon"):
+            origin_lemon = common.get_account_lemon(get_config_data['url'], get_follow_streamer_auth_header)
+            print("Before add to chest total lemon is: " + str(origin_lemon))
+        with allure.step('streamer: automation add 20 lemon to chest'):
+            add_chest = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                        Payload.LiveRoomAPI().LivestreamTreasureChestAddCheck(
+                                    get_config_data['chest_info']['chest_streamer'],
+                                    get_config_data['chest_info']['add_lemon']))
+            with allure.step('检查加lemon进宝箱是否成功'):
+                assert add_chest['data']['userByDisplayName']['treasureChest']['validUserTransfer'] == 'Success', \
+                    'add lemon to chest 失败'
+                assert add_chest['data']['userByDisplayName']['wallet']['balance'] == int(origin_lemon)*10000
+        with allure.step("在加lemon进宝箱之后检查帐户总的lemon"):
+            after_lemon = common.get_account_lemon(get_config_data['url'], get_follow_streamer_auth_header)
+            print("After add to chest total lemon is: " + str(after_lemon))
+        with allure.step('检查加钱进宝箱以后，总帐户减少对应的数目'):
+            assert int(after_lemon) + get_config_data['chest_info']['add_lemon'] == int(origin_lemon), '帐户lemon的减少不' \
+                                        '是' + get_config_data['chest_info']['add_lemon'] + '而是' + str(int(origin_lemon)-int(after_lemon))
+        viewer1_header = common.api_post(get_config_data['url'],
+                                         get_config_data['chest_info']['send_msg_chest_user1'],
+                                         get_config_data['chest_info']['send_msg_chest_user1_pwd'])
+        viewer2_header = common.api_post(get_config_data['url'],
+                                         get_config_data['chest_info']['send_msg_chest_user2'],
+                                         get_config_data['chest_info']['send_msg_chest_user2_pwd'])
+        viewer3_header = common.api_post(get_config_data['url'],
+                                         get_config_data['chest_info']['chest_user_no_point_user'],
+                                         get_config_data['chest_info']['chest_user_no_point_pwd'])
+        with allure.step(str(get_config_data['chest_info']['send_msg_chest_user1']) + 'send message to chat'):
+            msg_response = common.api_post(get_config_data['url'],
+                                           viewer1_header, Payload.send_chat(get_config_data['chest_info']['chest_streamer'],
+                                                                             get_config_data['chest_info']['msg']))
+        with allure.step(str(get_config_data['chest_info']['donate_chest_user2'] + 'donate lemon')):
+            donate_response = common.api_post(get_config_data['url'], viewer2_header,
+                                              Payload.donate_lemon(get_config_data['chest_info']['chest_streamer_permlimk']))
+
 
 
 if __name__ == '__main__':

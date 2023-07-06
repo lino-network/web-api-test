@@ -4,6 +4,7 @@ def normal_header():
     }
     return headers
 
+
 def normal_header():
     headers = {
         'Content-Type': 'application/json'
@@ -13,18 +14,13 @@ def normal_header():
 
 def login(username, password):
     payload = {
-        "operationName": "EmailLogin",
-        "variables": {
-            "email": username,
-            "password": password
-        },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "ee5f1abab8122a4441ed378b01f0905612ce3e053c80c1eb1f15cd28310ff017"
-            }
+          "operationName": "EmailLogin",
+          "variables": {
+            "email": "automation@nqmo.com",
+            "password": "Pwd@1234"
+          },
+          "query": "mutation EmailLogin($email: String!, $password: String!, $recaptchaToken: String, $deviceType: DeviceType) {\n  loginWithEmail(email: $email, password: $password, recaptchaToken: $recaptchaToken, deviceType: $deviceType) {\n    me {\n      id\n      private {\n        accessToken\n        __typename\n      }\n      __typename\n    }\n    twofactorToken\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
-    }
     return payload
 
 
@@ -34,12 +30,7 @@ def follow_user(user_id):
         "variables": {
             "streamer": user_id
         },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "daf146d77e754b6b5a7acd945ff005ae028b33feaa3c79e04e71505190003a5d"
-            }
-        }
+        "query": "mutation FollowUser($streamer: String!) {follow(streamer: $streamer) {err {code message}}}"
     }
     return payload
 
@@ -644,5 +635,65 @@ class DaskboardAPI:
         }
         return payload
 
+
+class LiveRoomAPI:
+    @staticmethod
+    def LivestreamTreasureChestAddPoints(streamerDisplayName):
+        payload = {
+              "operationName": "LivestreamTreasureChestAddPoints",
+              "variables": {
+                "displayname": streamerDisplayName
+              },
+              "query": "query LivestreamTreasureChestAddPoints($displayname: String!) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TreasureChestAddPointsFrag\n    __typename\n  }\n}\n\nfragment TreasureChestAddPointsFrag on User {\n  id\n  treasureChest {\n    userTransferSetting {\n      weeklyTransferTotalQuota\n      weeklyTransferQuotaLeft\n      __typename\n    }\n    __typename\n  }\n  wallet {\n    balance\n    __typename\n  }\n  __typename\n}\n"
+            }
+        return payload
+
+    @staticmethod
+    def LivestreamTreasureChestAddCheck(streamerDisplayName, amount):   # 加lemon 进宝箱
+        payload = {
+              "operationName": "LivestreamTreasureChestAddCheck",
+              "variables": {
+                "displayname": streamerDisplayName,
+                "amount": int(amount)
+              },
+              "query": "query LivestreamTreasureChestAddCheck($displayname: String!, $amount: String!) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TreasureChestValidTransferFrag\n    __typename\n  }\n}\n\nfragment TreasureChestValidTransferFrag on User {\n  id\n  treasureChest {\n    validUserTransfer(amount: $amount)\n    __typename\n  }\n  wallet {\n    balance\n    __typename\n  }\n  __typename\n}\n"
+            }
+        return payload
+
+    @staticmethod
+    def ChestUserTransfer(amount):
+        payload = {
+          "operationName": "ChestUserTransfer",
+          "variables": {
+            "amount": int(amount)
+          },
+          "query": "mutation ChestUserTransfer($amount: String!) {\n  treasureChestUserTransfer(amount: $amount) {\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def give_away_start():  # 主播开启宝箱
+        payload = {
+          "operationName": "GiveawayStart",
+          "variables": {},
+          "query": "mutation GiveawayStart {\n  giveawayStart {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def give_away_claim(streamer_name):  # 用户抢宝箱
+        payload = {
+            "operationName": "GiveawayClaim",
+            "variables": {
+                "streamer": streamer_name
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "9f013d22643dc9363fe89cc20f0e8d45e3141859907f8d5bbadae713be5a2332"
+                }
+            }
+        }
+        return payload
 
 
