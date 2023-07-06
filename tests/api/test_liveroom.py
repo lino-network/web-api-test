@@ -198,6 +198,54 @@ class TestLivePage:
         with allure.step(str(get_config_data['chest_info']['donate_chest_user2'] + 'donate lemon')):
             donate_response = common.api_post(get_config_data['url'], viewer2_header,
                                               Payload.donate_lemon(get_config_data['chest_info']['chest_streamer_permlimk']))
+        with allure.step('主播开始开启宝箱'):
+            open_response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                            Payload.LiveRoomAPI().give_away_start())
+            with allure.step('检查开启宝箱是否成功'):
+                assert open_response['data']['giveawayStart']['err'] is None, '主播开启宝箱失败，信息为' + \
+                                                                        open_response['data']['giveawayStart']['err']
+        viewer1_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer1_header)
+        viewer2_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer2_header)
+        with allure.step('发信息观众开始参与宝箱抽奖'):
+            viewer1_claim_re = common.api_post(get_config_data['url'], viewer1_header,
+                                               Payload.LiveRoomAPI().give_away_claim(get_config_data['chest_info']['chest_streamer']))
+            with allure.step('检查是否成功参与宝箱'):
+                assert viewer1_claim_re['data']['giveawayClaim']['err'] is None, '参与宝箱失败'
+        with allure.step('donate观众开始参与宝箱抽奖'):
+            viewer2_claim_re = common.api_post(get_config_data['url'], viewer2_header,
+                                               Payload.LiveRoomAPI().give_away_claim(
+                                                   get_config_data['chest_info']['chest_streamer']))
+            with allure.step('检查是否成功参与宝箱'):
+                assert viewer2_claim_re['data']['giveawayClaim']['err'] is None, '参与宝箱失败'
+        with allure.step('无积分观众参与宝箱'):
+            viewer3_claim_re = common.api_post(get_config_data['url'], viewer3_header,
+                                               Payload.LiveRoomAPI().give_away_claim(
+                                                   get_config_data['chest_info']['chest_streamer']))
+            with allure.step('检查是否成功参与宝箱'):
+                assert viewer3_claim_re['data']['giveawayClaim']['err'] is None, '参与宝箱失败'
+        with allure.step('检查中奖名单'):
+            winner_response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                              Payload.LiveRoomAPI().LivestreamTreasureChestWinners())
+            winner_list = winner_response['data']['userByDisplayName']['treasureChest']['lastGiveawayRewards']
+            viewer1_get_lemon = 0
+            viewer2_get_lemon = 0
+            with allure.step('检查无积分的观众不在中奖名单'):
+                assert get_config_data['chest_info']['chest_user_no_point_user']
+            for i in winner_list:
+                if i['user']['displayname'] in get_config_data['chest_info']['send_msg_chest_user1']:
+                    viewer1_get_lemon = str(int(i['value']/10000))
+                    print('发现信息的观众在中奖名单而且中奖金额是： ' + str(int(i['value']/10000)))
+                    assert True, '发送信息的观众不在中奖名单'
+                if i['user']['displayname'] in get_config_data['chest_info']['donate_chest_user2']:
+                    viewer2_get_lemon = str(int(i['value']/10000))
+                    print('donate的观众在中奖名单而且中奖金额是： ' + str(int(i['value']/10000)))
+                    assert True, '发送信息的观众不在中奖名单'
+
+
+
+
+
+
 
 
 

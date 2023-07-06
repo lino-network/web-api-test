@@ -683,17 +683,27 @@ class LiveRoomAPI:
     @staticmethod
     def give_away_claim(streamer_name):  # 用户抢宝箱
         payload = {
-            "operationName": "GiveawayClaim",
-            "variables": {
-                "streamer": streamer_name
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "9f013d22643dc9363fe89cc20f0e8d45e3141859907f8d5bbadae713be5a2332"
-                }
-            }
+          "operationName": "GiveawayClaim",
+          "variables": {
+            "streamer": streamer_name
+          },
+          "query": "mutation GiveawayClaim($streamer: String!) {\n  giveawayClaim(streamer: $streamer) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
+    @staticmethod
+    def LivestreamTreasureChestWinners(streamer_name):   # 宝箱中奖名单
+        payload = {
+          "operationName": "LivestreamTreasureChestWinners",
+          "variables": {
+            "displayname": streamer_name,
+            "isLoggedIn": True
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "94ea7f30d7e9e7ce0f04eb9944f4d2c373dcc7650f565beb050658142b61bf60"
+            }
+          }
+        }
 
