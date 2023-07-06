@@ -189,6 +189,58 @@ class TestHomePage:
         # with allure.step('检查用户语言设置是否为英文'):
         #     assert data['data']['me']['private']['language'] == 'en', "Language is not English"
 
+    @allure.title('test_me_balance')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_me_balance(self, get_config_data, api_headers):
+        """
+        接口: MeBalance
+
+        用户: viewer1_username unfollow 主播: automation
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.MeBalance())
+        assert response.status_code == 200
+        data = json.loads(response.text)
+
+        assert data["data"]["me"]["wallet"]["balance"] is not None
+        assert data['data']['me']['id'] == 'user:automation', "Username is incorrect"
+
+
+    @allure.title('test_me_rebillycards')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_me_rebillyCards(self, get_config_data, api_headers):
+        """
+        接口: MeRebillyCards
+
+        用户:  automation
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.MeRebillyCards())
+        assert response.status_code == 200
+        data = json.loads(response.text)
+
+        assert response["data"]["me"]["id"] == "user:automation"
+        assert response["data"]["me"]["private"]["userRebillyCards"] == []
+
+
+
+    @allure.title('test_activity_user_donation_rank')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_activity_user_donation_rank(self, get_config_data, api_headers):
+        """
+        接口: ActivityUserDonationRank
+
+        用户:  automation
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.ActivityUserDonationRank())
+        assert response.status_code == 200
+        data = json.loads(response.text)
+
+        assert response["data"]["userDonationRank"]["rank"] is not None
+        assert response["data"]["userDonationRank"]["user"]["displayname"] == 'automation'
+
+
 
 if __name__ == '__main__':
     print('e2rwf')

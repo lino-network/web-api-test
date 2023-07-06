@@ -418,6 +418,50 @@ def homepage_nav_search_result(search_text):
     }
     return payload
 
+ 
+  
+def MeBalance():
+    payload = {
+        "operationName": "MeBalance",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "6e6794dcd570ff8ed544d45483971969db2c8e968a3a082645ae92efa124f3ec"
+            }
+        }
+    }
+    return payload
+
+def MeRebillyCards():
+    payload ={
+        "operationName": "MeRebillyCards",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "c338f2610965aa4328a7da2c8012e81f565acf3de7c0c109eb9702507d014511"
+            }
+        }
+    }
+    return payload
+
+def ActivityUserDonationRank():
+    payload ={
+        "operationName": "ActivityUserDonationRank",
+        "variables": {
+            "username": "automation",
+            "rankingType": "THIS_WEEK",
+            "isStreamer": true
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "0a3cf0be08ae880d5894313d0be07f656fed47ec729f698545463761ca5f9c3d"
+            }
+        }
+    }
+
 def live_streams_languages():
     payload = {
         "operationName": "LivestreamsLanguages",
@@ -585,6 +629,7 @@ class DaskboardAPI:
         }
         return payload
 
+
     @staticmethod
     def RerunDisableSwitch():
         payload = {
@@ -598,5 +643,6 @@ class DaskboardAPI:
           }
         }
         return payload
+
 
 
