@@ -13,10 +13,14 @@ apiData:
     search_category: Art
   chest_info:
     chest_streamer: automation
+    chest_streamer_permlimk: automation+2hatMquVg
+    add_lemon: 20
     send_msg_chest_user1: Patrick1ios@nqmo.com
     send_msg_chest_user1_pwd: Pwd@1234
+    msg: for automation test chest
     donate_chest_user2: Patrick2ios@nqmo.com
     chest_donate_user2_pwd: Pwd@1234
+    donate_lemon_value: 1
     chest_user_no_point_user: Patrick3ios@nqmo.com
     chest_user_no_point_pwd: Pwd@1234
   gift_sub_info:
