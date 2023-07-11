@@ -168,42 +168,42 @@ class TestLivePage:
             origin_lemon = common.get_account_lemon(get_config_data['url'], get_follow_streamer_auth_header)
             print("Before add to chest total lemon is: " + str(origin_lemon))
         with allure.step('streamer: automation add 20 lemon to chest'):
-            add_chest = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                        Payload.LiveRoomAPI().LivestreamTreasureChestAddCheck(
-                                    get_config_data['chest_info']['chest_streamer'],
-                                    get_config_data['chest_info']['add_lemon']))
+            add_chest_payload = Payload.LiveRoomAPI().ChestUserTransfer(str(get_config_data['chest_info']['add_lemon']))
+            add_chest = common.api_post(get_config_data['url'], get_follow_streamer_auth_header, add_chest_payload)
             with allure.step('检查加lemon进宝箱是否成功'):
-                assert add_chest['data']['userByDisplayName']['treasureChest']['validUserTransfer'] == 'Success', \
-                    'add lemon to chest 失败'
-                assert add_chest['data']['userByDisplayName']['wallet']['balance'] == int(origin_lemon)*10000
+                assert add_chest['data']['treasureChestUserTransfer']['err'] is None, '加lemon进宝箱失败'
         with allure.step("在加lemon进宝箱之后检查帐户总的lemon"):
             after_lemon = common.get_account_lemon(get_config_data['url'], get_follow_streamer_auth_header)
             print("After add to chest total lemon is: " + str(after_lemon))
         with allure.step('检查加钱进宝箱以后，总帐户减少对应的数目'):
             assert int(after_lemon) + get_config_data['chest_info']['add_lemon'] == int(origin_lemon), '帐户lemon的减少不' \
                                         '是' + get_config_data['chest_info']['add_lemon'] + '而是' + str(int(origin_lemon)-int(after_lemon))
-        viewer1_header = common.api_post(get_config_data['url'],
-                                         get_config_data['chest_info']['send_msg_chest_user1'],
-                                         get_config_data['chest_info']['send_msg_chest_user1_pwd'])
-        viewer2_header = common.api_post(get_config_data['url'],
-                                         get_config_data['chest_info']['send_msg_chest_user2'],
-                                         get_config_data['chest_info']['send_msg_chest_user2_pwd'])
-        viewer3_header = common.api_post(get_config_data['url'],
-                                         get_config_data['chest_info']['chest_user_no_point_user'],
-                                         get_config_data['chest_info']['chest_user_no_point_pwd'])
+        viewer1_header = common.get_login_auth_header(get_config_data['url'],
+                                                      get_config_data['chest_info']['send_msg_chest_user1'],
+                                                      get_config_data['chest_info']['send_msg_chest_user1_pwd'])
+        viewer2_header = common.get_login_auth_header(get_config_data['url'],
+                                                      get_config_data['chest_info']['donate_chest_user2'],
+                                                      get_config_data['chest_info']['chest_donate_user2_pwd'])
+        viewer3_header = common.get_login_auth_header(get_config_data['url'],
+                                                      get_config_data['chest_info']['chest_user_no_point_user'],
+                                                      get_config_data['chest_info']['chest_user_no_point_pwd'])
         with allure.step(str(get_config_data['chest_info']['send_msg_chest_user1']) + 'send message to chat'):
             msg_response = common.api_post(get_config_data['url'],
                                            viewer1_header, Payload.send_chat(get_config_data['chest_info']['chest_streamer'],
-                                                                             get_config_data['chest_info']['msg']))
+                                                                             get_config_data['chest_info']['msg'], []))
         with allure.step(str(get_config_data['chest_info']['donate_chest_user2'] + 'donate lemon')):
             donate_response = common.api_post(get_config_data['url'], viewer2_header,
-                                              Payload.donate_lemon(get_config_data['chest_info']['chest_streamer_permlimk']))
+                                              Payload.donate_lemon(
+                                                  get_config_data['chest_info']['chest_streamer_permlimk']
+                                              , get_config_data['chest_info']['donate_lemon_value']))
         with allure.step('主播开始开启宝箱'):
             open_response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                             Payload.LiveRoomAPI().give_away_start())
+            print('0000')
+            print(open_response)
             with allure.step('检查开启宝箱是否成功'):
                 assert open_response['data']['giveawayStart']['err'] is None, '主播开启宝箱失败，信息为' + \
-                                                                        open_response['data']['giveawayStart']['err']
+                                                                        str(open_response['data']['giveawayStart']['err'])
         viewer1_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer1_header)
         viewer2_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer2_header)
         with allure.step('发信息观众开始参与宝箱抽奖'):
@@ -230,7 +230,7 @@ class TestLivePage:
             viewer1_get_lemon = 0
             viewer2_get_lemon = 0
             with allure.step('检查无积分的观众不在中奖名单'):
-                assert get_config_data['chest_info']['chest_user_no_point_user']
+                assert get_config_data['chest_info']['chest_user_no_point_user'] not in winner_list
             for i in winner_list:
                 if i['user']['displayname'] in get_config_data['chest_info']['send_msg_chest_user1']:
                     viewer1_get_lemon = str(int(i['value']/10000))
@@ -240,6 +240,7 @@ class TestLivePage:
                     viewer2_get_lemon = str(int(i['value']/10000))
                     print('donate的观众在中奖名单而且中奖金额是： ' + str(int(i['value']/10000)))
                     assert True, '发送信息的观众不在中奖名单'
+
 
 
 

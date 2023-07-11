@@ -654,7 +654,7 @@ class LiveRoomAPI:
               "operationName": "LivestreamTreasureChestAddCheck",
               "variables": {
                 "displayname": streamerDisplayName,
-                "amount": int(amount)
+                "amount": amount
               },
               "query": "query LivestreamTreasureChestAddCheck($displayname: String!, $amount: String!) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TreasureChestValidTransferFrag\n    __typename\n  }\n}\n\nfragment TreasureChestValidTransferFrag on User {\n  id\n  treasureChest {\n    validUserTransfer(amount: $amount)\n    __typename\n  }\n  wallet {\n    balance\n    __typename\n  }\n  __typename\n}\n"
             }
@@ -665,7 +665,7 @@ class LiveRoomAPI:
         payload = {
           "operationName": "ChestUserTransfer",
           "variables": {
-            "amount": int(amount)
+            "amount": amount
           },
           "query": "mutation ChestUserTransfer($amount: String!) {\n  treasureChestUserTransfer(amount: $amount) {\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
