@@ -415,7 +415,7 @@ def homepage_browse_page_search_category(search_text):
     payload = {
         "operationName": "BrowsePageSearchCategory",
         "variables": {
-            "text": "music",
+            "text": search_text,
             "first": 14
         },
         "extensions": {
@@ -425,6 +425,7 @@ def homepage_browse_page_search_category(search_text):
             }
         }
     }
+    return payload
   
 def MeBalance():
     payload = {
@@ -467,6 +468,7 @@ def ActivityUserDonationRank():
             }
         }
     }
+    return payload
 
 def live_streams_languages():
     payload = {
