@@ -240,6 +240,43 @@ class TestHomePage:
         assert response["data"]["userDonationRank"]["rank"] is not None
         assert response["data"]["userDonationRank"]["user"]["displayname"] == 'automation'
 
+    @allure.title('test_browse_page_search_category')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_browse_page_search_category(self, get_config_data, api_headers):
+        """
+        接口: BrowsePageSearchCategory
+
+        用户:  automation
+        步骤:  category点击show all        
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.homepage_browse_page_search_category(""))
+        assert response.status_code == 200
+        data = json.loads(response.text)
+        assert response["data"]["search"]["trendingCategories"]["list"] is not None
+
+        response_search = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.homepage_browse_page_search_category("qa"))
+        assert response_search.status_code == 200
+        data = json.loads(response_search.text)
+        assert response_search["data"]["search"]["trendingCategories"]["list"] is not None
+        
+
+    @allure.title('test_live_streams_languages')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_live_streams_languages(self, get_config_data, api_headers):
+        """
+        接口: BrowsePageSearchCategory
+
+        用户:  automation
+        步骤:  category点击show all        
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.live_streams_languages())
+        assert response.status_code == 200
+        data = json.loads(response.text)
+        assert response["data"]["languages"]["id"] is not None
+        
 
 
 if __name__ == '__main__':
