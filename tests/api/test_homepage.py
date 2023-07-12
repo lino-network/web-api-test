@@ -152,7 +152,7 @@ class TestHomePage:
             assert data['data']['me']['id'] == 'user:dlive-degnujtptx', "User ID is incorrect"
 
         with allure.step('检查用户名是否正确'):
-            assert data['data']['me']['username'] == 'dlive-degnujtptx', "Username is incorrect"
+            assert data['data']['me']['displayname'] == 'automation_viewer1', "User displayname is incorrect"
 
         with allure.step('检查用户余额是否为0'):
             assert data['data']['me']['wallet']['balance'] != 0, "User balance is 0"
@@ -190,21 +190,6 @@ class TestHomePage:
         # with allure.step('检查用户语言设置是否为英文'):
         #     assert data['data']['me']['private']['language'] == 'en', "Language is not English"
 
-    @allure.title('test_me_global')
-    @allure.severity(allure.severity_level.CRITICAL)
-    def test_me_global(self, get_config_data, get_viewer1_login_auth_header):
-        """
-        接口: MeGlobal
-
-        用户: viewer1_username 
-        """
-        response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.me_global())
-        assert response.status_code == 200
-        data = json.loads(response.text)
-        print(data)
-        assert response['data']['me']['id'] == "user:dlive-degnujtptx"
-        assert response['data']['me']['displayname'] == "automation_viewer1"
 
 
     @allure.title('test_me_balance')
@@ -226,19 +211,18 @@ class TestHomePage:
 
     @allure.title('test_me_rebillycards')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_me_rebillyCards(self, get_config_data, api_headers):
+    def test_me_rebillyCards(self, get_config_data, get_viewer1_login_auth_header):
         """
         接口: MeRebillyCards
 
         用户:  automation
         """
-        response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.MeRebillyCards())
+        response = requests.post(get_config_data['url'], get_viewer1_login_auth_header,
+                                Payload.MeRebillyCards())
         assert response.status_code == 200
-        data = json.loads(response.text)
 
-        assert data["data"]["me"]["id"] == "user:automation"
-        assert data["data"]["me"]["private"]["userRebillyCards"] == []
+        assert response["data"]["me"]["id"] == 'user:dlive-degnujtptx'
+        assert response["data"]["me"]["private"]["userRebillyCards"] == []
 
 
 
