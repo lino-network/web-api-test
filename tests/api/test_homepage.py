@@ -190,22 +190,38 @@ class TestHomePage:
         # with allure.step('检查用户语言设置是否为英文'):
         #     assert data['data']['me']['private']['language'] == 'en', "Language is not English"
 
-    @allure.title('test_me_balance')
+    @allure.title('test_me_global')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_me_balance(self, get_config_data, api_headers):
+    def test_me_global(self, get_config_data, get_viewer1_login_auth_header):
         """
-        接口: MeBalance
+        接口: MeGlobal
 
-        用户: viewer1_username unfollow 主播: automation
+        用户: viewer1_username 
         """
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.MeBalance())
+                                json=Payload.me_global())
         assert response.status_code == 200
         data = json.loads(response.text)
         print(data)
+        assert response['data']['me']['id'] == "user:dlive-degnujtptx"
+        assert response['data']['me']['displayname'] == "automation_viewer1"
 
-        assert data["data"]["me"]["wallet"]["balance"] is not None
-        assert data['data']['me']['id'] == 'user:automation', "Username is incorrect"
+
+    @allure.title('test_me_balance')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_me_balance(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口: MeBalance
+
+        用户: viewer1_username 
+        """
+        response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                        Payload.test_me_balance())
+        print(response)
+
+        assert response["data"]["me"]["wallet"]["balance"] is not None
+        assert response['data']['me']['id'] == 'user:dlive-degnujtptx', "Username is incorrect"
+
 
 
     @allure.title('test_me_rebillycards')
