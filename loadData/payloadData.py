@@ -650,7 +650,6 @@ class DaskboardAPI:
         }
         return payload
 
-
     @staticmethod
     def RerunDisableSwitch():
         payload = {
@@ -662,6 +661,28 @@ class DaskboardAPI:
               "sha256Hash": "40e24830c03e591246e493012a9d290d4f8ca9252f83bb089b2e4c93802f3259"
             }
           }
+        }
+        return payload
+
+    @staticmethod
+    def SetStreamTemplate(title, ageRestriction, earnRestriction, categoryID, languageID, thumbnailUrl, disableAlert,
+                          saveReplay, tags: []):
+        payload = {
+          "operationName": "SetStreamTemplate",
+          "variables": {
+            "template": {
+              "title": title,
+              "ageRestriction": ageRestriction,
+              "earnRestriction": earnRestriction,
+              "categoryID": categoryID,
+              "languageID": languageID,
+              "thumbnailUrl": thumbnailUrl,
+              "disableAlert": disableAlert,
+              "saveReplay": saveReplay,
+              "tags": tags
+            }
+          },
+          "query": "mutation SetStreamTemplate($template: SetStreamTemplateInput!) {\n  streamTemplateSet(template: $template) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
