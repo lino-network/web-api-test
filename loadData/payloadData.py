@@ -519,6 +519,18 @@ def me_global():  # 个人的一些信息
     }
     return payload
 
+def test_me_balance():{
+        "operationName": "MeBalance",
+        "variables": {},
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "6e6794dcd570ff8ed544d45483971969db2c8e968a3a082645ae92efa124f3ec"
+            }
+        }
+    }
+    return payload
+
 
 def global_information():
     payload = {
