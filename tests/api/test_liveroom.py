@@ -241,6 +241,20 @@ class TestLivePage:
                     print('donate的观众在中奖名单而且中奖金额是： ' + str(int(i['value']/10000)))
                     assert True, '发送信息的观众不在中奖名单'
 
+    @allure.title('test_streamer_open_chest')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_clip(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：MeClipsOfMe, MeClipsByMe
+
+        主播clip 自己和观众clip 主播
+        """
+        currentDateAndTime = datetime.now()
+        currentTime = currentDateAndTime.strftime("%H%M%S")
+        streamer_clip_message = 'streamer_clip_self'+ currentTime
+        with allure.step("主播clip自己"):
+            stream_clip_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                               Payload.me_clips_by_me())
 
 
 
