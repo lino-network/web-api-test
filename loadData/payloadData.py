@@ -519,7 +519,8 @@ def me_global():  # 个人的一些信息
     }
     return payload
 
-def test_me_balance():{
+def test_me_balance():
+    payload = {
         "operationName": "MeBalance",
         "variables": {},
         "extensions": {
@@ -757,6 +758,7 @@ class LiveRoomAPI:
             }
           }
         }
+        return payload
 
     @staticmethod
     def ClipAdd(streamerPermlink, streamerName, clipUrl, desc, thumbnailUrl, sendChat=True, startTime=0, endTime=60):
