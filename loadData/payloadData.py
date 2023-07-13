@@ -423,9 +423,29 @@ def homepage_browse_page_search_category(search_text):
                 "version": 1,
                 "sha256Hash": "3e7231352e1802ba18027591ee411d2ca59030bdfd490b6d54c8d67971001ece"
             }
-        }
+        },
+        "query": "query BrowsePageSearchCategory($text: String!, $first: Int, $after: String) {\n  search(text: $text) {\n    trendingCategories(first: $first, after: $after) {\n      ...HomeCategoriesFrag\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment HomeCategoriesFrag on CategoryConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    ...VCategoryCardFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VCategoryCardFrag on Category {\n  id\n  backendID\n  title\n  imgUrl\n  watchingCount\n  __typename\n}\n"
     }
     return payload
+
+def homepage_category_live_stream_page(categoryid):
+    payload = {
+    "operationName": "CategoryLivestreamsPage",
+    "variables": {
+        "first": 20,
+        "categoryID": categoryid,
+        # "showNSFW": true,
+        #"showMatureContent": true
+    },
+    "extensions": {
+        "persistedQuery": {
+            "version": 1,
+            "sha256Hash": "9d6d443be0fdaefaa701edb464e50582363f63c938d41ebb3ca4de265af126c4"
+        }
+    }
+}
+    return payload
+
   
 def MeBalance():
     payload = {
@@ -519,7 +539,8 @@ def me_global():  # 个人的一些信息
     }
     return payload
 
-def test_me_balance():{
+def test_me_balance():
+    payload ={
         "operationName": "MeBalance",
         "variables": {},
         "extensions": {
