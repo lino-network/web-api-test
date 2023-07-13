@@ -282,6 +282,23 @@ class TestHomePage:
         print (data)
         assert data["data"]["languages"][0]["id"] is not None
         assert data["data"]["languages"][0]["language"] == "All"
+
+
+    @allure.title('test_homepage_category_live_stream_page')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_homepage_category_live_stream_pages(self, get_config_data, api_headers):
+        """
+        接口: CategoryLivestreamsPage
+
+        步骤:  category点击games       
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.homepage_category_live_stream_page("-3"))
+        assert response.status_code == 200
+        data = json.loads(response.text)
+        print (data)
+        assert data["data"]["category"]["id"] == "category:-3"
+        assert data["data"]["category"]["title"] == "Games"
         
 
 
