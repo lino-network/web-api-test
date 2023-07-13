@@ -206,15 +206,14 @@ class TestLivePage:
                                                                         str(open_response['data']['giveawayStart']['err'])
         viewer1_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer1_header)
         viewer2_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer2_header)
+        claim_payload = Payload.LiveRoomAPI().give_away_claim(get_config_data['chest_info']['chest_streamer'])
+        print('claim_payload: ' + str(claim_payload))
         with allure.step('发信息观众开始参与宝箱抽奖'):
-            viewer1_claim_re = common.api_post(get_config_data['url'], viewer1_header,
-                                               Payload.LiveRoomAPI().give_away_claim(get_config_data['chest_info']['chest_streamer']))
+            viewer1_claim_re = common.api_post(get_config_data['url'], viewer1_header, claim_payload)
             with allure.step('检查是否成功参与宝箱'):
                 assert viewer1_claim_re['data']['giveawayClaim']['err'] is None, '参与宝箱失败'
         with allure.step('donate观众开始参与宝箱抽奖'):
-            viewer2_claim_re = common.api_post(get_config_data['url'], viewer2_header,
-                                               Payload.LiveRoomAPI().give_away_claim(
-                                                   get_config_data['chest_info']['chest_streamer']))
+            viewer2_claim_re = common.api_post(get_config_data['url'], viewer2_header, claim_payload)
             with allure.step('检查是否成功参与宝箱'):
                 assert viewer2_claim_re['data']['giveawayClaim']['err'] is None, '参与宝箱失败'
         with allure.step('无积分观众参与宝箱'):
@@ -240,7 +239,23 @@ class TestLivePage:
                     viewer2_get_lemon = str(int(i['value']/10000))
                     print('donate的观众在中奖名单而且中奖金额是： ' + str(int(i['value']/10000)))
                     assert True, '发送信息的观众不在中奖名单'
+            print('viewer1_get_lemon: ' + str(viewer1_get_lemon))
+            print('viewer2_get_lemon: ' + str(viewer2_get_lemon))
 
+    @allure.title('test_streamer_open_chest')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_clip(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：MeClipsOfMe, MeClipsByMe
+
+        主播clip 自己和观众clip 主播
+        """
+        currentDateAndTime = datetime.now()
+        currentTime = currentDateAndTime.strftime("%H%M%S")
+        streamer_clip_message = 'streamer_clip_self'+ currentTime
+        with allure.step("主播clip自己"):
+            stream_clip_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                               Payload.me_clips_by_me())
 
 
 

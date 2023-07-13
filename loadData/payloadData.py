@@ -540,7 +540,8 @@ def me_global():  # 个人的一些信息
     return payload
 
 def test_me_balance():
-    payload ={
+    payload = {
+
         "operationName": "MeBalance",
         "variables": {},
         "extensions": {
@@ -671,7 +672,6 @@ class DaskboardAPI:
         }
         return payload
 
-
     @staticmethod
     def RerunDisableSwitch():
         payload = {
@@ -683,6 +683,28 @@ class DaskboardAPI:
               "sha256Hash": "40e24830c03e591246e493012a9d290d4f8ca9252f83bb089b2e4c93802f3259"
             }
           }
+        }
+        return payload
+
+    @staticmethod
+    def SetStreamTemplate(title, ageRestriction, earnRestriction, categoryID, languageID, thumbnailUrl, disableAlert,
+                          saveReplay, tags: []):
+        payload = {
+          "operationName": "SetStreamTemplate",
+          "variables": {
+            "template": {
+              "title": title,
+              "ageRestriction": ageRestriction,
+              "earnRestriction": earnRestriction,
+              "categoryID": categoryID,
+              "languageID": languageID,
+              "thumbnailUrl": thumbnailUrl,
+              "disableAlert": disableAlert,
+              "saveReplay": saveReplay,
+              "tags": tags
+            }
+          },
+          "query": "mutation SetStreamTemplate($template: SetStreamTemplateInput!) {\n  streamTemplateSet(template: $template) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
@@ -757,4 +779,45 @@ class LiveRoomAPI:
             }
           }
         }
+        return payload
+
+    @staticmethod
+    def ClipAdd(streamerPermlink, streamerName, clipUrl, desc, thumbnailUrl, sendChat=True, startTime=0, endTime=60):
+        payload = {
+          "operationName": "ClipAdd",
+          "variables": {
+            "permlink": streamerPermlink,
+            "url": clipUrl,
+            "streamer": streamerName,
+            "description": desc,
+            "thumbnailUrl": thumbnailUrl,
+            "sendChat": sendChat,
+            "startTime": startTime,
+            "endTime": endTime,
+            "recaptchaToken": "03AAYGu2S8w6F90RZCmWzdnRLuFbiVPyuHk4PhyELecbm8kVPVk2LeZH0wULPtlFdVMu3d50GBgAyFmjMjR9F7zMnv2jAfo_HPqgmWE4MlaTKa5nY6cBBd2a3-t-0HV6Rg_339ujmZTtR-xzCVLKn0WGzfRfnToy-Ex7CRZRjAb2Qp9ffVy0nYhNMuxi9X-ODN4I7v1l5VmpDGISDTVd8-1fxJChj3YJyYbk1et_LPnvvCi69fByLnSKQBwxLR7aRQjX2vWBeTbi3dfCXySSZI2ssrPSE8mbkGnDmDSvFyuBWnOVQQe0isNsVFlBF4fdJ7U11A-SYg_og-gCdmaRSwkd48zI16TsDQxUODVLj2COX_aIWUbn23LxIFbIrJAEAdrL1SdgDLEW9LDOsi3VLHLoTETltoiDNyTK45pAfZxbiBIT8LRP49bKUxCz_yoBIRPYg0on7uLXn77hhMSYsoYoy8j1bLhDso6Gq0R9B6jc_JXKMrnD7eMfAd8mzijmlK5AwUwjLu6GAW9rg2Qmw_2-q4ZkILkczbBkvrXiQMAJZr6N5CC5TSUzI"
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "6a4ce76f11d29a750c535bd5558afb71d862241b592189a9799da70fce4a986c"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def ClipViewAdd(id):
+        payload = {
+          "operationName": "ClipViewAdd",
+          "variables": {
+            "id": id
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "afb2d85295db3fe9426254c342514d00093952d6a19f669ac56c3435007f2695"
+            }
+          }
+        }
+        return payload
 
