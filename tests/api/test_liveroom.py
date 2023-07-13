@@ -242,6 +242,58 @@ class TestLivePage:
             print('viewer1_get_lemon: ' + str(viewer1_get_lemon))
             print('viewer2_get_lemon: ' + str(viewer2_get_lemon))
 
+    @allure.title('test_pwd_check')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_pwd_check(self, get_config_data, api_headers):
+        """
+        接口： PwdCheck
+
+        直播间pwd接口检查
+        """
+        with allure.step("检查PwdCheck接口返回无报错"):
+            resp = common.api_post(get_config_data['url'], api_headers,
+                                   Payload.LiveRoomAPI().PwdCheck(get_config_data['follow_streamer']))
+            assert resp['data']['pwdCheck']['err'] is None, '接口返回报错，错误信息是：' + \
+                                                            str(resp['data']['pwdCheck']['err'])
+
+    @allure.title('test_Live_stream_Page')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_Live_stream_Page(self, get_config_data, api_headers):
+        """
+        接口： LivestreamPage
+
+        直播页面接口检查
+        直播间： automation
+        """
+        resp = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().
+                               LivestreamPage(get_config_data['follow_streamer'], False, False))
+        print(resp)
+        with allure.step("检查LivestreamPage接口返回无报错"):
+            assert 'err' not in resp['data'], '接口请求报错'
+        with allure.step('检查直播间的offline图片网址对不对'):
+            url = resp['data']['userByDisplayName']['offlineImage']
+            assert url == 'https://images.stg.dlivecdn.com/thumbnail/87f0bc09-1978-11ee-9872-2aa51b7576fb', \
+                'offline图片网址不对，实际的是： ' + str(url)
+        with allure.step('检查直播间的category是否显示正确'):
+            category = resp['data']['userByDisplayName']['livestream']['category']['title']
+            assert category == 'qaTest', '主播的category显示不对，期望是qaTest，但是实际是：' + str(category)
+        with allure.step('检查主播的displayname显示是否正确'):
+            displayname = resp['data']['userByDisplayName']['livestream']['creator']['displayname']
+            assert displayname == 'automation', '主播的名字显示不对，期望是automation，但是实际是：' + str(displayname)
+        with allure.step('检查主播的title显示是否正确'):
+            title = resp['data']['userByDisplayName']['livestream']['title']
+            assert title == 'Automation test', '主播的title显示不对，期望是Automation test，但是实际是：' + str(title)
+        tag_list = resp['data']['userByDisplayName']['livestream']['tags']
+        with allure.step('检查主播的tag显示是否正确'):
+            assert 'gogo' in tag_list, '主播的tag显示不对，期望是tag，但是实际是：' + str(tag_list)
+        with allure.step('检查主播的语言显示是否正确'):
+            assert 'English' in tag_list, '主播的语言显示不对，期望是English，但是实际是：' + str(tag_list)
+
+
+
+
+
+
     @allure.title('test_streamer_open_chest')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_clip(self, get_config_data, get_follow_streamer_auth_header):
@@ -252,7 +304,7 @@ class TestLivePage:
         """
         currentDateAndTime = datetime.now()
         currentTime = currentDateAndTime.strftime("%H%M%S")
-        streamer_clip_message = 'streamer_clip_self'+ currentTime
+        streamer_clip_message = 'streamer_clip_self' + currentTime
         with allure.step("主播clip自己"):
             stream_clip_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                                Payload.me_clips_by_me())
