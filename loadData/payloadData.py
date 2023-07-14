@@ -891,5 +891,28 @@ class LiveRoomAPI:
             }
         return payload
 
+    @staticmethod
+    def TopContributors(streamDisplayName, rule):
+        if rule == 'THIS_STREAM':
+            queryStream = True
+        else:
+            queryStream = False
+        payload = {
+          "operationName": "TopContributors",
+          "variables": {
+            "displayname": streamDisplayName,
+            "first": 3,
+            "rule": rule,
+            "queryStream": queryStream
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "41f574b3d8a3d0e81c28546c4cebeb2d7179a7dbfa1fc3469e6d681e19fb49d5"
+            }
+          }
+        }
+        return payload
+
 
 

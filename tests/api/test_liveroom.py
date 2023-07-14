@@ -289,12 +289,120 @@ class TestLivePage:
         with allure.step('检查主播的语言显示是否正确'):
             assert 'English' in tag_list, '主播的语言显示不对，期望是English，但是实际是：' + str(tag_list)
 
+    @allure.title('test_Live_room_top_contributors')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_Live_room_top_contributors(self, get_config_data, api_headers):
+        """
+        接口：TopContributors
+
+        检查直播间最佳贡献者排名
+        """
+        with allure.step("检查this stream 最佳贡献者排名是否显示正常"):
+            resp_stream = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().TopContributors(
+                get_config_data['follow_streamer'], 'THIS_STREAM'))
+            print('00000000')
+            print(resp_stream)
+            amount_list = resp_stream['data']['userByDisplayName']['livestream']['topContributions']['list']
+            l = len(amount_list)
+            if l == 0:
+                with allure.step('这个直播间暂时没有人做出贡献'):
+                    print('这个直播间暂时没有人做出贡献')
+            if l == 1:
+                with allure.step('这个直播间只有一个人做出贡献而且贡献值是' + str(amount_list['amount'][:-5])):
+                    print('这个直播间只有一个人做出贡献而且贡献值是' + str(amount_list['amount'][:-5]))
+            if l > 1:
+                with allure.step('这个直播间有多人做出贡献'):
+                    a = 1
+                    amount_new_list = []
+                    for i in amount_list:
+                        amount = str(i['amount'][:-5])
+                        amount_new_list.append(amount)
+                        with allure.step('THIS_STREAM第' + str(a) + '个人的贡献值是：' + amount):
+                            print('THIS_STREAM第' + str(a) + '个人的贡献值是：' + amount)
+                            a += 1
+                    with allure.step('检查贡献者按照倒序排列'):
+                        le = len(amount_new_list)
+                        for j in range(l):
+                            if j == le - 1:
+                                break
+                            else:
+                                with allure.step('检查' + str(int(amount_new_list[j])) + '大于' +
+                                                 str(int(amount_new_list[j + 1]))):
+                                    assert int(amount_new_list[j]) > int(amount_new_list[j + 1])
+
+        with allure.step("检查THIS_MONTH最佳贡献者排名是否显示正常"):
+            resp_month = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().TopContributors(
+                get_config_data['follow_streamer'], 'THIS_MONTH'))
+            amount_list1 = resp_month['data']['userByDisplayName']['topContributions']['list']
+            l1 = len(amount_list1)
+            if l1 == 0:
+                with allure.step('这个月暂时没有人做出贡献'):
+                    print('这个月暂时没有人做出贡献')
+            if l1 == 1:
+                with allure.step('这个月暂时只有一个人做出贡献， 而且贡献值是:' + str(amount_list1['amount'][:-5])):
+                    print('这个月暂时只有一个人做出贡献， 而且贡献值是:' + str(amount_list1['amount'][:-5]))
+            if l1 > 1:
+                with allure.step('这个月有多人做出贡献'):
+                    a = 1
+                    amount_new_list1 = []
+                    for i in amount_list1:
+                        amount = str(i['amount'][:-5])
+                        amount_new_list1.append(amount)
+                        with allure.step('THIS_MONTH第' + str(a) + '个人的贡献值是：' + amount):
+                            print('THIS_MONTH第' + str(a) + '个人的贡献值是：' + amount)
+                            a += 1
+                    with allure.step('检查贡献者按照倒序排列'):
+                        le = len(amount_new_list1)
+                        for j in range(l):
+                            if j == le - 1:
+                                break
+                            else:
+                                with allure.step('检查' + str(int(amount_new_list1[j])) + '大于' +
+                                                 str(int(amount_new_list1[j + 1]))):
+                                    assert int(amount_new_list1[j]) > int(amount_new_list1[j + 1])
+
+        with allure.step("检查ALL_TIME最佳贡献者排名是否显示正常"):
+            resp_all = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().TopContributors(
+                get_config_data['follow_streamer'], 'ALL_TIME'))
+            amount_list2 = resp_all['data']['userByDisplayName']['topContributions']['list']
+            l2 = len(amount_list2)
+            if l2 == 0:
+                with allure.step('开播到现在没人做出贡献值'):
+                    print('开播到现在没人做出贡献值')
+            if l2 == 1:
+                with allure.step('开播到现在只有一个人做出贡献而且贡献值是' + str(amount_list2['amount'][:-5])):
+                    print('开播到现在只有一个人做出贡献而且贡献值是' + str(amount_list2['amount'][:-5]))
+            if l > 1:
+                with allure.step('开播到现在有多人做出贡献而且贡献值是'):
+                    a = 1
+                    amount_new_list2 = []
+                    for i in amount_list2:
+                        amount = str(i['amount'][:-5])
+                        amount_new_list2.append(amount)
+                        with allure.step('ALL_TIME第' + str(a) + '个人的贡献值是：' + amount):
+                            print('ALL_TIME第' + str(a) + '个人的贡献值是：' + amount)
+                            a += 1
+                    with allure.step('检查贡献者按照倒序排列'):
+                        le = len(amount_new_list2)
+                        for j in range(l):
+                            if j == le - 1:
+                                break
+                            else:
+                                with allure.step('检查' + str(int(amount_new_list2[j])) + '大于' +
+                                                 str(int(amount_new_list2[j + 1]))):
+                                    assert int(amount_new_list2[j]) > int(amount_new_list2[j + 1])
 
 
 
 
 
-    @allure.title('test_streamer_open_chest')
+
+
+
+
+
+
+    @allure.title('test_clip')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_clip(self, get_config_data, get_follow_streamer_auth_header):
         """
