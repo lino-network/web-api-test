@@ -6,6 +6,7 @@ apiData:
   follow_streamer_user: automation@nqmo.com
   follow_streamer_pwd: Pwd@1234
   follow_streamer_permlink: automation+2hatMquVg
+  streamer_category_id: 18172     # qatest
   donate_value: 1
   send_message: for automation test   # send message and emo
   dashboard_info:
