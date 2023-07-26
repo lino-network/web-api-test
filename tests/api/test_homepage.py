@@ -125,7 +125,7 @@ class TestHomePage:
 
         # 获取分类列表
         categories = data["data"]["search"]["liveCategories"]["list"]
-
+        print(categories)
         # 检查是否存在"title": "qaTest"
         found_category = False
         for category in categories:
@@ -190,8 +190,6 @@ class TestHomePage:
         # with allure.step('检查用户语言设置是否为英文'):
         #     assert data['data']['me']['private']['language'] == 'en', "Language is not English"
 
-
-
     @allure.title('test_me_balance')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_me_balance(self, get_config_data, get_viewer1_login_auth_header):
@@ -200,8 +198,7 @@ class TestHomePage:
 
         用户: viewer1_username 
         """
-        response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                        Payload.test_me_balance())
+        response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header, Payload.test_me_balance())
         print(response)
 
         assert response["data"]["me"]["wallet"]["balance"] is not None

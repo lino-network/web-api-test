@@ -12,14 +12,19 @@ def normal_header():
     return headers
 
 
-def login(username, password):
+def login(email, password):
     payload = {
           "operationName": "EmailLogin",
           "variables": {
-            "email": "automation@nqmo.com",
-            "password": "Pwd@1234"
+            "email": email,
+            "password": password,
+            "recaptchaToken": 'fewvqv',
           },
-          "query": "mutation EmailLogin($email: String!, $password: String!, $recaptchaToken: String, $deviceType: DeviceType) {\n  loginWithEmail(email: $email, password: $password, recaptchaToken: $recaptchaToken, deviceType: $deviceType) {\n    me {\n      id\n      private {\n        accessToken\n        __typename\n      }\n      __typename\n    }\n    twofactorToken\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+          "query": "mutation EmailLogin($email: String!, $password: String!, $recaptchaToken: String, $deviceType: "
+                   "DeviceType) {\n  loginWithEmail(email: $email, password: $password, recaptchaToken: $recaptchaToken,"
+                   " deviceType: $deviceType) {\n    me {\n      id\n      private {\n        accessToken\n        "
+                   "__typename\n      }\n      __typename\n    }\n    twofactorToken\n    err {\n      code\n      "
+                   "message\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
     return payload
 
@@ -398,12 +403,12 @@ def homepage_nav_search_result(search_text):
             "userFirst": 8,
             "categoryFirst": 3
         },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "4943f85b80688382280a7ffb895f49baa099c624e6878da93c13a433438b6d81"
-            }
-        },
+        # "extensions": {
+        #     "persistedQuery": {
+        #         "version": 1,
+        #         "sha256Hash": "4943f85b80688382280a7ffb895f49baa099c624e6878da93c13a433438b6d81"
+        #     }
+        # },
         "query": "query NavSearchResult($text: String!, $userFirst: Int, $categoryFirst: Int) {\n  search(text: $text) {\n    allUsers(first: $userFirst) {\n      list {\n        ... on Livestream {\n          id\n          category {\n            id\n            title\n            __typename\n          }\n          creator {\n            id\n            ...VDliveAvatarFrag\n            ...VDliveNameFrag\n            followers {\n              totalCount\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        ... on User {\n          id\n          ...VDliveAvatarFrag\n          ...VDliveNameFrag\n          username\n          followers {\n            totalCount\n            __typename\n          }\n          rerun {\n            entries {\n              pastbroadcast {\n                id\n                category {\n                  id\n                  title\n                  __typename\n                }\n                __typename\n              }\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    liveCategories(first: $categoryFirst) {\n      list {\n        id\n        backendID\n        title\n        imgUrl\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
     }
     return payload
@@ -539,17 +544,13 @@ def me_global():  # 个人的一些信息
     }
     return payload
 
+
 def test_me_balance():
     payload = {
 
         "operationName": "MeBalance",
         "variables": {},
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "6e6794dcd570ff8ed544d45483971969db2c8e968a3a082645ae92efa124f3ec"
-            }
-        }
+        "query": "query MeBalance {me {id wallet {balance}}}"
     }
     return payload
 
