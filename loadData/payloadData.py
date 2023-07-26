@@ -433,21 +433,23 @@ def homepage_browse_page_search_category(search_text):
     }
     return payload
 
+
 def homepage_category_live_stream_page(categoryid):
     payload = {
-    "operationName": "CategoryLivestreamsPage",
-    "variables": {
-        "first": 20,
-        "categoryID": categoryid,
-        # "showNSFW": true,
-        #"showMatureContent": true
-    },
-    "extensions": {
-        "persistedQuery": {
-            "version": 1,
-            "sha256Hash": "9d6d443be0fdaefaa701edb464e50582363f63c938d41ebb3ca4de265af126c4"
+        "operationName": "CategoryLivestreamsPage",
+        "variables": {
+            "first": 20,
+            "languageID": None,
+            "categoryID": categoryid,
+            "showNSFW": True,
+            "showMatureContent": True
+        },
+        "extensions": {
+            "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "9d6d443be0fdaefaa701edb464e50582363f63c938d41ebb3ca4de265af126c4"
+            }
         }
-    }
 }
     return payload
 
@@ -465,18 +467,15 @@ def MeBalance():
     }
     return payload
 
+
 def MeRebillyCards():
-    payload ={
-        "operationName": "MeRebillyCards",
-        "variables": {},
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "c338f2610965aa4328a7da2c8012e81f565acf3de7c0c109eb9702507d014511"
-            }
+    payload = {
+          "operationName": "MeRebillyCards",
+          "variables": {},
+          "query": "query MeRebillyCards {\n  me {\n    ...MeRebillyCardsFrag\n    __typename\n  }\n}\n\nfragment MeRebillyCardsFrag on User {\n  id\n  private {\n    userRebillyCards {\n      brand\n      last4\n      id\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
         }
-    }
     return payload
+
 
 def ActivityUserDonationRank():
     payload ={

@@ -204,8 +204,6 @@ class TestHomePage:
         assert response["data"]["me"]["wallet"]["balance"] is not None
         assert response['data']['me']['id'] == 'user:dlive-degnujtptx', "Username is incorrect"
 
-
-
     @allure.title('test_me_rebillycards')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_me_rebillyCards(self, get_config_data, get_viewer1_login_auth_header):
@@ -214,14 +212,10 @@ class TestHomePage:
 
         用户:  automation
         """
-        response = requests.post(get_config_data['url'], get_viewer1_login_auth_header,
-                                Payload.MeRebillyCards())
-        assert response.status_code == 200
-
+        response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header, Payload.MeRebillyCards())
+        print(response)
         assert response["data"]["me"]["id"] == 'user:dlive-degnujtptx'
         assert response["data"]["me"]["private"]["userRebillyCards"] == []
-
-
 
     @allure.title('test_activity_user_donation_rank')
     @allure.severity(allure.severity_level.CRITICAL)
@@ -261,8 +255,6 @@ class TestHomePage:
         print(data_search)
         assert data_search["data"]["search"]["trendingCategories"]["list"][1]["title"] == "qaTest"
 
-
-
     @allure.title('test_live_streams_languages')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_live_streams_languages(self, get_config_data, api_headers):
@@ -280,7 +272,6 @@ class TestHomePage:
         assert data["data"]["languages"][0]["id"] is not None
         assert data["data"]["languages"][0]["language"] == "All"
 
-
     @allure.title('test_homepage_category_live_stream_page')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_category_live_stream_pages(self, get_config_data, api_headers):
@@ -289,14 +280,22 @@ class TestHomePage:
 
         步骤:  category点击games       
         """
-        response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.homepage_category_live_stream_page("-3"))
-        assert response.status_code == 200
-        data = json.loads(response.text)
-        print (data)
-        assert data["data"]["category"]["id"] == "category:-3"
-        assert data["data"]["category"]["title"] == "Games"
-        
+        response = common.api_post(get_config_data['url'], api_headers,
+                                   Payload.homepage_category_live_stream_page(get_config_data['streamer_category_id']))
+        print(response)
+        streamer_list = response["data"]["livestreams"]["list"]
+        with allure.step("检查automation这个直播间是否在category: qatest下面"):
+            streamerExist = False
+            print(streamer_list)
+            for i in streamer_list:
+                if get_config_data['follow_streamer'] in i['permlink']:
+                    streamerExist = True
+                    if streamerExist:
+                        with allure.step("检查category是否显示正确"):
+                            assert i['category']['id'] == "category:" + str(get_config_data['streamer_category_id'])
+                            assert i['title'] == "Automation test"
+                    break
+            assert streamerExist == True, 'automation这个直播间不在category: qatest下面'
 
 
 if __name__ == '__main__':
