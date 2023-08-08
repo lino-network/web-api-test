@@ -15,7 +15,7 @@ apiData:
   chest_info:
     chest_streamer: automation
     chest_streamer_permlimk: automation+2hatMquVg
-    add_lemon: 20
+    add_lemon: 5
     send_msg_chest_user1: Patrick1ios@nqmo.com
     send_msg_chest_user1_pwd: Pwd@1234
     msg: for automation test chest
