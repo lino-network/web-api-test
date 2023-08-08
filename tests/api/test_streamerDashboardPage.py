@@ -15,8 +15,6 @@ class TestStreamerDashboardPage:
 
         检查主播:automation的Dashboard信息是否正确
         """
-        print('888888888888888888888')
-        print(get_follow_streamer_auth_header)
         response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                         Payload.DaskboardAPI().MEDashboard(get_config_data['follow_streamer']))
         print(response_json)
@@ -92,7 +90,7 @@ class TestStreamerDashboardPage:
             else:
                 assert False, 'expected category ' + cate_name + ' not exists'
 
-    @allure.title('test_dashBoardSearchCategory')
+    @allure.title('test_enableAutoRun')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_enableAutoRun(self, get_config_data, get_follow_streamer_auth_header):
         """
@@ -102,10 +100,11 @@ class TestStreamerDashboardPage:
         """
         response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                    Payload.DaskboardAPI().RerunEnableSwitch())
+        print(response)
         with allure.step('检查返回值无error code'):
             assert response['data']['rerunEnable']['err'] is None, 'verify response code is not null'
 
-    @allure.title('test_dashBoardSearchCategory')
+    @allure.title('test_disableAutoRun')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_disableAutoRun(self, get_config_data, get_follow_streamer_auth_header):
         """
