@@ -297,6 +297,60 @@ class TestHomePage:
                     break
             assert streamerExist == True, 'automation这个直播间不在category: qatest下面'
 
+    @allure.title('test_IsUserVerifyEmailButNoPwd')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_IsUserVerifyEmailButNoPwd(self, get_config_data, api_headers):  # 轮播检查
+        """
+        接口： IsUserVerifyEmailButNoPwd
+
+        检查是否验证邮箱接口
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.IsUserVerifyEmailButNoPwd())
+        assert response.status_code == 200
+        data = json.loads(response.text)
+        is_user_verify_email_but_no_pwd = response_json["data"]["IsUserVerifyEmailButNoPwd"]["isUserVerifyEmailButNoPwd"]
+        assert is_user_verify_email_but_no_pwd is False, "'isUserVerifyEmailButNoPwd' is not False."
+
+
+    @allure.title('test_isFirstThirdLogin')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_isFirstThirdLogin(self, get_config_data, api_headers):  # 轮播检查
+        """
+        接口： isFirstThirdLogin
+
+        检查是否验证邮箱接口
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.isFirstThirdLogin())
+        assert response.status_code == 200
+        data = json.loads(response.text)
+        is_first_third_login = response_json["data"]["isFirstThirdLogin"]["isFirstThirdLogin"]
+        assert is_first_third_login is False, "'isFirstThirdLogin' is not False."
+
+
+    @allure.title('test_LiveCarousel')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_LiveCarousel(self, get_config_data, api_headers):  # 轮播检查
+        """
+        接口： LiveCarousel
+
+        检查是否验证邮箱接口
+        """
+        response = requests.post(get_config_data['url'], headers=api_headers,
+                                json=Payload.LiveCarousel())
+        assert response.status_code == 200
+        # 验证 totalCount 字段的值为 5
+        total_count = response_json["data"]["liveCarousel"]["totalCount"]
+        assert total_count == 5, "'totalCount' is not 5."
+
+        # 验证 list 字段不为空
+        carousel_list = response_json["data"]["liveCarousel"]["list"]
+        assert carousel_list, "'list' is empty."
+
+        # 验证 list 中每一项不为空
+        for item in carousel_list:
+            assert item, "An item in 'list' is empty."
 
 if __name__ == '__main__':
     print('e2rwf')
