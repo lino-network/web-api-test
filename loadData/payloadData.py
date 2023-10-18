@@ -978,3 +978,58 @@ class LiveRoomAPI:
             #          "...VDliveNameFrag"
             #          "...VDliveAvatarFrag}}}}}}"
         return payload
+    @staticmethod
+    def IsUserVerifyEmailButNoPwd(streamerDisplayName, isLoggedIn=True):
+        payload = {
+            "operationName": "IsUserVerifyEmailButNoPwd",
+            "variables": {
+                "username": "automation"
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "74b11202f62d608807a83abf4e6a4416ded05cd885e51ff726b7c72f2f655f10"
+                }
+            }
+        }  
+        return payload
+
+    @staticmethod
+    def isFirstThirdLogin(streamerDisplayName, isLoggedIn=True):
+        payload = {
+            "operationName": "isFirstThirdLogin",
+            "variables": {
+                "username": "automation"
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "ac7d37ad694d1630c7a972cec72c0d17669fb7fcdad9ce2edb0879217b734605"
+                }
+            }
+        } 
+        return payload
+
+
+
+    @staticmethod
+    def LiveCarousel(streamerDisplayName, isLoggedIn=True):
+        payload = {
+            "operationName": "LiveCarousel",
+            "variables": {
+                "input": {
+                    "first": 5,
+                    "showNSFW": true,
+                    "showMatureContent": true,
+                    "languageID": 1
+                }
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "0d63e672bde23e03a59810b22408aa61fbee9e89c3540feccb90717ff86f9757"
+                }
+            }
+        }
+        return payload
+
