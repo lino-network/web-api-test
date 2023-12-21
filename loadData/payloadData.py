@@ -436,55 +436,16 @@ def homepage_browse_page_search_category(search_text):
 def homepage_category_live_stream_page(categoryid):
     payload = {
         "operationName": "CategoryLivestreamsPage",
-        "variables": {
+          "variables": {
             "first": 20,
-            "languageID": None,
             "categoryID": categoryid,
+            "languageID": None,
             "showNSFW": True,
             "showMatureContent": True
-        },
-        "query": "query CategoryLivestreamsPage("
-                 "$first: Int "
-                 "$after: String"
-                 "$languageID: Int"
-                 "$categoryID: Int!"
-                 "$showNSFW: Boolean"
-                 "$order: LivestreamSortOrder"
-                 "$userLanguageCode: String"
-                 "$showMatureContent: Boolean) {"
-                 "category(id: $categoryID) {"
-                 "  id"
-                 "backendID"
-                 "title"
-                 "imgUrl"
-                 "coverImgUrl"
-                 "watchingCount"
-                 "languages {"
-                 " ...LanguageFrag"
-                 "}"
-                 "}"
-                 "livestreams("
-                 "input: {"
-                 "first: $first"
-                 "after: $after"
-                 "languageID: $languageID"
-                 "categoryID: $categoryID"
-                 "showNSFW: $showNSFW"
-                 "order: $order"
-                 "userLanguageCode: $userLanguageCode"
-                 "showMatureContent: $showMatureContent"
-                 "}"
-                 ") {"
-                 "...VCategoryLivestreamFrag"
-                 " }"
-                 "}",
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "9d6d443be0fdaefaa701edb464e50582363f63c938d41ebb3ca4de265af126c4"
-            }
+          },
+          "query": "query CategoryLivestreamsPage($first: Int, $after: String, $languageID: Int, $categoryID: Int!, $showNSFW: Boolean, $order: LivestreamSortOrder, $userLanguageCode: String, $showMatureContent: Boolean) {\n  category(id: $categoryID) {\n    id\n    backendID\n    title\n    imgUrl\n    coverImgUrl\n    watchingCount\n    languages {\n      ...LanguageFrag\n      __typename\n    }\n    __typename\n  }\n  livestreams(input: {first: $first, after: $after, languageID: $languageID, categoryID: $categoryID, showNSFW: $showNSFW, order: $order, userLanguageCode: $userLanguageCode, showMatureContent: $showMatureContent}) {\n    ...VCategoryLivestreamFrag\n    __typename\n  }\n}\n\nfragment VCategoryLivestreamFrag on LivestreamConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    permlink\n    ageRestriction\n    earnRestriction\n    ...VLivestreamSnapFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VLivestreamSnapFrag on Livestream {\n  id\n  creator {\n    id\n    username\n    displayname\n    myChatBadges\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  watchingCount\n  earnRestriction\n  ageRestriction\n  thumbnailUrl\n  lastUpdatedAt\n  category {\n    id\n    title\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  tags\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment LanguageFrag on Language {\n  id\n  backendID\n  language\n  code\n  __typename\n}\n"
         }
-    }
+
     return payload
 
 
@@ -978,12 +939,15 @@ class LiveRoomAPI:
             #          "...VDliveNameFrag"
             #          "...VDliveAvatarFrag}}}}}}"
         return payload
+
+
+class LoginAPI:
     @staticmethod
-    def IsUserVerifyEmailButNoPwd(streamerDisplayName, isLoggedIn=True):
+    def IsUserVerifyEmailButNoPwd(streamerDisplayName):
         payload = {
             "operationName": "IsUserVerifyEmailButNoPwd",
             "variables": {
-                "username": "automation"
+                "username": streamerDisplayName
             },
             "extensions": {
                 "persistedQuery": {
@@ -991,7 +955,7 @@ class LiveRoomAPI:
                     "sha256Hash": "74b11202f62d608807a83abf4e6a4416ded05cd885e51ff726b7c72f2f655f10"
                 }
             }
-        }  
+        }
         return payload
 
     @staticmethod
@@ -1007,20 +971,20 @@ class LiveRoomAPI:
                     "sha256Hash": "ac7d37ad694d1630c7a972cec72c0d17669fb7fcdad9ce2edb0879217b734605"
                 }
             }
-        } 
+        }
         return payload
 
 
-
+class HomePageAPI:
     @staticmethod
-    def LiveCarousel(streamerDisplayName, isLoggedIn=True):
+    def LiveCarousel():
         payload = {
             "operationName": "LiveCarousel",
             "variables": {
                 "input": {
                     "first": 5,
-                    "showNSFW": true,
-                    "showMatureContent": true,
+                    "showNSFW": True,
+                    "showMatureContent": True,
                     "languageID": 1
                 }
             },
