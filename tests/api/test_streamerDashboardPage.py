@@ -3,6 +3,7 @@ import allure
 import pytest
 import loadData.payloadData as Payload
 from tests import common
+from datetime import datetime
 
 
 @allure.feature('test_streamerDashboardPage')
@@ -116,6 +117,49 @@ class TestStreamerDashboardPage:
                                    Payload.DaskboardAPI().RerunDisableSwitch())
         with allure.step('检查返回值无error code'):
             assert response['data']['rerunDisable']['err'] is None, 'verify response code is not null'
+
+    @allure.title('test_SubscriberSettings')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_SubscriberSettings(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：SetSubSettings
+
+        设置subscription 信息
+        """
+        currentDateAndTime = datetime.now()
+        currentTime = currentDateAndTime.strftime("%H%h%S")
+        benefits = 'automationTest_' + currentTime
+        backgroundImage = "https://images.stg.dlivecdn.com/thumbnail/bd939713-ea48-11ed-a524-425e9654e40d"
+        badgeColor = "#FF0066"
+        badgeText = "autoTest"
+        streakTextColor = "#FFD300"
+        textColor = "#800080"
+        payload = Payload.DaskboardAPI().SetSubSettings(benefits=benefits, badgeColor=badgeColor, badgeText=badgeText,
+                                                        streakTextColor=streakTextColor,
+                                                        textColor=textColor, backgroundImage=backgroundImage)
+        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header, payload)
+        with allure.step('检查返回值无error code'):
+            assert response['data']['subSettingSet']['err'] is None, 'verify response code is not null'
+
+        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header, Payload.DaskboardAPI.MEDashboard(get_config_data['follow_streamer']))
+        subSetting = response['data']['me']['subSetting']
+        print('2222')
+        print(subSetting)
+        with allure.step('检查badgeColor是否更新正确'):
+            assert subSetting['badgeColor'] == badgeColor, '修改badge color 不成功，修改成：' + badgeColor + \
+                                                          '而实际是:' + subSetting['badgeColor']
+        with allure.step('badgeText'):
+            assert subSetting['badgeText'] == badgeText, '修改badgeText 不成功，修改成：' + badgeText + \
+                                                          '而实际是:' + subSetting['badgeText']
+        with allure.step('检查streakTextColor是否更新正确'):
+            assert subSetting['streakTextColor'] == streakTextColor, '修改streakTextColor不成功，修改成：' + streakTextColor + \
+                                                          '而实际是:' + subSetting['streakTextColor']
+        with allure.step('检查textColor是否更新正确'):
+            assert subSetting['textColor'] == textColor, '修改textColor不成功，修改成：' + textColor + \
+                                                          '而实际是:' + subSetting['textColor']
+        with allure.step('检查benefits是否更新正确'):
+            assert subSetting['benefits'][0] == benefits, '修改benefits不成功，修改成：' + benefits + \
+                                                          '而实际是:' + subSetting['benefits']
 
 
 if __name__ == '__main__':
