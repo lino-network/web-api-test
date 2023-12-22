@@ -20,7 +20,8 @@ class TestHomePage:
         检查轮播接口
         """
         with allure.step('检查轮播接口'):
-            response_json = common.api_post(get_config_data['url'], api_headers, Payload.homepage_carousels())
+            response_json = common.api_post(get_config_data['url'], api_headers,
+                                            Payload.HomePageAPI().homepage_carousels())
             print(response_json)
             with allure.step('检查轮播的位置是否为5'):
                 assert len(response_json['data']['carousels']) == 5
@@ -36,7 +37,7 @@ class TestHomePage:
         检查首页直播流接口
         """
         with allure.step('检查首页直播流接口'):
-            response_json = common.api_post(get_config_data['url'], api_headers, Payload.homepage_livestream())
+            response_json = common.api_post(get_config_data['url'], api_headers, Payload.HomePageAPI().homepage_livestream())
             print(response_json)
             with allure.step('检查轮播接口的返回值不为空 '):
                 assert len(response_json['data']['livestreams']['list']) is not None
@@ -52,7 +53,7 @@ class TestHomePage:
         检查主页推荐系统
         """
         with allure.step('检查主页推荐系统 '):
-            response_json = common.api_post(get_config_data['url'], api_headers, Payload.homepage_list_recommendation())
+            response_json = common.api_post(get_config_data['url'], api_headers, Payload.HomePageAPI().homepage_list_recommendation())
             print(response_json)
             data = response_json.get('data')
             home_page_list_recommendation = data.get('listRecommendation')
@@ -72,7 +73,7 @@ class TestHomePage:
         """
         with allure.step("主页左边的推荐列表"):
             response_json = common.api_post(get_config_data['url'], api_headers,
-                                            Payload.homepage_global_information_recommend())
+                                            Payload.HomePageAPI().homepage_global_information_recommend())
             # 判断 recommendChannels 数组是否为空
             recommend_channels = response_json['data']['globalInfo']['recommendChannels']
             with allure.step('检查数据不为空'):
@@ -91,7 +92,7 @@ class TestHomePage:
         """
         with allure.step('检查首页搜索功能'):
             data = common.api_post(get_config_data['url'], api_headers,
-                                   Payload.homepage_nav_search_result("automation"))
+                                   Payload.HomePageAPI().homepage_nav_search_result("automation"))
             # 解析返回结果
             print(data)
             users = data['data']['search']['allUsers']['list']
@@ -109,7 +110,7 @@ class TestHomePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_nav_search_category(self, get_config_data, api_headers):
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.homepage_nav_search_result("qatest"))
+                                json=Payload.HomePageAPI().homepage_nav_search_result("qatest"))
         assert response.status_code == 200
         # 解析返回结果
         data = json.loads(response.text)
@@ -243,13 +244,13 @@ class TestHomePage:
         步骤:  category点击show all        
         """
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.homepage_browse_page_search_category(""))
+                                json=Payload.HomePageAPI().homepage_browse_page_search_category(""))
         # assert response.status_code == 200 
         data = json.loads(response.text)
         assert data["data"]["search"]["trendingCategories"]["list"] is not None
 
         response_search = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.homepage_browse_page_search_category("qa"))
+                                json=Payload.HomePageAPI().homepage_browse_page_search_category("qa"))
         assert response_search.status_code == 200
         data_search = json.loads(response_search.text)
         print(data_search)
@@ -281,7 +282,7 @@ class TestHomePage:
         步骤:  category点击games       
         """
         response = common.api_post(get_config_data['url'], api_headers,
-                                   Payload.homepage_category_live_stream_page(get_config_data['streamer_category_id']))
+                                   Payload.HomePageAPI().homepage_category_live_stream_page(get_config_data['streamer_category_id']))
         print(response)
         streamer_list = response["data"]["livestreams"]["list"]
         with allure.step("检查automation这个直播间是否在category: qatest下面"):
