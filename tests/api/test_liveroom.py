@@ -82,7 +82,7 @@ class TestLivePage:
             print(currentTime)
             message = "AAA " + get_config_data['send_message'] + '_' + currentTime
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                            Payload.send_chat(get_config_data['follow_streamer'], message, [0, 2]))
+                                            Payload.LiveRoomAPI().send_chat(get_config_data['follow_streamer'], message, [0, 2]))
             print(response_json)
         with allure.step('检查返回值不报错'):
             assert response_json['data']['sendStreamchatMessage']['err'] is None
@@ -103,7 +103,7 @@ class TestLivePage:
         with allure.step('开始打赏 1 lemon'):
             print('donate lemon is: ' + str(get_config_data['donate_value']))
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                            Payload.donate_lemon(get_config_data['follow_streamer_permlink'],
+                                            Payload.LiveRoomAPI().donate_lemon(get_config_data['follow_streamer_permlink'],
                                                                  get_config_data['donate_value']))
             print(response_json)
             with allure.step('检查放回值无报错'):
@@ -133,7 +133,7 @@ class TestLivePage:
         with allure.step('用户 ' + str(get_config_data['gift_sub_info']['give_sub_gift_user'])
                          + ' 发送5 个gift在直播间：' + str(get_config_data['gift_sub_info']['streamer'])):
             gift_response_json = common.api_post(get_config_data['url'], header,
-                                                 Payload.add_gift_sub(get_config_data['gift_sub_info']['streamer'], 5))
+                                                 Payload.LiveRoomAPI().add_gift_sub(get_config_data['gift_sub_info']['streamer'], 5))
             print(gift_response_json)
             with allure.step('检查返回值无报错'):
                 assert gift_response_json['data']['giftSub']['err'] is None
@@ -144,7 +144,7 @@ class TestLivePage:
                                                          i['get_gift_sub_user_pwd'])
             with allure.step('用户' + str(i['get_gift_sub_user']) + ' 领取gift sub'):
                 claim_response_json = common.api_post(get_config_data['url'], viewer_header,
-                                                      Payload.add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
+                                                      Payload.LiveRoomAPI().add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
                 print('claim_response_json')
                 with allure.step('检查用户 ' + str(i['get_gift_sub_user']) + ' 领取gift sub 的时候无报错'):
                     assert claim_response_json['data']['giftSubClaim']['err'] is None
@@ -189,11 +189,11 @@ class TestLivePage:
                                                       get_config_data['chest_info']['chest_user_no_point_pwd'])
         with allure.step(str(get_config_data['chest_info']['send_msg_chest_user1']) + 'send message to chat'):
             msg_response = common.api_post(get_config_data['url'],
-                                           viewer1_header, Payload.send_chat(get_config_data['chest_info']['chest_streamer'],
+                                           viewer1_header, Payload.LiveRoomAPI().send_chat(get_config_data['chest_info']['chest_streamer'],
                                                                              get_config_data['chest_info']['msg'], []))
         with allure.step(str(get_config_data['chest_info']['donate_chest_user2'] + 'donate lemon')):
             donate_response = common.api_post(get_config_data['url'], viewer2_header,
-                                              Payload.donate_lemon(
+                                              Payload.LiveRoomAPI().donate_lemon(
                                                   get_config_data['chest_info']['chest_streamer_permlimk']
                                               , get_config_data['chest_info']['donate_lemon_value']))
         chest_streamer = get_config_data['chest_info']['chest_streamer']
