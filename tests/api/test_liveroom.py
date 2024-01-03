@@ -1,8 +1,10 @@
 import os
 import time
 import pytest
+from dateutil.relativedelta import relativedelta
+
 import loadData.payloadData as Payload
-from datetime import datetime
+from datetime import datetime, timedelta
 import allure
 import tests.common as common
 
@@ -232,13 +234,14 @@ class TestLivePage:
                 assert get_config_data['chest_info']['chest_user_no_point_user'] not in winner_list
             message_user = False
             donate_user = False
+            time.sleep(60)
             for i in winner_list:
                 if i['user']['displayname'] in get_config_data['chest_info']['send_msg_chest_user1']:
                     viewer1_get_lemon = int(i['value']) / 100000
                     print('发信息的观众在中奖名单而且中奖金额是： ' + str(viewer1_get_lemon))
                     assert True
                     message_user = True
-                    with allure.step('检查viewer1宝箱中奖的lemon 是否加入用户帐号'):
+                    with allure.step('检查send message用户的宝箱中奖的lemon 是否加入用户帐号'):
                         viewer1_after_lemon = common.get_account_lemon(get_config_data['url'], viewer1_header)
                         assert int(viewer1_origin_lemon) + int(viewer1_get_lemon) <= int(viewer1_after_lemon) \
                                < int(viewer1_after_lemon) + 2
@@ -247,7 +250,7 @@ class TestLivePage:
                     print('donate的观众在中奖名单而且中奖金额是： ' + str(viewer2_get_lemon))
                     assert True
                     donate_user = True
-                    with allure.step('检查viewer1宝箱中奖的lemon 是否加入用户帐号'):
+                    with allure.step('检查打赏用户宝箱中奖的lemon 是否加入用户帐号'):
                         viewer2_after_lemon = common.get_account_lemon(get_config_data['url'], viewer2_header)
                         assert int(viewer2_origin_lemon) + int(viewer2_get_lemon) <= int(viewer2_after_lemon) \
                                < int(viewer2_after_lemon) + 2
@@ -288,7 +291,7 @@ class TestLivePage:
             assert 'err' not in resp['data'], '接口请求报错'
         with allure.step('检查直播间的offline图片网址对不对'):
             url = resp['data']['userByDisplayName']['offlineImage']
-            assert url == 'https://images.stg.dlivecdn.com/thumbnail/87f0bc09-1978-11ee-9872-2aa51b7576fb', \
+            assert url == 'https://images.stg.dlivecdn.com/thumbnail/2f067ebf-42ea-11ee-8c81-aedbe0993999', \
                 'offline图片网址不对，实际的是： ' + str(url)
         with allure.step('检查直播间的category是否显示正确'):
             category = resp['data']['userByDisplayName']['livestream']['category']['title']
@@ -408,37 +411,72 @@ class TestLivePage:
                                                  str(int(amount_new_list2[j + 1]))):
                                     assert int(amount_new_list2[j]) > int(amount_new_list2[j + 1])
 
-
-
-
-
-
-
-
-
-
-
-    @allure.title('test_clip')
+    @allure.title('test_subscription_and_cancel_sub')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_clip(self, get_config_data, get_follow_streamer_auth_header):
+    def test_subscription_and_cancel_sub(self, get_config_data, get_follow_streamer_auth_header):
         """
-        接口：MeClipsOfMe, MeClipsByMe
+        接口：AddSubscribe, MeSubscribing, UserUnsubscribe
 
-        主播clip 自己和观众clip 主播
+        主播：automation去订阅并取消连续订阅
         """
         currentDateAndTime = datetime.now()
-        currentTime = currentDateAndTime.strftime("%H%M%S")
-        streamer_clip_message = 'streamer_clip_self' + currentTime
-        with allure.step("主播clip自己"):
-            stream_clip_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                               Payload.me_clips_by_me())
-
-
-
-
-
-
-
+        currentTime = currentDateAndTime.strftime("%b %d, %Y")
+        print("当前订阅时间：" + currentTime)
+        next_month = currentDateAndTime + relativedelta(months=1)
+        next_month_sub_date = next_month.strftime("%b %d, %Y")
+        print("下次续费时间：" + next_month_sub_date)
+        sub_streamer = get_config_data['subscription_streamer']
+        print(sub_streamer)
+        with allure.step("获取订阅前的lemon数量"):
+            sub_before_lemon = common.get_account_lemon(get_config_data['url'], get_follow_streamer_auth_header)
+            print("Before subscription lemon is: " + str(sub_before_lemon))
+        with allure.step("用户：" + get_config_data['follow_streamer'] + "订阅主播间" + sub_streamer):
+            sub_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.LiveRoomAPI().AddSubscription(sub_streamer, 1))
+            print(sub_resp)
+        with allure.step("检查开始订阅的时间"):
+            print("开始订阅的日期为：" + currentTime)
+        with allure.step("检查返回error is Null, Cash back is Null"):
+            assert sub_resp['data']['subscribeWithCashback']['err'] is None
+            assert sub_resp['data']['subscribeWithCashback']['cashbacked'] is None
+        time.sleep(60)
+        with allure.step("获取订阅后的lemon数量"):
+            sub_after_lemon = common.get_account_lemon(get_config_data['url'], get_follow_streamer_auth_header)
+            print("Before subscription lemon is: " + str(sub_after_lemon))
+        with allure.step("检查订阅后lemon是否只是扣了一个月298个lemon"):
+            assert int(sub_after_lemon) + 298 == int(sub_before_lemon)
+        with allure.step('检查订阅成功后，订阅时间续费时间是否正确'):
+            next_month = currentDateAndTime + relativedelta(months=1)
+            print('时间的下个月订阅的当天时间是：' + next_month.strftime("%b %d，%Y"))
+            with allure.step('获取用户的订阅列表'):
+                resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.LiveRoomAPI().MeSubscribing())
+                sub_list = resp['data']['me']['private']['subscribing']['list']
+                for i in sub_list:
+                    if i['streamer']['username'] == sub_streamer:
+                        print('订阅主播成功')
+                        assert True, '订阅主播不成功'
+                        next_date = i['nextBillingAt']
+                        date = (datetime.fromtimestamp(int(next_date) / 1000)).strftime("%b %d, %Y")
+                        print('实际下一次扣费的时间是：' + date)
+                        assert str(i['status']) == 'active', '订阅以后状态没更新，期望的是订阅以后状态变成active，' \
+                                                             '而实际是： ' + str(i['status'])
+                        assert str(next_month_sub_date) == str(date), '扣费时间不行，期望下次扣费时间是： ' + \
+                                                                      str(next_month_sub_date) + '而实际是:' + str(date)
+                        break
+        with allure.step("检查是否能cancel订阅"):
+            resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.LiveRoomAPI().UserUnsubscribe(sub_streamer))
+            time.sleep(60)
+            cancel_sub = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                            Payload.LiveRoomAPI().MeSubscribing())
+            sub_list1 = cancel_sub['data']['me']['private']['subscribing']['list']
+            with allure.step('检查取消订阅成功与否'):
+                assert resp['data']['unsubscribe']['err'] is None, '取消订阅不成功'
+                for i in sub_list1:
+                    if i['streamer']['username'] == sub_streamer:
+                        assert str(i['status']) == 'p_cancel', '取消订阅以后状态没更新，期望的是取消订阅以后状态变成p_cancel' \
+                                                               '而实际是： ' + str(i['status'])
 
 
 if __name__ == '__main__':
