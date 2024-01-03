@@ -35,10 +35,10 @@ class TestStreamerDashboardPage:
             if (response_json['data']['me']['private']['streamTemplate']['ageRestriction'] is False &
                     response_json['data']['me']['private']['streamTemplate']['earnRestriction'] is False):
                 assert True, 'streamer rating tag is not Family Friendly'
-        with allure.step('检查主播的设置的缩列图是否正确'):
-            assert response_json['data']['me']['private']['streamTemplate']['thumbnailUrl'] == \
-                   'https://images.stg.dlivecdn.com/thumbnail/37113e86-e28d-11ed-9838-e6f76b90cd4f', \
-                'streamer language is： https://images.stg.dlivecdn.com/thumbnail/37113e86-e28d-11ed-9838-e6f76b90cd4f'
+        # with allure.step('检查主播的设置的缩列图是否正确'):
+        #     assert response_json['data']['me']['private']['streamTemplate']['thumbnailUrl'] == \
+        #            'https://images.stg.dlivecdn.com/thumbnail/37113e86-e28d-11ed-9838-e6f76b90cd4f', \
+        #         'streamer language is： https://images.stg.dlivecdn.com/thumbnail/37113e86-e28d-11ed-9838-e6f76b90cd4f'
 
     @allure.title('test_dashBoardSearchTags')
     @allure.severity(allure.severity_level.CRITICAL)

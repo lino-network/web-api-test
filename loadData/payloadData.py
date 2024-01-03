@@ -735,6 +735,55 @@ class LiveRoomAPI:
             #          "...VDliveAvatarFrag}}}}}}"
         return payload
 
+    @staticmethod
+    def AddSubscription(streamerName, month):
+        payload = {
+              "operationName": "AddSubscribe",
+              "variables": {
+                "streamer": streamerName,
+                "month": month
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "e1768410429a8a28c5d8104fa12a6ca2bbcdc2605a0b0a0c354c2a3ddd617c6e"
+                }
+              }
+            }
+        return payload
+
+    @staticmethod
+    def MeSubscribing():
+        payload = {
+          "operationName": "MeSubscribing",
+          "variables": {
+            "first": 50
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "18129274ce05949ed82e94fd855132ea8a811c74dae6bd7f279bf1519b41b6c3"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def UserUnsubscribe(streamer_name):
+        payload = {
+          "operationName": "UserUnsubscribe",
+          "variables": {
+            "streamer": streamer_name
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "628f90aa017d2307a685102f735758934e31ed3098259a2401f3d38326214ac5"
+            }
+          }
+        }
+        return payload
+
 
 class LoginAPI:
     @staticmethod

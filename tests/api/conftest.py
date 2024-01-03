@@ -24,6 +24,27 @@ from loadData import payloadData
 import os
 import sys
 
+import pytest
+
+
+
+# @pytest.hookimpl(hookwrapper=True, tryfirst=True)
+# def pytest_runtest_makereport(item, call):
+#     print('------------------------------------')
+#
+#     # 获取钩子方法的调用结果，返回一个result对象
+#     out = yield
+#     print('用例执行结果', out)
+#
+#     # 从钩子方法的调用结果中获取测试报告
+#     report = out.get_result()
+#
+#     print('测试报告：%s' % report)
+#     print('步骤：%s' % report.when)
+#     print('nodeid：%s' % report.nodeid)
+#     print('description:%s' % str(item.function.__doc__))
+#     print(('运行结果: %s' % report.outcome))
+
 
 @pytest.fixture(scope='session')
 def get_config_data():
@@ -60,4 +81,6 @@ def get_follow_streamer_auth_header(get_config_data):
     auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['follow_streamer_user'],
                                                get_config_data['follow_streamer_pwd'])
     return auth_header
+
+
 
