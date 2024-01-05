@@ -71,7 +71,7 @@ def api_headers():
 
 @pytest.fixture(scope='session')
 def get_viewer1_login_auth_header(get_config_data):
-    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['viewer1_username'],
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['viewer1_loginEmail'],
                                                get_config_data['viewer1_pwd'])
     return auth_header
 

@@ -1,7 +1,8 @@
 apiData:
   url: https://graphigo.stg.dlive.tv/
-  viewer1_username: 66@nqmo.com
+  viewer1_loginEmail: 66@nqmo.com
   viewer1_pwd: password1234
+  viewer1_username: dlive-degnujtptx
   follow_streamer: automation
   follow_streamer_user: automation@nqmo.com
   follow_streamer_pwd: Pwd@1234
@@ -9,7 +10,7 @@ apiData:
   streamer_category_id: 18172     # qatest
   donate_value: 1
   send_message: for automation test   # send message and emo
-  subscription_streamer: lauren1         # 每次执行需要填写新的主播的名字，因为每次订阅过了就不能重新订阅了, 用username
+  subscription_streamer: helenstreamer         # 每次执行需要填写新的主播的名字，因为每次订阅过了就不能重新订阅了, 用username
   dashboard_info:
     search_tag: lol
     search_category: Art
