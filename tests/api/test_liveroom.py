@@ -478,6 +478,70 @@ class TestLivePage:
                         assert str(i['status']) == 'p_cancel', '取消订阅以后状态没更新，期望的是取消订阅以后状态变成p_cancel' \
                                                                '而实际是： ' + str(i['status'])
 
+    @allure.title('test_subscription_streamer_self')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_subscription_streamer_self(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：AddSubscribe
+        主播：automation去订阅自己失败
+        """
+        sub_streamer = get_config_data['follow_streamer']
+        with allure.step("用户：" + sub_streamer + "无法订阅自己"):
+            sub_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.LiveRoomAPI().AddSubscription(sub_streamer, 1))
+            print(sub_resp)
+            with allure.step('检查订阅自己时error code返回7004'):
+                assert sub_resp['data']['subscribeWithCashback']['err']['code'] == 7004
+            with allure.step('检查订阅自己时cashbacked返回None'):
+                assert sub_resp['data']['subscribeWithCashback']['cashbacked'] is None
+
+    @allure.title('test_ban_unban_chat_user')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_ban_unban_chat_user(self, get_config_data, get_follow_streamer_auth_header,
+                                 get_viewer1_login_auth_header):
+        """
+        接口：BanStreamChatUser, UnbanStreamChatUser, SendMessage
+        测试主播：automation ban和unban 用户并发送信息
+        """
+        streamer = get_config_data['follow_streamer']
+        user = get_config_data['viewer1_username']
+        before_ban_user_message = ' before ban test ban user'
+        ban_message = 'ban user test'
+        after_unban_user_message = 'after ban test unban user'
+        verify_message = 'message.AddMessage banned from stream chat'
+        with allure.step('检查用户被ban 之前能发信息'):
+            before_response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.LiveRoomAPI().send_chat(streamer, before_ban_user_message, [0, 2]))
+            print(before_response_json)
+            with allure.step('检查返回值不报错'):
+                assert before_response_json['data']['sendStreamchatMessage']['err'] is None
+            with allure.step('检查返回的信息就是发送的信息'):
+                assert before_response_json['data']['sendStreamchatMessage']['message']['content'] == \
+                   before_ban_user_message
+        with allure.step("主播：" + streamer + "开始ban 用户" + user + '返回值无报错'):
+            ban_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.LiveRoomAPI().BanStreamChatUser(streamer, user))
+            assert ban_resp['data']['streamchatUserBan']['err'] is None
+        with allure.step('检查用户被ban 之后不能发信息'):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                                  Payload.LiveRoomAPI().send_chat(streamer,
+                                                                                  ban_message, [0, 2]))
+            print(response_json)
+            assert response_json['data']['sendStreamchatMessage']['err']['code'] == 6001
+            assert response_json['data']['sendStreamchatMessage']['err']['message'] == verify_message
+        with allure.step('检查unban 用户之后能发信息'):
+            unban_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                         Payload.LiveRoomAPI().UnbanStreamChatUser(streamer, user))
+            with allure.step("主播：" + streamer + "unban 用户" + user + '返回值无报错'):
+                assert unban_resp['data']['streamchatUserUnban']['err'] is None
+            after_response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                                    Payload.LiveRoomAPI().send_chat(streamer,
+                                                                                    after_unban_user_message, [0, 2]))
+            print(after_response_json)
+            with allure.step('检查返回的信息就是发送的信息'):
+                assert after_response_json['data']['sendStreamchatMessage']['message']['content'] == \
+                   after_unban_user_message
+            
 
 if __name__ == '__main__':
     print('e2rwf')

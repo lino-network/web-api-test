@@ -721,18 +721,6 @@ class LiveRoomAPI:
                      "topContributions(first: $first, after: $after) {pageInfo{endCursor hasNextPage}"
                      "list{amount contributor{id displayname partnerStatus avatar effect}}}}}}"
         }
-            # "query": "query TopContributors($displayname: String! $rule: ContributionSummaryRule $first: Int"
-            #          "$after: String $queryStream: Boolean!) {"
-            #          "userByDisplayName(displayname: $displayname) {id "
-            #          "id topContributions(rule: $rule, first: $first, after: $after) {pageInfo {endCursor hasNextPage}"
-            #          "list {amount contributor {id "
-            #          "...VDliveNameFrag"
-            #          "...VDliveAvatarFrag}}} @skip(if: $queryStream)"
-            #          "livestream @include(if: $queryStream) {"
-            #          "id topContributions(first: $first, after: $after) {pageInfo {endCursor hasNextPage}"
-            #          "list {amount contributor {id"
-            #          "...VDliveNameFrag"
-            #          "...VDliveAvatarFrag}}}}}}"
         return payload
 
     @staticmethod
@@ -743,12 +731,15 @@ class LiveRoomAPI:
                 "streamer": streamerName,
                 "month": month
               },
-              "extensions": {
-                "persistedQuery": {
-                  "version": 1,
-                  "sha256Hash": "e1768410429a8a28c5d8104fa12a6ca2bbcdc2605a0b0a0c354c2a3ddd617c6e"
-                }
-              }
+              # "extensions": {
+              #   "persistedQuery": {
+              #     "version": 1,
+              #     "sha256Hash": "e1768410429a8a28c5d8104fa12a6ca2bbcdc2605a0b0a0c354c2a3ddd617c6e"
+              #   }
+              # },
+            "query": "mutation AddSubscribe($streamer: String!, $month: Int) {\n  subscribeWithCashback(streamer: "
+                     "$streamer, month: $month) {\n    err {\n      code\n      __typename\n    }\n    "
+                     "cashbacked\n    __typename\n  }\n}\n"
             }
         return payload
 
@@ -781,6 +772,53 @@ class LiveRoomAPI:
               "sha256Hash": "628f90aa017d2307a685102f735758934e31ed3098259a2401f3d38326214ac5"
             }
           }
+        }
+        return payload
+
+    @staticmethod
+    def BanStreamChatUser(streamer, banUser):
+        payload = {
+          "operationName": "BanStreamChatUser",
+          "variables": {
+            "streamer": streamer,
+            "username": banUser
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "4eaeb20cba25dddc95df6f2acf8018b09a4a699cde468d1e8075d99bb00bacc4"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def UnbanStreamChatUser(streamer, banUser):
+        payload = {
+          "operationName": "UnbanStreamChatUser",
+          "variables": {
+            "streamer": streamer,
+            "username": banUser,
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "574e9a8db47ff719844359964d6108320e4d35f0378d7f983651d87b315d4008"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def StreamChatBannedUsers(streamer_display):
+        payload = {
+          "operationName": "StreamChatBannedUsers",
+          "variables": {
+            "displayname": streamer_display,
+            "first": 20,
+            "search": ""
+          },
+          "query": "query StreamChatBannedUsers($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatBannedUsers(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
         }
         return payload
 
