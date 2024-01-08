@@ -822,6 +822,98 @@ class LiveRoomAPI:
         }
         return payload
 
+    @staticmethod
+    def AddModerator(streamer, user):
+        payload = {
+          "operationName": "AddModerator",
+          "variables": {
+            "username": user,
+            "streamer": streamer
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "062727612e825ec7e8307b176f7a60fb71bb205eb4cd432020af9c476362471f"
+            }
+          },
+          "query": "mutation AddModerator($username: String!, $streamer: String) {\n  moderatorAdd(username: $username, streamer: $streamer) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def RemoveModerator(streamer, user):
+        payload = {
+          "operationName": "RemoveModerator",
+          "variables": {
+            "username": user,
+            "streamer": streamer
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "6ab7beae3484aede4fc88a2052908ada86474fcabc6f29b7859b71443753b0da"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def StreamChatModerators(displayname):
+        payload = {
+          "operationName": "StreamChatModerators",
+          "variables": {
+            "displayname": displayname,
+            "first": 10
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "d3caa879911193700c04bc09d6a13f5b86480380f122a139446709b454c30384"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def DeleteChat(streamer, messageID):
+        payload = {
+          "operationName": "DeleteChat",
+          "variables": {
+            "streamer": streamer,
+            "id": messageID
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "7ae6f96161b89d9831dcf217f11f67c1edf5bb311d8819101345ed8eb38f6ed9"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def MeModLogs():
+        payload = {
+          "operationName": "MeModLogs",
+          "variables": {
+            "input": {
+              "operator": "",
+              "operation": "",
+              "start": None,
+              "end": None,
+              "first": 20,
+              "after": ""
+            }
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "c020f0450af648409bec9a04a5a3d84096d9965446cbb2c933b95bf324cf274e"
+            }
+          }
+        }
+        return payload
+
 
 class LoginAPI:
     @staticmethod

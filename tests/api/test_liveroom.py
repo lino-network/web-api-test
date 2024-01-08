@@ -1,4 +1,5 @@
 import os
+import string
 import time
 import pytest
 from dateutil.relativedelta import relativedelta
@@ -84,7 +85,8 @@ class TestLivePage:
             print(currentTime)
             message = "AAA " + get_config_data['send_message'] + '_' + currentTime
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                            Payload.LiveRoomAPI().send_chat(get_config_data['follow_streamer'], message, [0, 2]))
+                                            Payload.LiveRoomAPI().send_chat(get_config_data['follow_streamer'], message,
+                                                                            [0, 2]))
             print(response_json)
         with allure.step('检查返回值不报错'):
             assert response_json['data']['sendStreamchatMessage']['err'] is None
@@ -105,8 +107,9 @@ class TestLivePage:
         with allure.step('开始打赏 1 lemon'):
             print('donate lemon is: ' + str(get_config_data['donate_value']))
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                            Payload.LiveRoomAPI().donate_lemon(get_config_data['follow_streamer_permlink'],
-                                                                 get_config_data['donate_value']))
+                                            Payload.LiveRoomAPI().donate_lemon(
+                                                get_config_data['follow_streamer_permlink'],
+                                                get_config_data['donate_value']))
             print(response_json)
             with allure.step('检查放回值无报错'):
                 assert response_json['data']['donate']['err'] is None
@@ -135,7 +138,8 @@ class TestLivePage:
         with allure.step('用户 ' + str(get_config_data['gift_sub_info']['give_sub_gift_user'])
                          + ' 发送5 个gift在直播间：' + str(get_config_data['gift_sub_info']['streamer'])):
             gift_response_json = common.api_post(get_config_data['url'], header,
-                                                 Payload.LiveRoomAPI().add_gift_sub(get_config_data['gift_sub_info']['streamer'], 5))
+                                                 Payload.LiveRoomAPI().add_gift_sub(
+                                                     get_config_data['gift_sub_info']['streamer'], 5))
             print(gift_response_json)
             with allure.step('检查返回值无报错'):
                 assert gift_response_json['data']['giftSub']['err'] is None
@@ -146,14 +150,16 @@ class TestLivePage:
                                                          i['get_gift_sub_user_pwd'])
             with allure.step('用户' + str(i['get_gift_sub_user']) + ' 领取gift sub'):
                 claim_response_json = common.api_post(get_config_data['url'], viewer_header,
-                                                      Payload.LiveRoomAPI().add_gift_sub_claim(get_config_data['gift_sub_info']['streamer']))
+                                                      Payload.LiveRoomAPI().add_gift_sub_claim(
+                                                          get_config_data['gift_sub_info']['streamer']))
                 print('claim_response_json')
                 with allure.step('检查用户 ' + str(i['get_gift_sub_user']) + ' 领取gift sub 的时候无报错'):
                     assert claim_response_json['data']['giftSubClaim']['err'] is None
         after_lemon = common.get_account_lemon(get_config_data['url'], header)
         print('after gift 5 sub account lemon is: ' + str(after_lemon))
         with allure.step('检查发送了5 gift sub 帐户的钱相应的减少1490'):
-            assert int(after_lemon) + 1490 == int(origin_lemon), 'lemon减少不是1490, 而是 ' + str(int(origin_lemon)-int(after_lemon))
+            assert int(after_lemon) + 1490 == int(origin_lemon), 'lemon减少不是1490, 而是 ' + str(
+                int(origin_lemon) - int(after_lemon))
 
     @allure.title('test_streamer_open_chest')
     @allure.severity(allure.severity_level.CRITICAL)
@@ -179,7 +185,11 @@ class TestLivePage:
             print("After add to chest total lemon is: " + str(after_lemon))
         with allure.step('检查加钱进宝箱以后，总帐户减少对应的数目'):
             assert int(after_lemon) + get_config_data['chest_info']['add_lemon'] == int(origin_lemon), '帐户lemon的减少不' \
-                                        '是' + get_config_data['chest_info']['add_lemon'] + '而是' + str(int(origin_lemon)-int(after_lemon))
+                                                                                                       '是' + \
+                                                                                                       get_config_data[
+                                                                                                           'chest_info'][
+                                                                                                           'add_lemon'] + '而是' + str(
+                int(origin_lemon) - int(after_lemon))
         viewer1_header = common.get_login_auth_header(get_config_data['url'],
                                                       get_config_data['chest_info']['send_msg_chest_user1'],
                                                       get_config_data['chest_info']['send_msg_chest_user1_pwd'])
@@ -191,13 +201,14 @@ class TestLivePage:
                                                       get_config_data['chest_info']['chest_user_no_point_pwd'])
         with allure.step(str(get_config_data['chest_info']['send_msg_chest_user1']) + 'send message to chat'):
             msg_response = common.api_post(get_config_data['url'],
-                                           viewer1_header, Payload.LiveRoomAPI().send_chat(get_config_data['chest_info']['chest_streamer'],
-                                                                             get_config_data['chest_info']['msg'], []))
+                                           viewer1_header, Payload.LiveRoomAPI().send_chat(
+                    get_config_data['chest_info']['chest_streamer'],
+                    get_config_data['chest_info']['msg'], []))
         with allure.step(str(get_config_data['chest_info']['donate_chest_user2'] + 'donate lemon')):
             donate_response = common.api_post(get_config_data['url'], viewer2_header,
                                               Payload.LiveRoomAPI().donate_lemon(
                                                   get_config_data['chest_info']['chest_streamer_permlimk']
-                                              , get_config_data['chest_info']['donate_lemon_value']))
+                                                  , get_config_data['chest_info']['donate_lemon_value']))
         chest_streamer = get_config_data['chest_info']['chest_streamer']
         with allure.step('主播开始开启宝箱'):
             open_response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
@@ -205,7 +216,8 @@ class TestLivePage:
             print(open_response)
             with allure.step('检查开启宝箱是否成功'):
                 assert open_response['data']['giveawayStart']['err'] is None, '主播开启宝箱失败，信息为' + \
-                                                                        str(open_response['data']['giveawayStart']['err'])
+                                                                              str(open_response['data'][
+                                                                                      'giveawayStart']['err'])
         viewer1_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer1_header)
         viewer2_origin_lemon = common.get_account_lemon(get_config_data['url'], viewer2_header)
         claim_payload = Payload.LiveRoomAPI().give_away_claim(chest_streamer)
@@ -469,7 +481,7 @@ class TestLivePage:
                                    Payload.LiveRoomAPI().UserUnsubscribe(sub_streamer))
             time.sleep(60)
             cancel_sub = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                            Payload.LiveRoomAPI().MeSubscribing())
+                                         Payload.LiveRoomAPI().MeSubscribing())
             sub_list1 = cancel_sub['data']['me']['private']['subscribing']['list']
             with allure.step('检查取消订阅成功与否'):
                 assert resp['data']['unsubscribe']['err'] is None, '取消订阅不成功'
@@ -511,21 +523,22 @@ class TestLivePage:
         verify_message = 'message.AddMessage banned from stream chat'
         with allure.step('检查用户被ban 之前能发信息'):
             before_response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                            Payload.LiveRoomAPI().send_chat(streamer, before_ban_user_message, [0, 2]))
+                                                   Payload.LiveRoomAPI().send_chat(streamer, before_ban_user_message,
+                                                                                   [0, 2]))
             print(before_response_json)
             with allure.step('检查返回值不报错'):
                 assert before_response_json['data']['sendStreamchatMessage']['err'] is None
             with allure.step('检查返回的信息就是发送的信息'):
                 assert before_response_json['data']['sendStreamchatMessage']['message']['content'] == \
-                   before_ban_user_message
+                       before_ban_user_message
         with allure.step("主播：" + streamer + "开始ban 用户" + user + '返回值无报错'):
             ban_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                        Payload.LiveRoomAPI().BanStreamChatUser(streamer, user))
             assert ban_resp['data']['streamchatUserBan']['err'] is None
         with allure.step('检查用户被ban 之后不能发信息'):
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                                  Payload.LiveRoomAPI().send_chat(streamer,
-                                                                                  ban_message, [0, 2]))
+                                            Payload.LiveRoomAPI().send_chat(streamer,
+                                                                            ban_message, [0, 2]))
             print(response_json)
             assert response_json['data']['sendStreamchatMessage']['err']['code'] == 6001
             assert response_json['data']['sendStreamchatMessage']['err']['message'] == verify_message
@@ -535,13 +548,94 @@ class TestLivePage:
             with allure.step("主播：" + streamer + "unban 用户" + user + '返回值无报错'):
                 assert unban_resp['data']['streamchatUserUnban']['err'] is None
             after_response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                                    Payload.LiveRoomAPI().send_chat(streamer,
-                                                                                    after_unban_user_message, [0, 2]))
+                                                  Payload.LiveRoomAPI().send_chat(streamer,
+                                                                                  after_unban_user_message, [0, 2]))
             print(after_response_json)
             with allure.step('检查返回的信息就是发送的信息'):
                 assert after_response_json['data']['sendStreamchatMessage']['message']['content'] == \
-                   after_unban_user_message
-            
+                       after_unban_user_message
+
+    @allure.title('test_setModerator')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_Moderator1_add(self, get_config_data, get_follow_streamer_auth_header, get_viewer1_login_auth_header):
+        """
+        接口：AddModerator, DeleteChat
+        测试主播：automation 设置 automation_viewer1 as moderator
+        """
+        streamer = get_config_data['follow_streamer']
+        streamer_displayName = get_config_data['follow_displayName']
+        user = get_config_data['viewer1_username']
+        with allure.step('设置直播间Moderator'):
+            response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                            Payload.LiveRoomAPI().AddModerator(streamer, user))
+            with allure.step('检查返回的信息无error'):
+                assert response_json['data']['moderatorAdd']['err'] is None
+            with allure.step('检查Moderator 用户在Moderator 列表'):
+                response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                           Payload.LiveRoomAPI().StreamChatModerators(streamer_displayName))
+                m_list = response['data']['userByDisplayName']['chatModerators']['list']
+                for i in m_list:
+                    if i['username'] == user:
+                        assert True, 'The Moderator 不在Moderator列表'
+                        break
+        with allure.step('Moderator是否可以删除主播的信息'):
+            message = 'add Moderator'
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.LiveRoomAPI().send_chat(streamer, message, [0, 2]))
+            message_id = response_json['data']['sendStreamchatMessage']['message']['id']
+            with allure.step('Moderator开始删除信息'):
+                response_json1 = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                                 Payload.LiveRoomAPI().DeleteChat(streamer, message_id))
+                assert response_json1['data']['chatDelete']['err'] is None, 'Moderator删除信息失败'
+
+    @allure.title('test_RemoveModerator')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_Moderator2_detele(self, get_config_data, get_follow_streamer_auth_header, get_viewer1_login_auth_header):
+        """
+        接口：RemoveModerator, DeleteChat
+        测试主播：automation moderator： automation_viewer1
+        """
+        streamer = get_config_data['follow_streamer']
+        streamer_displayName = get_config_data['follow_displayName']
+        user = get_config_data['viewer1_username']
+        moderator_exists = False
+        with allure.step('检查删除之前Moderator在Moderator列中'):
+            b_response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                         Payload.LiveRoomAPI().StreamChatModerators(streamer_displayName))
+            b_list = b_response['data']['userByDisplayName']['chatModerators']['list']
+            print(b_list)
+            for i in b_list:
+                if i['username'] == user:
+                    moderator_exists = True
+                    break
+        if moderator_exists is False:
+            print('要删除的Moderator不在Moderator列中')
+            assert False
+        else:
+            with allure.step('删除Moderator'):
+                response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                                Payload.LiveRoomAPI().RemoveModerator(streamer, user))
+                with allure.step('检查返回的信息无error'):
+                    assert response_json['data']['moderatorRemove']['err'] is None
+                with allure.step('检查删除的Moderator 用户不在Moderator 列表'):
+                    response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                               Payload.LiveRoomAPI().StreamChatModerators(streamer_displayName))
+                    m_list = response['data']['userByDisplayName']['chatModerators']['list']
+                    assert not any(user == item for item in m_list), 'Moderator删除以后还在Moderator列表中'
+
+    @allure.title('test_MeModLogs')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_MeModLogs(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口： MeModLogs
+        检查dashboard ->Moderator Log页面无报错
+        """
+        with allure.step('检查dashboard ->Moderator Log页面无报错'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.LiveRoomAPI().MeModLogs())
+            print(response['data'])
+            assert not any('err' == item for item in str(response['data'])), '接口返回值有报错'
+
 
 if __name__ == '__main__':
     print('e2rwf')
