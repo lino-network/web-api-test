@@ -3,7 +3,9 @@ apiData:
   viewer1_loginEmail: 66@nqmo.com
   viewer1_pwd: password1234
   viewer1_username: dlive-degnujtptx
+  viewer1_display: automation_viewer1
   follow_streamer: automation
+  follow_displayName: automation
   follow_streamer_user: automation@nqmo.com
   follow_streamer_pwd: Pwd@1234
   follow_streamer_permlink: automation+2hatMquVg
