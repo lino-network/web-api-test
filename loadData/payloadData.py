@@ -272,6 +272,33 @@ def browser_register_notification(token):
 
 class DaskboardAPI:
     @staticmethod
+    def StreamHostDelete(username):
+        payload = {
+          "operationName": "StreamHostDelete",
+          "variables": {
+            "username": username
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "728bdb8b947c7d3b0c087114cfa11c6c31ec0897c603e96b0066319888dfc244"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def StreamHostSet(username):
+        payload = {
+          "operationName": "StreamHostSet",
+          "variables": {
+            "username": username
+          },
+          "query": "mutation StreamHostSet($username: String!) {\n  hostSet(username: $username) {\n    livestream {\n      id\n      permlink\n      creator {\n        id\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      ...VVideoPlayerFrag\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n"
+        }
+        return payload
+
+    @staticmethod
     def MEDashboard(username):
         payload = {
           "operationName": "MeDashboard",
@@ -863,15 +890,12 @@ class LiveRoomAPI:
           "operationName": "StreamChatModerators",
           "variables": {
             "displayname": displayname,
-            "first": 10
+            "first": 20,
+            "search": ""
           },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "d3caa879911193700c04bc09d6a13f5b86480380f122a139446709b454c30384"
-            }
-          }
+          "query": "query StreamChatModerators($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatModerators(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
         }
+
         return payload
 
     @staticmethod

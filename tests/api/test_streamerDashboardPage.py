@@ -141,25 +141,74 @@ class TestStreamerDashboardPage:
         with allure.step('检查返回值无error code'):
             assert response['data']['subSettingSet']['err'] is None, 'verify response code is not null'
 
-        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header, Payload.DaskboardAPI.MEDashboard(get_config_data['follow_streamer']))
+        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.DaskboardAPI.MEDashboard(get_config_data['follow_streamer']))
         subSetting = response['data']['me']['subSetting']
         print('2222')
         print(subSetting)
         with allure.step('检查badgeColor是否更新正确'):
             assert subSetting['badgeColor'] == badgeColor, '修改badge color 不成功，修改成：' + badgeColor + \
-                                                          '而实际是:' + subSetting['badgeColor']
+                                                           '而实际是:' + subSetting['badgeColor']
         with allure.step('badgeText'):
             assert subSetting['badgeText'] == badgeText, '修改badgeText 不成功，修改成：' + badgeText + \
-                                                          '而实际是:' + subSetting['badgeText']
+                                                         '而实际是:' + subSetting['badgeText']
         with allure.step('检查streakTextColor是否更新正确'):
-            assert subSetting['streakTextColor'] == streakTextColor, '修改streakTextColor不成功，修改成：' + streakTextColor + \
-                                                          '而实际是:' + subSetting['streakTextColor']
+            assert subSetting[
+                       'streakTextColor'] == streakTextColor, '修改streakTextColor不成功，修改成：' + streakTextColor + \
+                                                              '而实际是:' + subSetting['streakTextColor']
         with allure.step('检查textColor是否更新正确'):
             assert subSetting['textColor'] == textColor, '修改textColor不成功，修改成：' + textColor + \
-                                                          '而实际是:' + subSetting['textColor']
+                                                         '而实际是:' + subSetting['textColor']
         with allure.step('检查benefits是否更新正确'):
             assert subSetting['benefits'][0] == benefits, '修改benefits不成功，修改成：' + benefits + \
                                                           '而实际是:' + subSetting['benefits']
+
+    @allure.title('test_StreamHostSet')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_StreamHostSet1_add(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：StreamHostSet
+
+        添加hosting
+        """
+        user = 'appletv'
+        streamer = get_config_data['follow_streamer']
+        with allure.step('添加hosting'):
+            resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.DaskboardAPI().StreamHostSet(user))
+            assert resp['data']['hostSet']['err'] is None
+            hostingID = resp['data']['hostSet']['livestream']['permlink']
+            with allure.step('检查添加的hosting 以后显示在hosting 列表'):
+                host_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                            Payload.DaskboardAPI().MEDashboard(streamer))
+                hosting_list = host_resp['data']['me']['hostingLivestream']['permlink']
+                print('hosting列表如下：' + str(hosting_list))
+                assert not any(hostingID == item for item in hosting_list), 'Hosting 视频在hosting列表中'
+
+    @allure.title('test_StreamHostDelete')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_StreamHostSet2_delete(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：StreamHostDelete
+
+        删除hosting
+        """
+        streamer = get_config_data['follow_streamer']
+        with allure.step('获取一个要删除的hosting id'):
+            host_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                        Payload.DaskboardAPI().MEDashboard(streamer))
+            delete_hosting_id = host_resp['data']['me']['hostingLivestream']['permlink']
+            delete_hotsing = str(delete_hosting_id).split('+')[0]
+        with allure.step('开始删除hosting'):
+            resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.DaskboardAPI().StreamHostDelete(delete_hotsing))
+            assert resp['data']['hostDelete']['err'] is None
+            with allure.step('检查删除后的hosting不显示在hosting 列表'):
+                host_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                            Payload.DaskboardAPI().MEDashboard(streamer))
+                hosting_list = host_resp['data']['me']['hostingLivestream']
+                print('hosting列表如下：' + str(hosting_list))
+                assert hosting_list is None, '删除Hosting视频以后，视频还在hosting列表中'
 
 
 if __name__ == '__main__':
