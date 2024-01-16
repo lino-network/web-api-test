@@ -210,6 +210,22 @@ class TestStreamerDashboardPage:
                 print('hosting列表如下：' + str(hosting_list))
                 assert hosting_list is None, '删除Hosting视频以后，视频还在hosting列表中'
 
+    @allure.title('test_xtagChannelNoSubFunction')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_xtagChannelNoSubFunction(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：SetStreamTemplate
+        测试xtag 直播间没sub 功能不可用
+        """
+        user = get_config_data['viewer1_username']
+        response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                   Payload.DaskboardAPI().MEDashboard(user))
+        with allure.step('检查x-tag 直播间canSubscribe 是False'):
+            assert response['data']['me']['canSubscribe'] is False, '真实的canSubscribe 状态是' + \
+                                                                    response['data']['me']['canSubscribe'] + \
+                                                                    '，但是期望的是False'
+
+
 
 if __name__ == '__main__':
     print('e2rwf')

@@ -929,13 +929,9 @@ class LiveRoomAPI:
               "after": ""
             }
           },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "c020f0450af648409bec9a04a5a3d84096d9965446cbb2c933b95bf324cf274e"
-            }
-          }
+          "query": "query MeModLogs($input: ListModLogsInput!) {\n  me {\n    ...DashboardModeratorFrag\n    __typename\n  }\n}\n\nfragment DashboardModeratorFrag on User {\n  id\n  modLogs(input: $input) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      streamer {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      operator {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      operation\n      user {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      emote\n      log\n      createdAt\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
         }
+
         return payload
 
 
