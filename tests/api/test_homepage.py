@@ -159,7 +159,7 @@ class TestHomePage:
             assert data['data']['me']['wallet']['balance'] != 0, "User balance is 0"
 
         with allure.step('检查用户头像URL是否正确'):
-            assert data['data']['me']['avatar'] == 'https://image.dlivecdn.com/avatar/default22.png', \
+            assert data['data']['me']['avatar'] == 'https://images.stg.dlivecdn.com/avatar/c1e413da-aec2-11ee-acb9-4aed4c90c80a', \
                 "Avatar URL is incorrect"
 
         with allure.step('检查用户角色是否为None'):
