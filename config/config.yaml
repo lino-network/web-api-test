@@ -30,21 +30,21 @@ apiData:
     chest_user_no_point_pwd: Pwd@1234
   gift_sub_info:
     streamer: automation
-    give_sub_gift_user: 1193492940@qq.com
+    give_sub_gift_user: 37@nqmo.com
     give_sub_gift_user_pwd: password1234
     claim_user:
     -
-      get_gift_sub_user: 37@nqmo.com
+      get_gift_sub_user: newsub@nqmo.com
       get_gift_sub_user_pwd: password1234
     -
       get_gift_sub_user: 371@nqmo.com
       get_gift_sub_user_pwd: password1234
     -
-      get_gift_sub_user: felix.li@tron.network
-      get_gift_sub_user_pwd:  lfz123456
+      get_gift_sub_user: susban@nqmo.com
+      get_gift_sub_user_pwd:  password1234
     -
-      get_gift_sub_user: nick.ao@tron.network
-      get_gift_sub_user_pwd: yang19881209@888
+      get_gift_sub_user: sub161@nqmo.com
+      get_gift_sub_user_pwd: password1234
     -
       get_gift_sub_user: 39@nqmo.com
       get_gift_sub_user_pwd: password1234
