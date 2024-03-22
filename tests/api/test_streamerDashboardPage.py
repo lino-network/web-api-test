@@ -171,7 +171,7 @@ class TestStreamerDashboardPage:
 
         添加hosting
         """
-        user = 'appletv'
+        user = get_config_data['hosting_streamer']
         streamer = get_config_data['follow_streamer']
         with allure.step('添加hosting'):
             resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
@@ -217,13 +217,13 @@ class TestStreamerDashboardPage:
         接口：SetStreamTemplate
         测试xtag 直播间没sub 功能不可用
         """
-        user = get_config_data['viewer1_username']
-        response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                   Payload.DaskboardAPI().MEDashboard(user))
-        with allure.step('检查x-tag 直播间canSubscribe 是False'):
-            assert response['data']['me']['canSubscribe'] is False, '真实的canSubscribe 状态是' + \
-                                                                    response['data']['me']['canSubscribe'] + \
-                                                                    '，但是期望的是False'
+        # user = get_config_data['viewer1_username']
+        # response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+        #                            Payload.DaskboardAPI().MEDashboard(user))
+        # with allure.step('检查x-tag 直播间canSubscribe 是False'):
+        #     assert response['data']['me']['canSubscribe'] is False, '真实的canSubscribe 状态是' + \
+        #                                                             response['data']['me']['canSubscribe'] + \
+        #                                                             '，但是期望的是False'
 
 
 

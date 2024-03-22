@@ -30,14 +30,15 @@ class TestHomePage:
 
     @allure.title('test_homepage_livestream')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_homepage_livestream(self, get_config_data, api_headers): # 画廊直播间检查
+    def test_homepage_livestream(self, get_config_data, api_headers):  # 画廊直播间检查
         """
         接口： HomePageLivestream
 
         检查首页直播流接口
         """
         with allure.step('检查首页直播流接口'):
-            response_json = common.api_post(get_config_data['url'], api_headers, Payload.HomePageAPI().homepage_livestream())
+            response_json = common.api_post(get_config_data['url'], api_headers,
+                                            Payload.HomePageAPI().homepage_livestream())
             print(response_json)
             with allure.step('检查轮播接口的返回值不为空 '):
                 assert len(response_json['data']['livestreams']['list']) is not None
@@ -53,7 +54,8 @@ class TestHomePage:
         检查主页推荐系统
         """
         with allure.step('检查主页推荐系统 '):
-            response_json = common.api_post(get_config_data['url'], api_headers, Payload.HomePageAPI().homepage_list_recommendation())
+            response_json = common.api_post(get_config_data['url'], api_headers,
+                                            Payload.HomePageAPI().homepage_list_recommendation())
             print(response_json)
             data = response_json.get('data')
             home_page_list_recommendation = data.get('listRecommendation')
@@ -110,7 +112,7 @@ class TestHomePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_nav_search_category(self, get_config_data, api_headers):
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.HomePageAPI().homepage_nav_search_result("qatest"))
+                                 json=Payload.HomePageAPI().homepage_nav_search_result("qatest"))
         assert response.status_code == 200
         # 解析返回结果
         data = json.loads(response.text)
@@ -159,7 +161,8 @@ class TestHomePage:
             assert data['data']['me']['wallet']['balance'] != 0, "User balance is 0"
 
         with allure.step('检查用户头像URL是否正确'):
-            assert data['data']['me']['avatar'] == 'https://images.stg.dlivecdn.com/avatar/c1e413da-aec2-11ee-acb9-4aed4c90c80a', \
+            assert data['data']['me'][
+                       'avatar'] == 'https://images.stg.dlivecdn.com/avatar/c1e413da-aec2-11ee-acb9-4aed4c90c80a', \
                 "Avatar URL is incorrect"
 
         with allure.step('检查用户角色是否为None'):
@@ -169,7 +172,7 @@ class TestHomePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_live_streams_languages(self, get_config_data, api_headers):
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.live_streams_languages())
+                                 json=Payload.live_streams_languages())
         assert response.status_code == 200
         # 解析返回结果
         data = json.loads(response.text)
@@ -178,7 +181,7 @@ class TestHomePage:
         # 检查返回的数据中的"languages"列表是否包含至少一个元素
         assert len(data["data"]["languages"]) > 0, "'languages' list is empty"
 
-        #检查返回的数据中的每个语言对象是否包含"id"、"backendID"、"language"和"code"字段
+        # 检查返回的数据中的每个语言对象是否包含"id"、"backendID"、"language"和"code"字段
         for language in data["data"]["languages"]:
             assert "id" in language, "Language object does not contain 'id' field"
             assert "backendID" in language, "Language object does not contain 'backendID' field"
@@ -227,7 +230,7 @@ class TestHomePage:
         用户:  automation
         """
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.ActivityUserDonationRank())
+                                 json=Payload.ActivityUserDonationRank())
         assert response.status_code == 200
         data = json.loads(response.text)
 
@@ -244,17 +247,23 @@ class TestHomePage:
         步骤:  category点击show all        
         """
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.HomePageAPI().homepage_browse_page_search_category(""))
+                                 json=Payload.HomePageAPI().homepage_browse_page_search_category(""))
         # assert response.status_code == 200 
         data = json.loads(response.text)
         assert data["data"]["search"]["trendingCategories"]["list"] is not None
 
         response_search = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.HomePageAPI().homepage_browse_page_search_category("qa"))
+                                        json=Payload.HomePageAPI().homepage_browse_page_search_category("qa"))
         assert response_search.status_code == 200
         data_search = json.loads(response_search.text)
         print(data_search)
-        assert data_search["data"]["search"]["trendingCategories"]["list"][1]["title"] == "qaTest"
+        category_list = data_search["data"]["search"]["trendingCategories"]["list"]
+        cate_exists = False
+        for i in category_list:
+            if i["title"] == "qaTest":
+                cate_exists = True
+                break
+        assert cate_exists == True, '搜索的category不存在'
 
     @allure.title('test_live_streams_languages')
     @allure.severity(allure.severity_level.CRITICAL)
@@ -266,10 +275,10 @@ class TestHomePage:
         步骤:  category点击show all        
         """
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                json=Payload.live_streams_languages())
+                                 json=Payload.live_streams_languages())
         assert response.status_code == 200
         data = json.loads(response.text)
-        print (data)
+        print(data)
         assert data["data"]["languages"][0]["id"] is not None
         assert data["data"]["languages"][0]["language"] == "All"
 
@@ -282,7 +291,8 @@ class TestHomePage:
         步骤:  category点击games       
         """
         response = common.api_post(get_config_data['url'], api_headers,
-                                   Payload.HomePageAPI().homepage_category_live_stream_page(get_config_data['streamer_category_id']))
+                                   Payload.HomePageAPI().homepage_category_live_stream_page(
+                                       get_config_data['streamer_category_id']))
         print(response)
         streamer_list = response["data"]["livestreams"]["list"]
         with allure.step("检查automation这个直播间是否在category: qatest下面"):
