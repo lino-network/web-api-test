@@ -244,12 +244,20 @@ def me_livestream():
         "variables": {
             "isLoggedIn": True
         },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "9f719304dbe7a32983da173d9ba737bc4c4d5b4bdc558163e01afad91be6db9c"
-            }
-        }
+        "query": "query MeLivestream($isLoggedIn: Boolean!) {me {...MeLivestreamFrag __typename}}fragment MeLivestreamFrag on User "
+                 "{id ...MeLivestreamChatroomFrag __typename}fragment MeLivestreamChatroomFrag on User {id username role "
+                 "myChatBadges ...EmojiFrag ...MeEmoteFrag ...MeStreamChatModeSettingFrag __typename}fragment MeEmoteFrag on User {"
+                 "id role @include(if: $isLoggedIn)emote {...EmoteMineFrag ...EmoteChannelFrag ...EmoteGlobalFrag ...EmoteVipFrag __typename }__typename}"
+                 "fragment EmoteMineFrag on AllEmotes {mine {list {name username sourceURL mimeType level type __typename}__typename}__typename}"
+                 "fragment EmoteChannelFrag on AllEmotes {channel {list {name username sourceURL mimeType level type __typename}__typename}__typename}"
+                 "fragment EmoteGlobalFrag on AllEmotes {global {list {name username sourceURL mimeType level type __typename}__typename}__typename}"
+                 "fragment EmoteVipFrag on AllEmotes {vip {list {name username sourceURL mimeType level type__typename}__typename}__typename}"
+                 "fragment MeStreamChatModeSettingFrag on User {id private {displaySetting {lemon icecream diamond ninjaghini "
+                 "ninjet follow subscription hosting moderation chat stickers __typename}__typename}__typename}"
+                 "fragment EmojiFrag on User {id emoji {...EmojiGlobalFrag ...EmojiVipFrag __typename}__typename}"
+                 "fragment EmojiGlobalFrag on AllEmojis {global {totalCount list { name username sourceURL mimeType level type "
+                 "__typename}__typename}__typename}"
+                 "fragment EmojiVipFrag on AllEmojis {vip {totalCount list {name username sourceURL mimeType level type __typename}__typename}__typename}"
     }
     return payload
 
@@ -260,12 +268,7 @@ def browser_register_notification(token):
         "variables": {
             "token": token
         },
-        "extensions": {
-            "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "20d6ecfcdb7dc10b4008037e9eee326755b370e69dc9cfce2a407718cb2e5eff"
-            }
-        }
+        "query": "mutation BrowserDeregisterNotification($token: String!) {browserDeregisterNotification(token: $token) {err {message code __typename}__typename}}"
     }
     return payload
 
@@ -274,44 +277,39 @@ class DaskboardAPI:
     @staticmethod
     def StreamHostDelete(username):
         payload = {
-          "operationName": "StreamHostDelete",
-          "variables": {
-            "username": username
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "728bdb8b947c7d3b0c087114cfa11c6c31ec0897c603e96b0066319888dfc244"
-            }
-          }
+            "operationName": "StreamHostDelete",
+            "variables": {
+                "username": username
+            },
+            "query": "mutation StreamHostDelete($username: String!) {hostDelete(username: $username) {err {code __typename}__typename}}"
         }
         return payload
 
     @staticmethod
     def StreamHostSet(username):
         payload = {
-          "operationName": "StreamHostSet",
-          "variables": {
-            "username": username
-          },
-          "query": "mutation StreamHostSet($username: String!) {\n  hostSet(username: $username) {\n    livestream {\n      id\n      permlink\n      creator {\n        id\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      ...VVideoPlayerFrag\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n"
+            "operationName": "StreamHostSet",
+            "variables": {
+                "username": username
+            },
+            "query": "mutation StreamHostSet($username: String!) {\n  hostSet(username: $username) {\n    livestream {\n      id\n      permlink\n      creator {\n        id\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      ...VVideoPlayerFrag\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n"
         }
         return payload
 
     @staticmethod
     def MEDashboard(username):
         payload = {
-          "operationName": "MeDashboard",
-          "variables": {
-            "isLoggedIn": True,
-            "input": {
-              "operator": username,
-              "operation": "",
-              "first": 10,
-              "after": ""
-            }
-          },
-          "query": "query MeDashboard($isLoggedIn: Boolean!) {\n  me {\n    ...MeDashboardFrag\n    __typename\n  }\n}\n\nfragment MeDashboardFrag on User {\n  id\n  canSubscribe\n  private {\n    emailVerified\n    __typename\n  }\n  ...DashboardStreamSettingsFrag\n  ...DashboardHostSettingFrag\n  ...DashboardStreamChatroomFrag\n  ...DashboardActivityFeedFrag\n  ...DashboardOfflineImageSettingFrag\n  ...DashboardRerunSettingsFrag\n  ...DashboardSubscriptionSettingFrag\n  __typename\n}\n\nfragment DashboardStreamSettingsFrag on User {\n  livestream {\n    id\n    permlink\n    ...VVideoPlayerFrag\n    __typename\n  }\n  hostingLivestream {\n    id\n    permlink\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    ...VVideoPlayerFrag\n    __typename\n  }\n  private {\n    streamTemplate {\n      title\n      ageRestriction\n      earnRestriction\n      thumbnailUrl\n      disableAlert\n      category {\n        id\n        backendID\n        title\n        __typename\n      }\n      language {\n        id\n        backendID\n        code\n        language\n        __typename\n      }\n      tags\n      saveReplay\n      __typename\n    }\n    filterWords\n    __typename\n  }\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment DashboardHostSettingFrag on User {\n  id\n  hostingLivestream {\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardStreamChatroomFrag on User {\n  ...MeLivestreamChatroomFrag\n  __typename\n}\n\nfragment MeLivestreamChatroomFrag on User {\n  id\n  username\n  role\n  myChatBadges\n  ...EmojiFrag\n  ...MeEmoteFrag\n  ...MeStreamChatModeSettingFrag\n  __typename\n}\n\nfragment MeEmoteFrag on User {\n  id\n  role @include(if: $isLoggedIn)\n  emote {\n    ...EmoteMineFrag\n    ...EmoteChannelFrag\n    ...EmoteGlobalFrag\n    ...EmoteVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteMineFrag on AllEmotes {\n  mine {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteChannelFrag on AllEmotes {\n  channel {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteGlobalFrag on AllEmotes {\n  global {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteVipFrag on AllEmotes {\n  vip {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment MeStreamChatModeSettingFrag on User {\n  id\n  private {\n    displaySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      chat\n      stickers\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiFrag on User {\n  id\n  emoji {\n    ...EmojiGlobalFrag\n    ...EmojiVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiGlobalFrag on AllEmojis {\n  global {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiVipFrag on AllEmojis {\n  vip {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardActivityFeedFrag on User {\n  id\n  ...ActivityFeedFrag\n  __typename\n}\n\nfragment ActivityFeedFrag on User {\n  id\n  username\n  displayname\n  ...VStreamChatRowStreamerFrag\n  ...ActivityFeedSettingsFrag\n  chats(count: 50) {\n    type\n    ... on ChatGift {\n      id\n      gift\n      amount\n      message\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatHost {\n      id\n      viewer\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatSubscription {\n      id\n      month\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatExtendSub {\n      id\n      month\n      length\n      ...VStreamChatSenderInfoFrag\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSub {\n      id\n      ...VStreamChatSenderInfoFrag\n      count\n      receiver\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSubReceive {\n      id\n      ...VStreamChatSenderInfoFrag\n      gifter\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatFollow {\n      id\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatRowStreamerFrag on User {\n  displayname\n  isMe @include(if: $isLoggedIn)\n  ...VStreamChatRowSenderInfoStreamerFrag\n  ...VStreamChatProfileCardStreamerFrag\n  ...StreamChatTextRowStreamerFrag\n  __typename\n}\n\nfragment VStreamChatRowSenderInfoStreamerFrag on User {\n  id\n  subSetting {\n    badgeText\n    badgeColor\n    textColor\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatProfileCardStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  role\n  __typename\n}\n\nfragment StreamChatTextRowStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  mySubscription @include(if: $isLoggedIn) {\n    isSubscribing\n    __typename\n  }\n  chatBannedEmoji\n  emote @include(if: $isLoggedIn) {\n    channel {\n      list {\n        name\n        username\n        sourceURL\n        mimeType\n        level\n        type\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  subSetting {\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment ActivityFeedSettingsFrag on User {\n  id\n  private {\n    activitySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatSenderInfoFrag on SenderInfo {\n  subscribing\n  role\n  roomRole\n  sender {\n    id\n    username\n    displayname\n    avatar\n    partnerStatus\n    badges\n    effect\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardOfflineImageSettingFrag on User {\n  id\n  partnerStatus\n  offlineImage\n  __typename\n}\n\nfragment DashboardRerunSettingsFrag on User {\n  id\n  private {\n    rerunSetting {\n      enabled\n      presets {\n        pastbroadcast {\n          permlink\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardSubscriptionSettingFrag on User {\n  id\n  private {\n    showSubSettingTab\n    __typename\n  }\n  ...SettingsSubscribeFrag\n  __typename\n}\n\nfragment SettingsSubscribeFrag on User {\n  id\n  subSetting {\n    badgeColor\n    badgeText\n    textColor\n    streakTextColor\n    benefits\n    backgroundImage\n    __typename\n  }\n  __typename\n}\n"
+            "operationName": "MeDashboard",
+            "variables": {
+                "isLoggedIn": True,
+                "input": {
+                    "operator": username,
+                    "operation": "",
+                    "first": 10,
+                    "after": ""
+                }
+            },
+            "query": "query MeDashboard($isLoggedIn: Boolean!) {\n  me {\n    ...MeDashboardFrag\n    __typename\n  }\n}\n\nfragment MeDashboardFrag on User {\n  id\n  canSubscribe\n  private {\n    emailVerified\n    __typename\n  }\n  ...DashboardStreamSettingsFrag\n  ...DashboardHostSettingFrag\n  ...DashboardStreamChatroomFrag\n  ...DashboardActivityFeedFrag\n  ...DashboardOfflineImageSettingFrag\n  ...DashboardRerunSettingsFrag\n  ...DashboardSubscriptionSettingFrag\n  __typename\n}\n\nfragment DashboardStreamSettingsFrag on User {\n  livestream {\n    id\n    permlink\n    ...VVideoPlayerFrag\n    __typename\n  }\n  hostingLivestream {\n    id\n    permlink\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    ...VVideoPlayerFrag\n    __typename\n  }\n  private {\n    streamTemplate {\n      title\n      ageRestriction\n      earnRestriction\n      thumbnailUrl\n      disableAlert\n      category {\n        id\n        backendID\n        title\n        __typename\n      }\n      language {\n        id\n        backendID\n        code\n        language\n        __typename\n      }\n      tags\n      saveReplay\n      __typename\n    }\n    filterWords\n    __typename\n  }\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment DashboardHostSettingFrag on User {\n  id\n  hostingLivestream {\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardStreamChatroomFrag on User {\n  ...MeLivestreamChatroomFrag\n  __typename\n}\n\nfragment MeLivestreamChatroomFrag on User {\n  id\n  username\n  role\n  myChatBadges\n  ...EmojiFrag\n  ...MeEmoteFrag\n  ...MeStreamChatModeSettingFrag\n  __typename\n}\n\nfragment MeEmoteFrag on User {\n  id\n  role @include(if: $isLoggedIn)\n  emote {\n    ...EmoteMineFrag\n    ...EmoteChannelFrag\n    ...EmoteGlobalFrag\n    ...EmoteVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteMineFrag on AllEmotes {\n  mine {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteChannelFrag on AllEmotes {\n  channel {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteGlobalFrag on AllEmotes {\n  global {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteVipFrag on AllEmotes {\n  vip {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment MeStreamChatModeSettingFrag on User {\n  id\n  private {\n    displaySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      chat\n      stickers\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiFrag on User {\n  id\n  emoji {\n    ...EmojiGlobalFrag\n    ...EmojiVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiGlobalFrag on AllEmojis {\n  global {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiVipFrag on AllEmojis {\n  vip {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardActivityFeedFrag on User {\n  id\n  ...ActivityFeedFrag\n  __typename\n}\n\nfragment ActivityFeedFrag on User {\n  id\n  username\n  displayname\n  ...VStreamChatRowStreamerFrag\n  ...ActivityFeedSettingsFrag\n  chats(count: 50) {\n    type\n    ... on ChatGift {\n      id\n      gift\n      amount\n      message\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatHost {\n      id\n      viewer\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatSubscription {\n      id\n      month\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatExtendSub {\n      id\n      month\n      length\n      ...VStreamChatSenderInfoFrag\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSub {\n      id\n      ...VStreamChatSenderInfoFrag\n      count\n      receiver\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSubReceive {\n      id\n      ...VStreamChatSenderInfoFrag\n      gifter\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatFollow {\n      id\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatRowStreamerFrag on User {\n  displayname\n  isMe @include(if: $isLoggedIn)\n  ...VStreamChatRowSenderInfoStreamerFrag\n  ...VStreamChatProfileCardStreamerFrag\n  ...StreamChatTextRowStreamerFrag\n  __typename\n}\n\nfragment VStreamChatRowSenderInfoStreamerFrag on User {\n  id\n  subSetting {\n    badgeText\n    badgeColor\n    textColor\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatProfileCardStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  role\n  __typename\n}\n\nfragment StreamChatTextRowStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  mySubscription @include(if: $isLoggedIn) {\n    isSubscribing\n    __typename\n  }\n  chatBannedEmoji\n  emote @include(if: $isLoggedIn) {\n    channel {\n      list {\n        name\n        username\n        sourceURL\n        mimeType\n        level\n        type\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  subSetting {\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment ActivityFeedSettingsFrag on User {\n  id\n  private {\n    activitySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatSenderInfoFrag on SenderInfo {\n  subscribing\n  role\n  roomRole\n  sender {\n    id\n    username\n    displayname\n    avatar\n    partnerStatus\n    badges\n    effect\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardOfflineImageSettingFrag on User {\n  id\n  partnerStatus\n  offlineImage\n  __typename\n}\n\nfragment DashboardRerunSettingsFrag on User {\n  id\n  private {\n    rerunSetting {\n      enabled\n      presets {\n        pastbroadcast {\n          permlink\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardSubscriptionSettingFrag on User {\n  id\n  private {\n    showSubSettingTab\n    __typename\n  }\n  ...SettingsSubscribeFrag\n  __typename\n}\n\nfragment SettingsSubscribeFrag on User {\n  id\n  subSetting {\n    badgeColor\n    badgeText\n    textColor\n    streakTextColor\n    benefits\n    backgroundImage\n    __typename\n  }\n  __typename\n}\n"
         }
 
         return payload
@@ -339,12 +337,7 @@ class DaskboardAPI:
             "variables": {
                 "text": searchText
             },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "4eb124d36b62fa4258d2179ed8f5647b1f5370f32eb7492988dca5b016f6d487"
-                }
-            }
+            "query": "query DashboardSearchCategories($text: String!, $first: Int, $after: String) {search(text: $text) {categories(first: $first, after: $after) {pageInfo {endCursor hasNextPage __typename}list {id backendID title __typename}__typename}__typename}}"
         }
         return payload
 
@@ -353,15 +346,8 @@ class DaskboardAPI:
         payload = {
             "operationName": "RerunEnableSwitch",
             "variables": {},
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "c00825f9268b8b4a2c35cb7febae59ae955c6bd704c7e2e49021c0374ba70a40"
-                }
-            }
+            "query": "mutation RerunEnableSwitch {rerunEnable {err {code message __typename}__typename}}"
         }
-        #     #"query": "mutation RerunEnableSwitch {\n  rerunEnable {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
-        #     }
         return payload
 
     @staticmethod
@@ -369,18 +355,8 @@ class DaskboardAPI:
         payload = {
             "operationName": "RerunDisableSwitch",
             "variables": {},
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "40e24830c03e591246e493012a9d290d4f8ca9252f83bb089b2e4c93802f3259"
-                }
-            }
+            "query": "mutation RerunDisableSwitch {rerunDisable {err {code message __typename}__typename}}"
         }
-        #     {
-        #   "operationName": "RerunDisableSwitch",
-        #   "variables": {},
-        #     "query": "mutation RerunDisableSwitch {\n  rerunDisable {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
-        # }
         return payload
 
     @staticmethod
@@ -408,16 +384,16 @@ class DaskboardAPI:
     @staticmethod
     def SetSubSettings(benefits, badgeColor, badgeText, textColor, streakTextColor, backgroundImage):
         payload = {
-          "operationName": "SetSubSettings",
-          "variables": {
-            "badgeColor": badgeColor,
-            "badgeText": badgeText,
-            "textColor": textColor,
-            "streakTextColor": streakTextColor,
-            "benefits": [benefits],
-            "backgroundImage": backgroundImage
-          },
-          "query": "mutation SetSubSettings($badgeText: String!, $badgeColor: String!, $textColor: String!, $backgroundImage: String, $streakTextColor: String, $benefits: [String!]) {\n  subSettingSet(subSetting: {badgeColor: $badgeColor, badgeText: $badgeText, textColor: $textColor, streakTextColor: $streakTextColor, benefits: $benefits, backgroundImage: $backgroundImage}) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+            "operationName": "SetSubSettings",
+            "variables": {
+                "badgeColor": badgeColor,
+                "badgeText": badgeText,
+                "textColor": textColor,
+                "streakTextColor": streakTextColor,
+                "benefits": [benefits],
+                "backgroundImage": backgroundImage
+            },
+            "query": "mutation SetSubSettings($badgeText: String!, $badgeColor: String!, $textColor: String!, $backgroundImage: String, $streakTextColor: String, $benefits: [String!]) {\n  subSettingSet(subSetting: {badgeColor: $badgeColor, badgeText: $badgeText, textColor: $textColor, streakTextColor: $streakTextColor, benefits: $benefits, backgroundImage: $backgroundImage}) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
@@ -426,39 +402,30 @@ class LiveRoomAPI:
     @staticmethod
     def Live_stream_profile_following(streamer_display_name):  # 主播关注的直播间
         payload = {
-            "operationName": "LivestreamProfileFollowing",
-            "variables": {
+              "operationName": "LivestreamProfileFollowing",
+              "variables": {
                 "displayname": streamer_display_name,
                 "sortedBy": "AZ",
                 "first": 20,
                 "isLoggedIn": True
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "76690ef91938871b85d1155bd9061d6bce3dec7f375db20160c4ce14bf2ff9ad"
-                }
+              },
+              "query": "query LivestreamProfileFollowing($displayname: String!, $sortedBy: RelationSortOrder, $first: Int, $after: String, $isLoggedIn: Boolean!) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    displayname\n    following(sortedBy: $sortedBy, first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        ...VFollowFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VFollowFrag on User {\n  id\n  username\n  displayname\n  isFollowing @include(if: $isLoggedIn)\n  isMe @include(if: $isLoggedIn)\n  followers {\n    totalCount\n    __typename\n  }\n  __typename\n}\n"
             }
-        }
+
         return payload
 
     @staticmethod
     def Live_stream_profile_followers(streamer_display_name):  # 其他关注主播的主播
         payload = {
-            "operationName": "LivestreamProfileFollowers",
-            "variables": {
+              "operationName": "LivestreamProfileFollowers",
+              "variables": {
                 "displayname": streamer_display_name,
                 "sortedBy": "AZ",
                 "first": 20,
                 "isLoggedIn": True
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "698db968db04e78c79fe1d48461a5af4596a1337e33386f45cad1cb7d4da3dce"
-                }
+              },
+              "query": "query LivestreamProfileFollowers($displayname: String!, $sortedBy: RelationSortOrder, $first: Int, $after: String, $isLoggedIn: Boolean!) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    displayname\n    followers(sortedBy: $sortedBy, first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        ...VFollowFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VFollowFrag on User {\n  id\n  username\n  displayname\n  isFollowing @include(if: $isLoggedIn)\n  isMe @include(if: $isLoggedIn)\n  followers {\n    totalCount\n    __typename\n  }\n  __typename\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -753,147 +720,135 @@ class LiveRoomAPI:
     @staticmethod
     def AddSubscription(streamerName, month):
         payload = {
-              "operationName": "AddSubscribe",
-              "variables": {
+            "operationName": "AddSubscribe",
+            "variables": {
                 "streamer": streamerName,
                 "month": month
-              },
-              # "extensions": {
-              #   "persistedQuery": {
-              #     "version": 1,
-              #     "sha256Hash": "e1768410429a8a28c5d8104fa12a6ca2bbcdc2605a0b0a0c354c2a3ddd617c6e"
-              #   }
-              # },
+            },
             "query": "mutation AddSubscribe($streamer: String!, $month: Int) {\n  subscribeWithCashback(streamer: "
                      "$streamer, month: $month) {\n    err {\n      code\n      __typename\n    }\n    "
                      "cashbacked\n    __typename\n  }\n}\n"
-            }
+        }
         return payload
 
     @staticmethod
     def MeSubscribing():
         payload = {
-          "operationName": "MeSubscribing",
-          "variables": {
-            "first": 50
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "18129274ce05949ed82e94fd855132ea8a811c74dae6bd7f279bf1519b41b6c3"
+            "operationName": "MeSubscribing",
+            "variables": {
+                "first": 50
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "18129274ce05949ed82e94fd855132ea8a811c74dae6bd7f279bf1519b41b6c3"
+                }
             }
-          }
         }
         return payload
 
     @staticmethod
     def UserUnsubscribe(streamer_name):
         payload = {
-          "operationName": "UserUnsubscribe",
-          "variables": {
-            "streamer": streamer_name
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "628f90aa017d2307a685102f735758934e31ed3098259a2401f3d38326214ac5"
+            "operationName": "UserUnsubscribe",
+            "variables": {
+                "streamer": streamer_name
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "628f90aa017d2307a685102f735758934e31ed3098259a2401f3d38326214ac5"
+                }
             }
-          }
         }
         return payload
 
     @staticmethod
     def BanStreamChatUser(streamer, banUser):
         payload = {
-          "operationName": "BanStreamChatUser",
-          "variables": {
-            "streamer": streamer,
-            "username": banUser
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "4eaeb20cba25dddc95df6f2acf8018b09a4a699cde468d1e8075d99bb00bacc4"
+            "operationName": "BanStreamChatUser",
+            "variables": {
+                "streamer": streamer,
+                "username": banUser
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "4eaeb20cba25dddc95df6f2acf8018b09a4a699cde468d1e8075d99bb00bacc4"
+                }
             }
-          }
         }
         return payload
 
     @staticmethod
     def UnbanStreamChatUser(streamer, banUser):
         payload = {
-          "operationName": "UnbanStreamChatUser",
-          "variables": {
-            "streamer": streamer,
-            "username": banUser,
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "574e9a8db47ff719844359964d6108320e4d35f0378d7f983651d87b315d4008"
+            "operationName": "UnbanStreamChatUser",
+            "variables": {
+                "streamer": streamer,
+                "username": banUser,
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "574e9a8db47ff719844359964d6108320e4d35f0378d7f983651d87b315d4008"
+                }
             }
-          }
         }
         return payload
 
     @staticmethod
     def StreamChatBannedUsers(streamer_display):
         payload = {
-          "operationName": "StreamChatBannedUsers",
-          "variables": {
-            "displayname": streamer_display,
-            "first": 20,
-            "search": ""
-          },
-          "query": "query StreamChatBannedUsers($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatBannedUsers(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
+            "operationName": "StreamChatBannedUsers",
+            "variables": {
+                "displayname": streamer_display,
+                "first": 20,
+                "search": ""
+            },
+            "query": "query StreamChatBannedUsers($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatBannedUsers(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
         }
         return payload
 
     @staticmethod
     def AddModerator(streamer, user):
         payload = {
-          "operationName": "AddModerator",
-          "variables": {
-            "username": user,
-            "streamer": streamer
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "062727612e825ec7e8307b176f7a60fb71bb205eb4cd432020af9c476362471f"
-            }
-          },
-          "query": "mutation AddModerator($username: String!, $streamer: String) {\n  moderatorAdd(username: $username, streamer: $streamer) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
+            "operationName": "AddModerator",
+            "variables": {
+                "username": user,
+                "streamer": streamer
+            },
+            "query": "mutation AddModerator($username: String!, $streamer: String) {\n  moderatorAdd(username: $username, streamer: $streamer) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
     @staticmethod
     def RemoveModerator(streamer, user):
         payload = {
-          "operationName": "RemoveModerator",
-          "variables": {
-            "username": user,
-            "streamer": streamer
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "6ab7beae3484aede4fc88a2052908ada86474fcabc6f29b7859b71443753b0da"
+            "operationName": "RemoveModerator",
+            "variables": {
+                "username": user,
+                "streamer": streamer
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "6ab7beae3484aede4fc88a2052908ada86474fcabc6f29b7859b71443753b0da"
+                }
             }
-          }
         }
         return payload
 
     @staticmethod
     def StreamChatModerators(displayname):
         payload = {
-          "operationName": "StreamChatModerators",
-          "variables": {
-            "displayname": displayname,
-            "first": 20,
-            "search": ""
-          },
-          "query": "query StreamChatModerators($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatModerators(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
+            "operationName": "StreamChatModerators",
+            "variables": {
+                "displayname": displayname,
+                "first": 20,
+                "search": ""
+            },
+            "query": "query StreamChatModerators($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatModerators(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
         }
 
         return payload
@@ -901,37 +856,61 @@ class LiveRoomAPI:
     @staticmethod
     def DeleteChat(streamer, messageID):
         payload = {
-          "operationName": "DeleteChat",
-          "variables": {
-            "streamer": streamer,
-            "id": messageID
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "7ae6f96161b89d9831dcf217f11f67c1edf5bb311d8819101345ed8eb38f6ed9"
+            "operationName": "DeleteChat",
+            "variables": {
+                "streamer": streamer,
+                "id": messageID
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "7ae6f96161b89d9831dcf217f11f67c1edf5bb311d8819101345ed8eb38f6ed9"
+                }
             }
-          }
         }
         return payload
 
     @staticmethod
     def MeModLogs():
         payload = {
-          "operationName": "MeModLogs",
-          "variables": {
-            "input": {
-              "operator": "",
-              "operation": "",
-              "start": None,
-              "end": None,
-              "first": 20,
-              "after": ""
-            }
-          },
-          "query": "query MeModLogs($input: ListModLogsInput!) {\n  me {\n    ...DashboardModeratorFrag\n    __typename\n  }\n}\n\nfragment DashboardModeratorFrag on User {\n  id\n  modLogs(input: $input) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      streamer {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      operator {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      operation\n      user {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      emote\n      log\n      createdAt\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
+            "operationName": "MeModLogs",
+            "variables": {
+                "input": {
+                    "operator": "",
+                    "operation": "",
+                    "start": None,
+                    "end": None,
+                    "first": 20,
+                    "after": ""
+                }
+            },
+            "query": "query MeModLogs($input: ListModLogsInput!) {\n  me {\n    ...DashboardModeratorFrag\n    __typename\n  }\n}\n\nfragment DashboardModeratorFrag on User {\n  id\n  modLogs(input: $input) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      streamer {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      operator {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      operation\n      user {\n        id\n        avatar\n        displayname\n        __typename\n      }\n      emote\n      log\n      createdAt\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
         }
 
+        return payload
+
+    @staticmethod
+    def LivestreamProfileReplay(displayname):
+        payload = {
+              "operationName": "LivestreamProfileReplay",
+              "variables": {
+                "displayname": displayname,
+                "first": 20
+              },
+              "query": "query LivestreamProfileReplay($displayname: String!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    pastBroadcastsV2(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        ...ProfileReplaySnapFrag\n        __typename\n      }\n      __typename\n    }\n    username\n    __typename\n  }\n}\n\nfragment ProfileReplaySnapFrag on PastBroadcast {\n  permlink\n  thumbnailUrl\n  title\n  length\n  totalReward\n  createdAt\n  viewCount\n  playbackUrl\n  creator {\n    id\n    displayname\n    __typename\n  }\n  resolution {\n    resolution\n    url\n    __typename\n  }\n  category {\n    id\n    title\n    imgUrl\n    __typename\n  }\n  __typename\n}\n"
+            }
+        return payload
+
+    @staticmethod
+    def LivestreamProfileSubscriber(displayname):
+        payload = {
+              "operationName": "LivestreamProfileSubscriber",
+              "variables": {
+                "displayname": displayname,
+                "first": 20
+              },
+              "query": "query LivestreamProfileSubscriber($displayname: String!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    private {\n      subscribers(first: $first, after: $after) {\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        list {\n          subscriber {\n            username\n            ...VDliveAvatarFrag\n            ...VDliveNameFrag\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
+            }
         return payload
 
 
@@ -943,12 +922,7 @@ class LoginAPI:
             "variables": {
                 "username": streamerDisplayName
             },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "74b11202f62d608807a83abf4e6a4416ded05cd885e51ff726b7c72f2f655f10"
-                }
-            }
+            "query": "query IsUserVerifyEmailButNoPwd($username: String!) {IsUserVerifyEmailButNoPwd(username: $username) {isUserVerifyEmailButNoPwd __typename}}"
         }
         return payload
 
@@ -959,12 +933,7 @@ class LoginAPI:
             "variables": {
                 "username": "automation"
             },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "ac7d37ad694d1630c7a972cec72c0d17669fb7fcdad9ce2edb0879217b734605"
-                }
-            }
+            "query": "query isFirstThirdLogin($username: String!) {isFirstThirdLogin(username: $username) {isFirstThirdLogin __typename}}"
         }
         return payload
 
@@ -1123,5 +1092,3 @@ class HomePageAPI:
         }
 
         return payload
-
-
