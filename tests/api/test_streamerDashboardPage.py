@@ -22,8 +22,8 @@ class TestStreamerDashboardPage:
         with allure.step('检查主播的title 是否是：Automation test'):
             assert response_json['data']['me']['private']['streamTemplate'][
                        'title'] == 'Automation test', 'streamer title is not Automation test'
-        with allure.step('检查主播的所在的category 是否是：qaTest'):
-            assert response_json['data']['me']['private']['streamTemplate']['category']['title'] == 'qaTest', \
+        with allure.step('检查主播的所在的category 是否是： Web3 Games '):
+            assert response_json['data']['me']['private']['streamTemplate']['category']['title'] == 'Web3 Games', \
                 'streamer category is not qaTest'
         with allure.step('检查主播的所在的tag是否是：gogo'):
             assert response_json['data']['me']['private']['streamTemplate']['tags'][0] == 'gogo', \
@@ -31,10 +31,10 @@ class TestStreamerDashboardPage:
         with allure.step('检查主播的设置的语言是否是：English'):
             assert response_json['data']['me']['livestream']['language']['language'] == 'English', \
                 'streamer language is not qaTest'
-        with allure.step('检查主播的设置的rating tag是否是：Family Friendly'):
+        with allure.step('检查主播是否是Mature tag 直播间'):
             if (response_json['data']['me']['private']['streamTemplate']['ageRestriction'] is False &
-                    response_json['data']['me']['private']['streamTemplate']['earnRestriction'] is False):
-                assert True, 'streamer rating tag is not Family Friendly'
+                    response_json['data']['me']['private']['streamTemplate']['earnRestriction'] is True):
+                assert True, 'streamer rating tag is not Mature tag'
         # with allure.step('检查主播的设置的缩列图是否正确'):
         #     assert response_json['data']['me']['private']['streamTemplate']['thumbnailUrl'] == \
         #            'https://images.stg.dlivecdn.com/thumbnail/37113e86-e28d-11ed-9838-e6f76b90cd4f', \

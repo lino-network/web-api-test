@@ -112,7 +112,7 @@ class TestHomePage:
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_nav_search_category(self, get_config_data, api_headers):
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                 json=Payload.HomePageAPI().homepage_nav_search_result("qatest"))
+                                 json=Payload.HomePageAPI().homepage_nav_search_result("Web3 Games"))
         assert response.status_code == 200
         # 解析返回结果
         data = json.loads(response.text)
@@ -129,15 +129,15 @@ class TestHomePage:
         # 获取分类列表
         categories = data["data"]["search"]["liveCategories"]["list"]
         print(categories)
-        # 检查是否存在"title": "qaTest"
+        # 检查是否存在"title": "Web3 Games"
         found_category = False
         for category in categories:
-            if category.get("title") == "qaTest":
+            if category.get("title") == "Web3 Games":
                 found_category = True
                 break
 
         # 检查结果
-        assert found_category == True, "Category 'qaTest' not found"
+        assert found_category == True, "Category 'Web3 Games' not found"
 
     @allure.title('test_me_global')
     @allure.severity(allure.severity_level.CRITICAL)
@@ -253,14 +253,14 @@ class TestHomePage:
         assert data["data"]["search"]["trendingCategories"]["list"] is not None
 
         response_search = requests.post(get_config_data['url'], headers=api_headers,
-                                        json=Payload.HomePageAPI().homepage_browse_page_search_category("qa"))
+                                        json=Payload.HomePageAPI().homepage_browse_page_search_category("Web3"))
         assert response_search.status_code == 200
         data_search = json.loads(response_search.text)
         print(data_search)
         category_list = data_search["data"]["search"]["trendingCategories"]["list"]
         cate_exists = False
         for i in category_list:
-            if i["title"] == "qaTest":
+            if i["title"] == "Web3 Games":
                 cate_exists = True
                 break
         assert cate_exists == True, '搜索的category不存在'
@@ -295,7 +295,7 @@ class TestHomePage:
                                        get_config_data['streamer_category_id']))
         print(response)
         streamer_list = response["data"]["livestreams"]["list"]
-        with allure.step("检查automation这个直播间是否在category: qatest下面"):
+        with allure.step("检查automation这个直播间是否在category: Web3 Games下面"):
             streamerExist = False
             for i in streamer_list:
                 print(i['permlink'])
@@ -307,7 +307,7 @@ class TestHomePage:
                             assert i['category']['id'] == "category:" + str(get_config_data['streamer_category_id'])
                             assert i['title'] == "Automation test"
                     break
-            assert streamerExist == True, 'automation这个直播间不在category: qatest下面'
+            assert streamerExist == True, 'automation这个直播间不在category: Web3 Games下面'
 
     @allure.title('test_IsUserVerifyEmailButNoPwd')
     @allure.severity(allure.severity_level.CRITICAL)

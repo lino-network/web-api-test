@@ -9,10 +9,10 @@ apiData:
   follow_streamer_user: automation@nqmo.com
   follow_streamer_pwd: Pwd@1234
   follow_streamer_permlink: automation+2hatMquVg
-  streamer_category_id: 18172     # qatest
+  streamer_category_id: -4     # web3 Games
   donate_value: 1
   send_message: for automation test   # send message and emo
-  subscription_streamer: replay2         # 每次执行需要填写新的主播的名字，因为每次订阅过了就不能重新订阅了, 用username,
+  subscription_streamer: mo2         # 每次执行需要填写新的主播的名字，因为每次订阅过了就不能重新订阅了, 用username,
                                         # 被订阅着：automation@nqmo.com
   hosting_streamer: helentron
   dashboard_info:
