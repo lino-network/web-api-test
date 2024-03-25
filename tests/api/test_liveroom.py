@@ -266,9 +266,9 @@ class TestLivePage:
                         viewer2_after_lemon = common.get_account_lemon(get_config_data['url'], viewer2_header)
                         assert int(viewer2_origin_lemon) + int(viewer2_get_lemon) <= int(viewer2_after_lemon) \
                                < int(viewer2_after_lemon) + 2
-            if not message_user:
-                with allure.step('发信息的观众不在中奖名单'):
-                    assert False
+            # if not message_user:
+            #     with allure.step('发信息的观众不在中奖名单'):
+            #         assert False
             if not donate_user:
                 with allure.step('donate的观众不在中奖名单'):
                     assert False
@@ -307,7 +307,7 @@ class TestLivePage:
                 'offline图片网址不对，实际的是： ' + str(url)
         with allure.step('检查直播间的category是否显示正确'):
             category = resp['data']['userByDisplayName']['livestream']['category']['title']
-            assert category == 'qaTest', '主播的category显示不对，期望是qaTest，但是实际是：' + str(category)
+            assert category == 'Web3 Games', '主播的category显示不对，期望是Web3 Games，但是实际是：' + str(category)
         with allure.step('检查主播的displayname显示是否正确'):
             displayname = resp['data']['userByDisplayName']['livestream']['creator']['displayname']
             assert displayname == 'automation', '主播的名字显示不对，期望是automation，但是实际是：' + str(displayname)

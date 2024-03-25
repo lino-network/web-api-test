@@ -1082,7 +1082,7 @@ class HomePageAPI:
         payload = {
             "operationName": "CategoryLivestreamsPage",
             "variables": {
-                "first": 20,
+                "first": 150,
                 "categoryID": categoryid,
                 "languageID": None,
                 "showNSFW": True,
@@ -1092,3 +1092,18 @@ class HomePageAPI:
         }
 
         return payload
+
+
+class MatureRelatedAPI:
+    @staticmethod
+    def CheckMaturePopupClosedByUsername(username):
+        payload = {
+              "operationName": "CheckMaturePopupClosedByUsername",
+              "variables": {
+                "username": username
+              },
+              "query": "query CheckMaturePopupClosedByUsername($username: String!) {\n  checkMaturePopupClosedByUsername(username: $username) {\n    isClosed\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+            }
+        return payload
+
+
