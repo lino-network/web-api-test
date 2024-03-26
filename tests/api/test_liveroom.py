@@ -636,6 +636,55 @@ class TestLivePage:
             print(response['data'])
             assert not any('err' == item for item in str(response['data'])), '接口返回值有报错'
 
+    @allure.title('test_replay')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_replay(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：LivestreamProfileReplay
+        检查replay数据返回没报错
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('检查replay数据返回没报错'):
+            response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                       Payload.LiveRoomAPI().LivestreamProfileReplay(
+                                           get_config_data['replay_streamer']))
+            assert response['data']['userByDisplayName']['pastBroadcastsV2']['list'] is not None
+            assert not any('err' == item for item in str(response['data'])), '接口返回值有报错'
+
+    @allure.title('test_replay_addWatch')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_replay_addWatch(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：AddWatch
+        检查replay add watch接口数据返回没报错
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('检查replay add watch接口数据返回没报错'):
+            response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                       Payload.LiveRoomAPI().AddWatch(
+                                           get_config_data['replay_streamer_permlink']))
+            assert not any('err' == item for item in str(response['data'])), '接口返回值有报错'
+
+    @allure.title('test_replay_PastBroadcastPage')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_replay_PastBroadcastPage(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：PastBroadcastPage
+        检查replay PastBroadcastPage接口数据返回没报错
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('检查replay PastBroadcastPage接口数据返回没报错'):
+            response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                       Payload.LiveRoomAPI().PastBroadcastPage(
+                                           get_config_data['replay_streamer_permlink']))
+            assert not any('err' == item for item in str(response['data'])), '接口返回值有报错'
+
 
 if __name__ == '__main__':
     print('e2rwf')
