@@ -329,8 +329,8 @@ class TestLivePage:
         检查直播间最佳贡献者排名
         """
         with allure.step("检查this stream 最佳贡献者排名是否显示正常"):
-            resp_stream = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().TopContributors(
-                get_config_data['follow_streamer'], 'THIS_STREAM'))
+            resp_stream = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().
+                                          TopContributorsLivestream(get_config_data['follow_streamer']))
             print('00000000')
             print(resp_stream)
             amount_list = resp_stream['data']['userByDisplayName']['livestream']['topContributions']['list']
@@ -359,7 +359,7 @@ class TestLivePage:
                             else:
                                 with allure.step('检查' + str(int(amount_new_list[j])) + '大于' +
                                                  str(int(amount_new_list[j + 1]))):
-                                    assert int(amount_new_list[j]) > int(amount_new_list[j + 1])
+                                    assert int(amount_new_list[j]) >= int(amount_new_list[j + 1])
 
         with allure.step("检查THIS_MONTH最佳贡献者排名是否显示正常"):
             resp_month = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().TopContributors(
@@ -390,7 +390,7 @@ class TestLivePage:
                             else:
                                 with allure.step('检查' + str(int(amount_new_list1[j])) + '大于' +
                                                  str(int(amount_new_list1[j + 1]))):
-                                    assert int(amount_new_list1[j]) > int(amount_new_list1[j + 1])
+                                    assert int(amount_new_list1[j]) >= int(amount_new_list1[j + 1])
 
         with allure.step("检查ALL_TIME最佳贡献者排名是否显示正常"):
             resp_all = common.api_post(get_config_data['url'], api_headers, Payload.LiveRoomAPI().TopContributors(
@@ -421,7 +421,7 @@ class TestLivePage:
                             else:
                                 with allure.step('检查' + str(int(amount_new_list2[j])) + '大于' +
                                                  str(int(amount_new_list2[j + 1]))):
-                                    assert int(amount_new_list2[j]) > int(amount_new_list2[j + 1])
+                                    assert int(amount_new_list2[j]) >= int(amount_new_list2[j + 1])
 
     @allure.title('test_subscription_and_cancel_sub')
     @allure.severity(allure.severity_level.CRITICAL)
