@@ -688,22 +688,28 @@ class LiveRoomAPI:
         return payload
 
     @staticmethod
-    def TopContributors(streamDisplayName, rule):
-        if rule == 'THIS_STREAM':
-            queryStream = True
-            operationName = 'TopContributorsLivestream'
-            query = 'query TopContributorsLivestream($displayname: String! $first: Int $after: String) {userByDisplayName(displayname: $displayname) {id livestream {...TopContributorsOfLivestreamFrag}}}'
-        else:
-            queryStream = False
-            operationName = 'TopContributors'
-            query = 'query TopContributors($displayname: String!, $rule: ContributionSummaryRule!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TopContributorsOfStreamerFrag\n    __typename\n  }\n}\n\nfragment TopContributorsOfStreamerFrag on User {\n  id\n  topContributions(rule: $rule, first: $first, after: $after) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      amount\n      contributor {\n        id\n        ...VDliveNameFrag\n        ...VDliveAvatarFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"'
+    def TopContributorsLivestream(streamDisplayName):
         payload = {
-              "operationName": operationName,
+              "operationName": "TopContributorsLivestream",
+              "variables": {
+                "displayname": streamDisplayName,
+                "first": 10,
+                "rule": "THIS_STREAM",
+                "queryStream": True
+              },
+              "query": "query TopContributorsLivestream($displayname: String!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    livestream {\n      ...TopContributorsOfLivestreamFrag\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment TopContributorsOfLivestreamFrag on Livestream {\n  id\n  permlink\n  topContributions(first: $first, after: $after) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      amount\n      contributor {\n        id\n        ...VDliveNameFrag\n        ...VDliveAvatarFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"
+            }
+        return payload
+
+    @staticmethod
+    def TopContributors(streamDisplayName, rule):
+        payload = {
+              "operationName": 'TopContributors',
               "variables": {
                 "displayname": streamDisplayName,
                 "first": 10,
                 "rule": rule,
-                "queryStream": queryStream
+                "queryStream": False
               },
               "extensions": {
                 "persistedQuery": {
@@ -711,8 +717,7 @@ class LiveRoomAPI:
                   "sha256Hash": "e167a0e968a58dc723f0471b68fe65b0015ac63fdf1724187b68055b1361970f"
                 }
               },
-            'query': query
-             # "query": "query TopContributors($displayname: String!, $rule: ContributionSummaryRule!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TopContributorsOfStreamerFrag\n    __typename\n  }\n}\n\nfragment TopContributorsOfStreamerFrag on User {\n  id\n  topContributions(rule: $rule, first: $first, after: $after) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      amount\n      contributor {\n        id\n        ...VDliveNameFrag\n        ...VDliveAvatarFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"
+             "query": "query TopContributors($displayname: String!, $rule: ContributionSummaryRule!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TopContributorsOfStreamerFrag\n    __typename\n  }\n}\n\nfragment TopContributorsOfStreamerFrag on User {\n  id\n  topContributions(rule: $rule, first: $first, after: $after) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      amount\n      contributor {\n        id\n        ...VDliveNameFrag\n        ...VDliveAvatarFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"
             }
         return payload
 
