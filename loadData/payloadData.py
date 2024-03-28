@@ -143,21 +143,22 @@ def MeRebillyCards():
     return payload
 
 
-def ActivityUserDonationRank():
+def ActivityUserDonationRank(username, rankingType):
     payload = {
-        "operationName": "ActivityUserDonationRank",
-        "variables": {
-            "username": "automation",
-            "rankingType": "THIS_WEEK",
+          "operationName": "ActivityUserDonationRank",
+          "variables": {
+            "username": username,
+            "rankingType": rankingType,
             "isStreamer": True
-        },
-        "extensions": {
+          },
+          "extensions": {
             "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "0a3cf0be08ae880d5894313d0be07f656fed47ec729f698545463761ca5f9c3d"
+              "version": 1,
+              "sha256Hash": "5ff007e457c354fc042cd9ef637babac993c1c92c917650b152bbf4cd5fd1a20"
             }
+          },
+          "query": "query ActivityUserDonationRank($username: String!, $rankingType: RankingType!, $isStreamer: Boolean!) {\n  userDonationRank(username: $username, rankingType: $rankingType, isStreamer: $isStreamer) {\n    __typename\n    rank\n    user {\n      displayname\n      __typename\n    }\n    amount\n  }\n}\n"
         }
-    }
     return payload
 
 
@@ -288,46 +289,58 @@ class DaskboardAPI:
     @staticmethod
     def StreamHostSet(username):
         payload = {
-            "operationName": "StreamHostSet",
-            "variables": {
-                "username": username
-            },
-            "query": "mutation StreamHostSet($username: String!) {\n  hostSet(username: $username) {\n    livestream {\n      id\n      permlink\n      creator {\n        id\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      ...VVideoPlayerFrag\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n"
+          "operationName": "StreamHostSet",
+          "variables": {
+            "username": username
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "c4c11c7881c2516b8aeae032be6280fbb944a38af2b66ae32dba9d07da788260"
+            }
+          },
+          "query": "mutation StreamHostSet($username: String!) {\n  hostSet(username: $username) {\n    livestream {\n      id\n      permlink\n      creator {\n        id\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      ...VVideoPlayerFrag\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n"
         }
         return payload
 
     @staticmethod
     def MEDashboard(username):
         payload = {
-            "operationName": "MeDashboard",
-            "variables": {
-                "isLoggedIn": True,
-                "input": {
-                    "operator": username,
-                    "operation": "",
-                    "first": 10,
-                    "after": ""
-                }
-            },
-            "query": "query MeDashboard($isLoggedIn: Boolean!) {\n  me {\n    ...MeDashboardFrag\n    __typename\n  }\n}\n\nfragment MeDashboardFrag on User {\n  id\n  canSubscribe\n  private {\n    emailVerified\n    __typename\n  }\n  ...DashboardStreamSettingsFrag\n  ...DashboardHostSettingFrag\n  ...DashboardStreamChatroomFrag\n  ...DashboardActivityFeedFrag\n  ...DashboardOfflineImageSettingFrag\n  ...DashboardRerunSettingsFrag\n  ...DashboardSubscriptionSettingFrag\n  __typename\n}\n\nfragment DashboardStreamSettingsFrag on User {\n  livestream {\n    id\n    permlink\n    ...VVideoPlayerFrag\n    __typename\n  }\n  hostingLivestream {\n    id\n    permlink\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    ...VVideoPlayerFrag\n    __typename\n  }\n  private {\n    streamTemplate {\n      title\n      ageRestriction\n      earnRestriction\n      thumbnailUrl\n      disableAlert\n      category {\n        id\n        backendID\n        title\n        __typename\n      }\n      language {\n        id\n        backendID\n        code\n        language\n        __typename\n      }\n      tags\n      saveReplay\n      __typename\n    }\n    filterWords\n    __typename\n  }\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment DashboardHostSettingFrag on User {\n  id\n  hostingLivestream {\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardStreamChatroomFrag on User {\n  ...MeLivestreamChatroomFrag\n  __typename\n}\n\nfragment MeLivestreamChatroomFrag on User {\n  id\n  username\n  role\n  myChatBadges\n  ...EmojiFrag\n  ...MeEmoteFrag\n  ...MeStreamChatModeSettingFrag\n  __typename\n}\n\nfragment MeEmoteFrag on User {\n  id\n  role @include(if: $isLoggedIn)\n  emote {\n    ...EmoteMineFrag\n    ...EmoteChannelFrag\n    ...EmoteGlobalFrag\n    ...EmoteVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteMineFrag on AllEmotes {\n  mine {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteChannelFrag on AllEmotes {\n  channel {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteGlobalFrag on AllEmotes {\n  global {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteVipFrag on AllEmotes {\n  vip {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment MeStreamChatModeSettingFrag on User {\n  id\n  private {\n    displaySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      chat\n      stickers\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiFrag on User {\n  id\n  emoji {\n    ...EmojiGlobalFrag\n    ...EmojiVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiGlobalFrag on AllEmojis {\n  global {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiVipFrag on AllEmojis {\n  vip {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardActivityFeedFrag on User {\n  id\n  ...ActivityFeedFrag\n  __typename\n}\n\nfragment ActivityFeedFrag on User {\n  id\n  username\n  displayname\n  ...VStreamChatRowStreamerFrag\n  ...ActivityFeedSettingsFrag\n  chats(count: 50) {\n    type\n    ... on ChatGift {\n      id\n      gift\n      amount\n      message\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatHost {\n      id\n      viewer\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatSubscription {\n      id\n      month\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatExtendSub {\n      id\n      month\n      length\n      ...VStreamChatSenderInfoFrag\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSub {\n      id\n      ...VStreamChatSenderInfoFrag\n      count\n      receiver\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSubReceive {\n      id\n      ...VStreamChatSenderInfoFrag\n      gifter\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatFollow {\n      id\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatRowStreamerFrag on User {\n  displayname\n  isMe @include(if: $isLoggedIn)\n  ...VStreamChatRowSenderInfoStreamerFrag\n  ...VStreamChatProfileCardStreamerFrag\n  ...StreamChatTextRowStreamerFrag\n  __typename\n}\n\nfragment VStreamChatRowSenderInfoStreamerFrag on User {\n  id\n  subSetting {\n    badgeText\n    badgeColor\n    textColor\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatProfileCardStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  role\n  __typename\n}\n\nfragment StreamChatTextRowStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  mySubscription @include(if: $isLoggedIn) {\n    isSubscribing\n    __typename\n  }\n  chatBannedEmoji\n  emote @include(if: $isLoggedIn) {\n    channel {\n      list {\n        name\n        username\n        sourceURL\n        mimeType\n        level\n        type\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  subSetting {\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment ActivityFeedSettingsFrag on User {\n  id\n  private {\n    activitySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatSenderInfoFrag on SenderInfo {\n  subscribing\n  role\n  roomRole\n  sender {\n    id\n    username\n    displayname\n    avatar\n    partnerStatus\n    badges\n    effect\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardOfflineImageSettingFrag on User {\n  id\n  partnerStatus\n  offlineImage\n  __typename\n}\n\nfragment DashboardRerunSettingsFrag on User {\n  id\n  private {\n    rerunSetting {\n      enabled\n      presets {\n        pastbroadcast {\n          permlink\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardSubscriptionSettingFrag on User {\n  id\n  private {\n    showSubSettingTab\n    __typename\n  }\n  ...SettingsSubscribeFrag\n  __typename\n}\n\nfragment SettingsSubscribeFrag on User {\n  id\n  subSetting {\n    badgeColor\n    badgeText\n    textColor\n    streakTextColor\n    benefits\n    backgroundImage\n    __typename\n  }\n  __typename\n}\n"
+          "operationName": "MeDashboard",
+          "variables": {
+            "isLoggedIn": True,
+            "input": {
+              "operator": username,
+              "operation": "",
+              "first": 10,
+              "after": ""
+            }
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "78e83028a2c6203c4ac6e2cdccd1cb162f061d7fcf7e64ce7f851b618116af1c"
+            }
+          },
+          "query": "query MeDashboard($isLoggedIn: Boolean!) {\n  me {\n    ...MeDashboardFrag\n    __typename\n  }\n}\n\nfragment MeDashboardFrag on User {\n  id\n  canSubscribe\n  private {\n    emailVerified\n    __typename\n  }\n  ...DashboardStreamSettingsFrag\n  ...DashboardHostSettingFrag\n  ...DashboardStreamChatroomFrag\n  ...DashboardActivityFeedFrag\n  ...DashboardOfflineImageSettingFrag\n  ...DashboardRerunSettingsFrag\n  ...DashboardSubscriptionSettingFrag\n  __typename\n}\n\nfragment DashboardStreamSettingsFrag on User {\n  livestream {\n    id\n    permlink\n    ...VVideoPlayerFrag\n    __typename\n  }\n  hostingLivestream {\n    id\n    permlink\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    ...VVideoPlayerFrag\n    __typename\n  }\n  private {\n    streamTemplate {\n      title\n      ageRestriction\n      earnRestriction\n      thumbnailUrl\n      disableAlert\n      category {\n        id\n        backendID\n        title\n        __typename\n      }\n      language {\n        id\n        backendID\n        code\n        language\n        __typename\n      }\n      tags\n      saveReplay\n      __typename\n    }\n    filterWords\n    __typename\n  }\n  __typename\n}\n\nfragment VVideoPlayerFrag on Livestream {\n  permlink\n  disableAlert\n  encryptedStream\n  ageRestriction\n  category {\n    id\n    title\n    __typename\n  }\n  tags\n  language {\n    id\n    language\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment DashboardHostSettingFrag on User {\n  id\n  hostingLivestream {\n    creator {\n      id\n      username\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardStreamChatroomFrag on User {\n  ...MeLivestreamChatroomFrag\n  __typename\n}\n\nfragment MeLivestreamChatroomFrag on User {\n  id\n  username\n  role\n  myChatBadges\n  ...EmojiFrag\n  ...MeEmoteFrag\n  ...MeStreamChatModeSettingFrag\n  __typename\n}\n\nfragment MeEmoteFrag on User {\n  id\n  role @include(if: $isLoggedIn)\n  emote {\n    ...EmoteMineFrag\n    ...EmoteChannelFrag\n    ...EmoteGlobalFrag\n    ...EmoteVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteMineFrag on AllEmotes {\n  mine {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteChannelFrag on AllEmotes {\n  channel {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteGlobalFrag on AllEmotes {\n  global {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmoteVipFrag on AllEmotes {\n  vip {\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment MeStreamChatModeSettingFrag on User {\n  id\n  private {\n    displaySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      chat\n      stickers\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiFrag on User {\n  id\n  emoji {\n    ...EmojiGlobalFrag\n    ...EmojiVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiGlobalFrag on AllEmojis {\n  global {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiVipFrag on AllEmojis {\n  vip {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardActivityFeedFrag on User {\n  id\n  ...ActivityFeedFrag\n  __typename\n}\n\nfragment ActivityFeedFrag on User {\n  id\n  username\n  displayname\n  ...VStreamChatRowStreamerFrag\n  ...ActivityFeedSettingsFrag\n  chats(count: 50) {\n    type\n    ... on ChatGift {\n      id\n      gift\n      amount\n      message\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatHost {\n      id\n      viewer\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatSubscription {\n      id\n      month\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    ... on ChatExtendSub {\n      id\n      month\n      length\n      ...VStreamChatSenderInfoFrag\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSub {\n      id\n      ...VStreamChatSenderInfoFrag\n      count\n      receiver\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatGiftSubReceive {\n      id\n      ...VStreamChatSenderInfoFrag\n      gifter\n      subscribing\n      role\n      roomRole\n      sender {\n        id\n        username\n        displayname\n        avatar\n        partnerStatus\n        badges\n        __typename\n      }\n      __typename\n    }\n    ... on ChatFollow {\n      id\n      ...VStreamChatSenderInfoFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatRowStreamerFrag on User {\n  displayname\n  isMe @include(if: $isLoggedIn)\n  ...VStreamChatRowSenderInfoStreamerFrag\n  ...VStreamChatProfileCardStreamerFrag\n  ...StreamChatTextRowStreamerFrag\n  __typename\n}\n\nfragment VStreamChatRowSenderInfoStreamerFrag on User {\n  id\n  subSetting {\n    badgeText\n    badgeColor\n    textColor\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatProfileCardStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  role\n  __typename\n}\n\nfragment StreamChatTextRowStreamerFrag on User {\n  id\n  username\n  myRoomRole @include(if: $isLoggedIn)\n  mySubscription @include(if: $isLoggedIn) {\n    isSubscribing\n    __typename\n  }\n  chatBannedEmoji\n  emote @include(if: $isLoggedIn) {\n    channel {\n      list {\n        name\n        username\n        sourceURL\n        mimeType\n        level\n        type\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  subSetting {\n    streakTextColor\n    __typename\n  }\n  __typename\n}\n\nfragment ActivityFeedSettingsFrag on User {\n  id\n  private {\n    activitySetting {\n      lemon\n      icecream\n      diamond\n      ninjaghini\n      ninjet\n      follow\n      subscription\n      hosting\n      moderation\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VStreamChatSenderInfoFrag on SenderInfo {\n  subscribing\n  role\n  roomRole\n  sender {\n    id\n    username\n    displayname\n    avatar\n    partnerStatus\n    badges\n    effect\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardOfflineImageSettingFrag on User {\n  id\n  partnerStatus\n  offlineImage\n  __typename\n}\n\nfragment DashboardRerunSettingsFrag on User {\n  id\n  private {\n    rerunSetting {\n      enabled\n      presets {\n        pastbroadcast {\n          permlink\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment DashboardSubscriptionSettingFrag on User {\n  id\n  private {\n    showSubSettingTab\n    __typename\n  }\n  ...SettingsSubscribeFrag\n  __typename\n}\n\nfragment SettingsSubscribeFrag on User {\n  id\n  subSetting {\n    badgeColor\n    badgeText\n    textColor\n    streakTextColor\n    benefits\n    backgroundImage\n    __typename\n  }\n  __typename\n}\n"
         }
-
         return payload
 
     @staticmethod
     def DashBoardSearchTags(searchText):
         payload = {
-            "operationName": "DashBoardSearchTags",
-            "variables": {
+              "operationName": "DashBoardSearchTags",
+              "variables": {
                 "text": searchText
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "6941f74b248c6b1a2045742c053865a91576fd8e03e71ce9982dfa0a781c2d3f"
+                  "version": 1,
+                  "sha256Hash": "6941f74b248c6b1a2045742c053865a91576fd8e03e71ce9982dfa0a781c2d3f"
                 }
+              },
+              "query": "query DashBoardSearchTags($text: String!) {\n  tags(text: $text)\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -455,12 +468,7 @@ class LiveRoomAPI:
                 "streamer": streamer_name,
                 "count": int(count)
             },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "4f14249cf00d8548aa75c5f992a3ddc741833ee9b4317f5a4c897c1e5743666d"
-                }
-            }
+            'query': 'mutation AddGiftSub($streamer: String!, $toUser: String, $count: Int) {giftSub(streamer: $streamer, toUser: $toUser, count: $count) {err {code message}}}'
         }
         return payload
 
@@ -471,35 +479,25 @@ class LiveRoomAPI:
             "variables": {
                 "streamer": streamer_name
             },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "21f80889b2afd31652216b1e80abb69467fa20853e8529bfbb78ed1fe0c9d069"
-                }
-            }
+            'query': 'mutation AddGiftSubClaim($streamer: String!) {giftSubClaim(streamer: $streamer) {err {code message}}}'
         }
         return payload
 
     @staticmethod
     def send_chat(stream_name, message, emoList: []):  # 直播间发信息
         payload = {
-            "operationName": "SendStreamChatMessage",
-            "variables": {
+              "operationName": "SendStreamChatMessage",
+              "variables": {
                 "input": {
-                    "streamer": stream_name,
-                    "message": message,
-                    "roomRole": "Member",
-                    "subscribing": True,
-                    "emojis": emoList
+                  "streamer": stream_name,
+                  "message": message,
+                  "roomRole": "Owner",
+                  "subscribing": True,
+                  "emojis": emoList
                 }
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "848cbe91a57458ed402716e7b57b7a128c3b5a8385a6ebe14d9deff8d1eda73c"
-                }
+              },
+              "query": "mutation SendStreamChatMessage($input: SendStreamchatMessageInput!) {\n  sendStreamchatMessage(input: $input) {\n    err {\n      message\n      code\n      __typename\n    }\n    message {\n      type\n      ... on ChatText {\n        id\n        emojis\n        content\n        createdAt\n        subLength\n        ...VStreamChatSenderInfoFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VStreamChatSenderInfoFrag on SenderInfo {\n  subscribing\n  role\n  roomRole\n  sender {\n    id\n    username\n    displayname\n    avatar\n    partnerStatus\n    badges\n    effect\n    __typename\n  }\n  __typename\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -693,28 +691,29 @@ class LiveRoomAPI:
     def TopContributors(streamDisplayName, rule):
         if rule == 'THIS_STREAM':
             queryStream = True
+            operationName = 'TopContributorsLivestream'
+            query = 'query TopContributorsLivestream($displayname: String! $first: Int $after: String) {userByDisplayName(displayname: $displayname) {id livestream {...TopContributorsOfLivestreamFrag}}}'
         else:
             queryStream = False
+            operationName = 'TopContributors'
+            query = 'query TopContributors($displayname: String!, $rule: ContributionSummaryRule!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TopContributorsOfStreamerFrag\n    __typename\n  }\n}\n\nfragment TopContributorsOfStreamerFrag on User {\n  id\n  topContributions(rule: $rule, first: $first, after: $after) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      amount\n      contributor {\n        id\n        ...VDliveNameFrag\n        ...VDliveAvatarFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"'
         payload = {
-            "operationName": "TopContributors",
-            "variables": {
+              "operationName": operationName,
+              "variables": {
                 "displayname": streamDisplayName,
-                "first": 3,
+                "first": 10,
                 "rule": rule,
                 "queryStream": queryStream
-            },
-            "query": "query TopContributors($displayname: String!"
-                     "$rule: ContributionSummaryRule $first: Int $after: String $queryStream: Boolean!){"
-                     "userByDisplayName(displayname:$displayname){"
-                     "id id"
-                     "topContributions(rule: $rule, first: $first, after: $after) @skip(if: $queryStream){"
-                     "pageInfo {endCursor hasNextPage}"
-                     "list{amount contributor{id displayname partnerStatus avatar effect}}}"
-                     "livestream @include(if: $queryStream) {"
-                     "id"
-                     "topContributions(first: $first, after: $after) {pageInfo{endCursor hasNextPage}"
-                     "list{amount contributor{id displayname partnerStatus avatar effect}}}}}}"
-        }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "e167a0e968a58dc723f0471b68fe65b0015ac63fdf1724187b68055b1361970f"
+                }
+              },
+            'query': query
+             # "query": "query TopContributors($displayname: String!, $rule: ContributionSummaryRule!, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    ...TopContributorsOfStreamerFrag\n    __typename\n  }\n}\n\nfragment TopContributorsOfStreamerFrag on User {\n  id\n  topContributions(rule: $rule, first: $first, after: $after) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      __typename\n    }\n    list {\n      amount\n      contributor {\n        id\n        ...VDliveNameFrag\n        ...VDliveAvatarFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"
+            }
         return payload
 
     @staticmethod
@@ -734,17 +733,12 @@ class LiveRoomAPI:
     @staticmethod
     def MeSubscribing():
         payload = {
-            "operationName": "MeSubscribing",
-            "variables": {
+              "operationName": "MeSubscribing",
+              "variables": {
                 "first": 50
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "18129274ce05949ed82e94fd855132ea8a811c74dae6bd7f279bf1519b41b6c3"
-                }
+              },
+              "query": "query MeSubscribing($first: Int!, $after: String) {\n  me {\n    ...MeSubscribingFrag\n    __typename\n  }\n}\n\nfragment MeSubscribingFrag on User {\n  id\n  private {\n    subscribing(first: $first, after: $after) {\n      totalCount\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n        __typename\n      }\n      list {\n        streamer {\n          username\n          displayname\n          avatar\n          partnerStatus\n          __typename\n        }\n        tier\n        status\n        lastBilledDate\n        subscribedAt\n        nextBillingAt\n        month\n        subType\n        platform\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -761,35 +755,31 @@ class LiveRoomAPI:
     @staticmethod
     def BanStreamChatUser(streamer, banUser):
         payload = {
-            "operationName": "BanStreamChatUser",
-            "variables": {
-                "streamer": streamer,
-                "username": banUser
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "4eaeb20cba25dddc95df6f2acf8018b09a4a699cde468d1e8075d99bb00bacc4"
-                }
-            }
+          "operationName": "BanStreamChatUser",
+          "variables": {
+            "streamer": streamer,
+            "username": banUser
+          },
+          "query": "mutation BanStreamChatUser($streamer: String!, $username: String!) {\n  streamchatUserBan(streamer: $streamer, username: $username) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
     @staticmethod
     def UnbanStreamChatUser(streamer, banUser):
         payload = {
-            "operationName": "UnbanStreamChatUser",
-            "variables": {
+              "operationName": "UnbanStreamChatUser",
+              "variables": {
                 "streamer": streamer,
-                "username": banUser,
-            },
-            "extensions": {
+                "username": banUser
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "574e9a8db47ff719844359964d6108320e4d35f0378d7f983651d87b315d4008"
+                  "version": 1,
+                  "sha256Hash": "574e9a8db47ff719844359964d6108320e4d35f0378d7f983651d87b315d4008"
                 }
+              },
+              "query": "mutation UnbanStreamChatUser($streamer: String!, $username: String!) {\n  streamchatUserUnban(streamer: $streamer, username: $username) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -820,18 +810,13 @@ class LiveRoomAPI:
     @staticmethod
     def RemoveModerator(streamer, user):
         payload = {
-            "operationName": "RemoveModerator",
-            "variables": {
+              "operationName": "RemoveModerator",
+              "variables": {
                 "username": user,
                 "streamer": streamer
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "6ab7beae3484aede4fc88a2052908ada86474fcabc6f29b7859b71443753b0da"
-                }
+              },
+              "query": "mutation RemoveModerator($username: String!, $streamer: String) {\n  moderatorRemove(username: $username, streamer: $streamer) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -851,18 +836,19 @@ class LiveRoomAPI:
     @staticmethod
     def DeleteChat(streamer, messageID):
         payload = {
-            "operationName": "DeleteChat",
-            "variables": {
+              "operationName": "DeleteChat",
+              "variables": {
                 "streamer": streamer,
                 "id": messageID
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "7ae6f96161b89d9831dcf217f11f67c1edf5bb311d8819101345ed8eb38f6ed9"
+                  "version": 1,
+                  "sha256Hash": "7ae6f96161b89d9831dcf217f11f67c1edf5bb311d8819101345ed8eb38f6ed9"
                 }
+              },
+              "query": "mutation DeleteChat($streamer: String!, $id: String!) {\n  chatDelete(streamer: $streamer, id: $id) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
@@ -962,22 +948,22 @@ class HomePageAPI:
     @staticmethod
     def LiveCarousel():
         payload = {
-            "operationName": "LiveCarousel",
-            "variables": {
+              "operationName": "LiveCarousel",
+              "variables": {
                 "input": {
-                    "first": 5,
-                    "showNSFW": True,
-                    "showMatureContent": True,
-                    "languageID": 1
+                  "first": 5,
+                  "showNSFW": True,
+                  "showMatureContent": True,
+                  "languageID": 1
                 }
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "0d63e672bde23e03a59810b22408aa61fbee9e89c3540feccb90717ff86f9757"
+                  "version": 1,
+                  "sha256Hash": "421104d17f58f9e240983bebe1c8811cb534560b049e444d32bf3350067e4eb9"
                 }
+              }
             }
-        }
         return payload
 
     @staticmethod
@@ -1022,54 +1008,55 @@ class HomePageAPI:
     @staticmethod
     def homepage_categories():
         payload = {
-            "operationName": "HomePageCategories",
-            "variables": {
+              "operationName": "HomePageCategories",
+              "variables": {
                 "first": 15,
-                "languageID": 'null'
-            },
-            "extensions": {
+                "languageID": None,
+                "showMatureContent": True,
+                "showNSFW": True
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "386f2dbb71fa1d28e3c9bbff30e41beb7c09dd845b02dcf01c35856076e354dc"
+                  "version": 1,
+                  "sha256Hash": "859cd2be7b573e3070733a7ac8ec9c398aa8476026987afb516ee9bdcd4aef57"
                 }
+              },
+              "query": "query HomePageCategories($first: Int, $after: String, $languageID: Int, $showMatureContent: Boolean, $showNSFW: Boolean) {\n  categories(input: {first: $first, after: $after, languageID: $languageID, showMatureContent: $showMatureContent, showNSFW: $showNSFW}) {\n    ...HomeCategoriesFrag\n    __typename\n  }\n}\n\nfragment HomeCategoriesFrag on CategoryConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    ...VCategoryCardFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VCategoryCardFrag on Category {\n  id\n  backendID\n  title\n  imgUrl\n  watchingCount\n  __typename\n}\n"
             }
-        }
         return payload
 
     @staticmethod
     def homepage_list_recommendation():  # 推荐系统
         payload = {
-            "operationName": "HomePageListRecommendation",
-            "variables": {
+              "operationName": "HomePageListRecommendation",
+              "variables": {
                 "first": 40,
                 "after": "0",
-                "showNSFW": True,
+                "languageID": None,
+                "categoryID": None,
+                "showNSFW": None,
                 "userLanguageCode": "en",
                 "showMatureContent": True
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "35160b344e48b47fbc781b60f92f7e6bf1bfcdea1ba1a08b311be56fef38b7d2"
+                  "version": 1,
+                  "sha256Hash": "51069c2a7814a46fdc4e3bbc6920f18351ded9a1491e57617cbdb6a4cab633c2"
                 }
+              },
+              "query": "query HomePageListRecommendation($first: Int, $after: String, $languageID: Int, $categoryID: Int, $showNSFW: Boolean, $userLanguageCode: String, $showMatureContent: Boolean) {\n  listRecommendation(input: {first: $first, after: $after, languageID: $languageID, categoryID: $categoryID, showNSFW: $showNSFW, userLanguageCode: $userLanguageCode, showMatureContent: $showMatureContent}) {\n    ...VCategoryLivestreamFrag\n    __typename\n  }\n}\n\nfragment VCategoryLivestreamFrag on LivestreamConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    permlink\n    ageRestriction\n    earnRestriction\n    ...VLivestreamSnapFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VLivestreamSnapFrag on Livestream {\n  id\n  creator {\n    id\n    username\n    displayname\n    myChatBadges\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  watchingCount\n  earnRestriction\n  ageRestriction\n  thumbnailUrl\n  lastUpdatedAt\n  category {\n    id\n    title\n    parent {\n      id\n      title\n      __typename\n    }\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  tags\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
             }
-        }
         return payload
 
     @staticmethod
     def homepage_global_information_recommend():  # 主页左边的推荐列表
         payload = {
-            "operationName": "GlobalInformationRecommend",
-            "variables": {
-                "limit": 30
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "f58123b70a8319382f44c077489e4fca285c2b06bc318e46605eb79644a6b0f3"
-                }
+              "operationName": "GlobalInformationRecommend",
+              "variables": {
+                "limit": 50
+              },
+              "query": "query GlobalInformationRecommend($limit: Int!, $category: String) {\n  globalInfo {\n    ...SidebarRecommendation\n    __typename\n  }\n}\n\nfragment SidebarRecommendation on GlobalInfo {\n  recommendChannels(limit: $limit, category: $category) {\n    user {\n      ...VDliveNameFrag\n      ...VDliveAvatarFrag\n      livestream {\n        id\n        watchingCount\n        permlink\n        earnRestriction\n        ageRestriction\n        category {\n          id\n          title\n          __typename\n        }\n        __typename\n      }\n      followers {\n        totalCount\n        __typename\n      }\n      banStatus\n      hostingLivestream {\n        id\n        permlink\n        earnRestriction\n        ageRestriction\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"
             }
-        }
         return payload
 
     @staticmethod

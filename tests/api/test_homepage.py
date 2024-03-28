@@ -230,7 +230,8 @@ class TestHomePage:
         用户:  automation
         """
         response = requests.post(get_config_data['url'], headers=api_headers,
-                                 json=Payload.ActivityUserDonationRank())
+                                 json=Payload.ActivityUserDonationRank(
+                                     get_config_data['follow_streamer'], 'THIS_WEEK'))
         assert response.status_code == 200
         data = json.loads(response.text)
 

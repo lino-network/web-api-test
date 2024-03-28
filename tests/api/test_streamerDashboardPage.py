@@ -198,10 +198,10 @@ class TestStreamerDashboardPage:
             host_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                         Payload.DaskboardAPI().MEDashboard(streamer))
             delete_hosting_id = host_resp['data']['me']['hostingLivestream']['permlink']
-            delete_hotsing = str(delete_hosting_id).split('+')[0]
+            delete_hosting = str(delete_hosting_id).split('+')[0]
         with allure.step('开始删除hosting'):
             resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                   Payload.DaskboardAPI().StreamHostDelete(delete_hotsing))
+                                   Payload.DaskboardAPI().StreamHostDelete(delete_hosting))
             assert resp['data']['hostDelete']['err'] is None
             with allure.step('检查删除后的hosting不显示在hosting 列表'):
                 host_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
