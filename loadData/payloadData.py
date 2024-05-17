@@ -967,7 +967,8 @@ class HomePageAPI:
                   "version": 1,
                   "sha256Hash": "421104d17f58f9e240983bebe1c8811cb534560b049e444d32bf3350067e4eb9"
                 }
-              }
+              },
+              "query": "query LiveCarousel($input: LivestreamsOption) {\n  liveCarousel(input: $input) {\n    totalCount\n    list {\n      id\n      position\n      live {\n        ... on Livestream {\n          id\n          permlink\n          ...VLivestreamSnapFrag\n          language {\n            id\n            backendID\n            language\n            __typename\n          }\n          category {\n            id\n            backendID\n            title\n            imgUrl\n            __typename\n          }\n          title\n          creator {\n            beta {\n              starfruitEnabled\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VLivestreamSnapFrag on Livestream {\n  id\n  creator {\n    id\n    username\n    displayname\n    myChatBadges\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  watchingCount\n  earnRestriction\n  ageRestriction\n  thumbnailUrl\n  lastUpdatedAt\n  category {\n    id\n    title\n    parent {\n      id\n      title\n      __typename\n    }\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  tags\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
             }
         return payload
 
@@ -1116,6 +1117,99 @@ class MatureRelatedAPI:
               },
               "query": "query CheckMaturePopupClosedByUsername($username: String!) {\n  checkMaturePopupClosedByUsername(username: $username) {\n    isClosed\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
+        return payload
+
+
+class MyProfileAPI:
+    @staticmethod
+    def VideoPermlink():
+        payload = {
+          "operationName": "VideoPermlink",
+          "variables": {},
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "47739a80af2c7fa5b81f5431904a9f5dc9b1fdaf2f84de1cbc8bc0dc072f3a52"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def UploadSearchCategory(categoryName):
+        payload = {
+          "operationName": "UploadSearchCategory",
+          "variables": {
+            "text": "qaTest"
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "29e85a6ed7256fb31aadd10a2e1c590de507634a150123786a16a7d16c01ab6b"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def UploadGeneratePresignUrl(fileName, hash):
+        payload = {
+          "operationName": "UploadGeneratePresignUrl",
+          "variables": {
+            "hash": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJtbGluayI6ImF1dG9tYXRpb24rQTY4Wm9uUFNSIiwiZXhwIjoxNzE2NTM1MzEzLCJpc3MiOiJMaW5vQXBwVHJhbnNjb2RlciJ9.PiUCWgdsu8j79thHUzl4Y4eqr37Q3bSvFyhRV_DceW8",
+            "filename": "mp4"
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "d5c9666317e2b2bfde1cbf3736c80c01294a6c19ecc7a2f406bc755961561bd8"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def UploadAddVideo(permlink, thumbnailUrl, title, content, filename, bucketName, region, categoryId, languageId):
+        payload = {
+          "operationName": "UploadAddVideo",
+          "variables": {
+            "video": {
+              "permlink": permlink,
+              "thumbnailUrl": thumbnailUrl,
+              "title": title,
+              "content": content,
+              "filename": filename,
+              "bucketName": bucketName,
+              "region": region,
+              "categoryId": categoryId,
+              "languageId": languageId
+            }
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "a01d82b6355c1e46274199381a64403773019ed866973a0d51489a473b3d2bd2"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def LivestreamProfileVideo(displayname):
+        payload = {
+          "operationName": "LivestreamProfileVideo",
+          "variables": {
+            "displayname": displayname,
+            "sortedBy": "Trending",
+            "first": 20
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "df2b8483dbe1fb13ef47e3cf6af8d230571061d7038625587c7ed066bdbdddd3"
+            }
+          }
+        }
         return payload
 
 
