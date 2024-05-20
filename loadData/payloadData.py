@@ -925,6 +925,65 @@ class LiveRoomAPI:
         return payload
 
 
+   @staticmethod
+    def PanelAddNew():
+        payload = {
+                "operationName": "PanelAddNew",
+                "variables": {
+                    "input": {
+                    "type": "DEFAULT"
+                    }
+                },
+                "extensions": {
+                    "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "0017e94aaedb38658861726199464ae176797a4eb85c85298fb1c0278997b383"
+                    }
+                }
+            }
+        return payload
+
+    @staticmethod
+    def PanelUpdateAbout():
+        payload = {
+                "operationName": "PanelUpdateAbout",
+                "variables": {
+                    "input": {
+                    "id": 286,
+                    "title": "automation test",
+                    "imageURL": "https://images.stg.dlivecdn.com/panel/9a571da9-1677-11ef-a15d-c22d51d48ad0",
+                    "imageLinkURL": "https://stg.dlive.tv/automation",
+                    "body": "automation test describtion"
+                    }
+                },
+                "extensions": {
+                    "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "748dc56653c26e07c75fd2ff4f07f02f7207ca6d66e5714899c8984aff138be4"
+                    }
+                }
+            }
+        return payload
+
+    @staticmethod
+    def PanelDeleteAbout(panel_id):
+        payload = {
+            "operationName": "PanelDeleteAbout",
+            "variables": {
+                "input": {
+                    "id": panel_id
+                }
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "ab10e53ad37e8463f7109ccbb9ff04bfb570c63ce99886117281d838d62009b4"
+                }
+            }
+        }
+        return payload
+
+
 class LoginAPI:
     @staticmethod
     def IsUserVerifyEmailButNoPwd(streamerDisplayName):
