@@ -110,6 +110,12 @@ class TestHomePage:
 
     @allure.title('test_homepage_nav_search_category')
     @allure.severity(allure.severity_level.CRITICAL)
+        """
+        接口： NavSearchResult
+
+        搜索关键字： automation
+        检查首页搜索功能
+        """
     def test_homepage_nav_search_category(self, get_config_data, api_headers):
         response = requests.post(get_config_data['url'], headers=api_headers,
                                  json=Payload.HomePageAPI().homepage_nav_search_result("Web3 Games"))
@@ -171,6 +177,10 @@ class TestHomePage:
     @allure.title('test_live_streams_languages')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_live_streams_languages(self, get_config_data, api_headers):
+        """
+        接口： LivestreamsLanguages
+
+        """
         response = requests.post(get_config_data['url'], headers=api_headers,
                                  json=Payload.live_streams_languages())
         assert response.status_code == 200
