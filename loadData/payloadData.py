@@ -1212,4 +1212,96 @@ class MyProfileAPI:
         }
         return payload
 
+    @staticmethod
+    def DeleteVideo(permlink):
+        payload = {
+          "operationName": "DeleteVideo",
+          "variables": {
+            "permlink": permlink
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "caaf5423d39fe7e0c7b9863d5737a8edb86f5bca6f2d3ed53d4922642859eaaf"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def VideoPage(permlink):
+        payload = {
+          "operationName": "VideoPage",
+          "variables": {
+            "permlink": permlink,
+            "commentsFirst": 20,
+            "topContributionsFirst": 10,
+            "isLoggedIn": True
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "a437ab1221ff46c180c60529efee5881820feb7b5fb744b0341e4412453777f2"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def AddComment(permlink, comment):
+        payload = {
+          "operationName": "AddComment",
+          "variables": {
+            "permlink": permlink,
+            "content": comment
+          },
+          "query": "mutation AddComment($permlink: String!, $content: String!) {\n  comment(permlink: $permlink, content: $content) {\n    comment {\n      ...VVideoPBCommentItemFrag\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VVideoPBCommentItemFrag on Comment {\n  upvotes\n  downvotes\n  author {\n    displayname\n    avatar\n    __typename\n  }\n  content\n  createdAt\n  myVote\n  commentCount\n  permlink\n  __typename\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def AddWatch(permlink):
+        payload = {
+          "operationName": "AddWatch",
+          "variables": {
+            "permlink": permlink
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "22b60b73c62955d4904e3d193fed9496a8afc0c40ab1f3ca5f52a7a2f1ca75ce"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def DeleteVideoComment(permlinkComment, permlinkStreamer):
+        payload = {
+          "operationName": "DeleteVideoComment",
+          "variables": {
+            "permlinkComment": permlinkComment,
+            "permlinkStreamer": permlinkStreamer
+          },
+          "query": "mutation DeleteVideoComment($permlinkComment: String!, $permlinkStreamer: String!) {\n  deleteVideoComment(permlinkComment: $permlinkComment, permlinkStreamer: $permlinkStreamer) {\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def AddCommentVote(permlink, method):
+        payload = {
+          "operationName": "AddCommentVote",
+          "variables": {
+            "permlink": permlink,
+            "action": method
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "2a2d3ea04265201522133f5460924c336f990b47051c05c2eb25b1370ff9701f"
+            }
+          }
+        }
+        return payload
+
 
