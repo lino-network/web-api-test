@@ -410,6 +410,89 @@ class DaskboardAPI:
         }
         return payload
 
+    @staticmethod
+    def CheckEmoteNameIsValid(emote_name):
+        payload = {
+          "operationName": "CheckEmoteNameIsValid",
+          "variables": {
+            "name": emote_name
+          },
+          "query": "query CheckEmoteNameIsValid($name: String!) {\n  emoteNameIsValid(name: $name)\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def EmoteAdd(name, url, mimeType, level, type, streamer):
+        payload = {
+          "operationName": "EmoteAdd",
+          "variables": {
+            "input": {
+              "name": name,
+              "url": url,
+              "mimeType": mimeType,
+              "level": level,
+              "type": type,
+              "streamer": streamer
+            }
+          },
+          "query": "mutation EmoteAdd($input: AddEmoteInput!) {\n  addEmote(input: $input) {\n    emote {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def CheckNamePrefixIsValid(name):
+        payload = {
+          "operationName": "CheckNamePrefixIsValid",
+          "variables": {
+            "namePrefix": name
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "6ff967923faf4b9565a0ca0b98bc0b24b6ba8b7c7c6ea9bb15ab109ba18d60e7"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def UserUpdatePrefixName(namePrefix):
+        payload = {
+          "operationName": "UserUpdatePrefixName",
+          "variables": {
+            "namePrefix": namePrefix
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "fbef591b5e440c8910cf0a76dbc9ac836f29f2dea731a2f6f7dd5e410d83f134"
+            }
+          }
+        }
+        return payload
+
+    @staticmethod
+    def EmoteDelete(name, level, type, streamer):
+        paylaod = {
+          "operationName": "EmoteDelete",
+          "variables": {
+            "input": {
+              "name": name,
+              "level": level,
+              "type": type,
+              "streamer": streamer
+            }
+          },
+          "extensions": {
+            "persistedQuery": {
+              "version": 1,
+              "sha256Hash": "80cb5931bcaa0a880e81995278c65814d8ad1ae667119bef69fae61661c1c894"
+            }
+          }
+        }
+        return paylaod
+
+
 
 class LiveRoomAPI:
     @staticmethod
@@ -1229,8 +1312,8 @@ class MyProfileAPI:
         payload = {
           "operationName": "UploadGeneratePresignUrl",
           "variables": {
-            "hash": fileName,
-            "filename": hash
+            "hash": hash,
+            "filename": fileName
           },
           "extensions": {
             "persistedQuery": {

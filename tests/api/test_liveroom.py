@@ -706,10 +706,15 @@ class TestLivePage:
         assert panel_id is not None, 'Panel ID is None'
 
         # 更新panel
+        title = 'automation test'
+        imageLinkURL = 'https://stg.dlive.tv/automation'
+        imageURL = 'https://images.stg.dlivecdn.com/panel/78c20fd4-1749-11ef-a02b-4236a17e4298'
+        body = 'automation test describtion'
         response_json_update = common.api_post(
             get_config_data['url'], 
             get_follow_streamer_auth_header,
-            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id)
+            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id=panel_id, title=title, imageURL=imageURL,
+                                                   imageLinkURL=imageLinkURL, body=body)
         )  
 
         # 删除panel
