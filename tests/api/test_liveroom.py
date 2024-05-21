@@ -709,7 +709,7 @@ class TestLivePage:
         response_json_update = common.api_post(
             get_config_data['url'], 
             get_follow_streamer_auth_header,
-            Payload.LiveRoomAPI().PanelUpdateAbout()
+            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id)
         )  
 
         # 删除panel
@@ -741,7 +741,67 @@ class TestLivePage:
             with allure.step('检查PanelDeleteAbout是否有报错'):
                 assert panel_delete_data['err'] is None, 'Error is not None'
 
-      
+
+    @allure.title('test_PanelOrderChange')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_PanelOrderChange(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口： PanelOrderChange
+
+        检查主播：增加主播panel，调换pannel顺序
+        """
+
+        # 添加panel 1
+        response_json_add_1 = common.api_post(
+            get_config_data['url'], 
+            get_follow_streamer_auth_header,
+            Payload.LiveRoomAPI().PanelAddNew()
+        )
+
+        # 提取 panel id
+        panel_id1 = response_json_add_1['data']['panelAdd']['panel']['id']
+        assert panel_id1 is not None, 'Panel ID is None'
+
+        # 更新panel 1
+        response_json_update = common.api_post(
+            get_config_data['url'], 
+            get_follow_streamer_auth_header,
+            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id1)
+        ) 
+        # 添加panel 2
+        response_json_add_2 = common.api_post(
+            get_config_data['url'], 
+            get_follow_streamer_auth_header,
+            Payload.LiveRoomAPI().PanelAddNew()
+        )
+
+        # 提取 panel id
+        panel_id2 = response_json_add_2['data']['panelAdd']['panel']['id']
+        assert panel_id2 is not None, 'Panel ID is None'
+
+        # 更新panel 2
+        response_json_update = common.api_post(
+            get_config_data['url'], 
+            get_follow_streamer_auth_header,
+            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id2)
+        )  
+
+        # 更换panel顺序
+        response_json_orderchange = common.api_post(
+            get_config_data['url'], 
+            get_follow_streamer_auth_header,
+            Payload.LiveRoomAPI().PanelOrderChange(panel_id2, panel_id1)
+            
+        )
+        panel_order_data = response_json_orderchange['data']['panelOrder']
+
+        with allure.step('检查PanelOrderChange是否有报错'):
+            assert panel_order_data['err'] is None, 'Error is not None'
+    
+
+
+
+
 
 
 if __name__ == '__main__':
