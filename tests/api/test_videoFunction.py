@@ -38,7 +38,8 @@ class TestVideoFunction:
             print('video permlinkToken is:' + str(permlinkToken))
         with allure.step('获取UploadGeneratePresignUrl的信息'):
             url_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                       Payload.MyProfileAPI().UploadGeneratePresignUrl('mp4', permlinkToken))
+                                       Payload.MyProfileAPI().UploadGeneratePresignUrl(fileName="mp4", hash=permlinkToken))
+            print(url_resp)
             assert url_resp['data']['presignURLGenerate']['err'] is None
             presignURL = url_resp['data']['presignURLGenerate']['presignURL']
             bucketName = presignURL['bucketName']

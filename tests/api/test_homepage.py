@@ -112,14 +112,14 @@ class TestHomePage:
 
     @allure.title('test_homepage_global_information_register_recommend')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_homepage_global_information_register_recommend(self, get_config_data, api_headers):  
+    def test_homepage_global_information_register_recommend(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：GlobalInformationRegisterRecommend
 
         """
         with allure.step("新注册用户推荐4个频道"):
             response_json = requests.post(get_config_data['url'], headers=get_follow_streamer_auth_header,
-                                 json=Payload.LoginAPI().homepage_global_information_register_recommend())
+                                 json=Payload.HomePageAPI().homepage_global_information_register_recommend())
             
             recommend_channels = response_json['data']['globalInfo']['recommendChannels']
 

@@ -1,9 +1,18 @@
 import os
+import time
+
 import allure
 import pytest
 import loadData.payloadData as Payload
 from tests import common
 from datetime import datetime
+
+currentDateAndTime = datetime.now()
+currentTime = currentDateAndTime.strftime("%H%M%S")
+emote_valid_name = 'auto'
+emote_pre_name = 'pr' + currentTime
+png_emote_url = 'https://images.stg.dlivecdn.com/emoji/ftwqrgauto'
+emote_pre = 'ftwqrg'
 
 
 @allure.feature('test_streamerDashboardPage')
@@ -210,21 +219,66 @@ class TestStreamerDashboardPage:
                 print('hosting列表如下：' + str(hosting_list))
                 assert hosting_list is None, '删除Hosting视频以后，视频还在hosting列表中'
 
-    @allure.title('test_xtagChannelNoSubFunction')
+    @allure.title('test_UserUpdatePrefixName')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_xtagChannelNoSubFunction(self, get_config_data, get_viewer1_login_auth_header):
+    def test_CheckEmoteNameIsValid(self, get_config_data, get_follow_streamer_auth_header):
         """
-        接口：SetStreamTemplate
-        测试xtag 直播间没sub 功能不可用
+        接口：CheckNamePrefixIsValid, UserUpdatePrefixName
+        1. 检查emote prefix name 是否正确
+        2. 检查在不删除现有emote的时候更新emote prefix的名字失败
         """
-        # user = get_config_data['viewer1_username']
-        # response = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-        #                            Payload.DaskboardAPI().MEDashboard(user))
-        # with allure.step('检查x-tag 直播间canSubscribe 是False'):
-        #     assert response['data']['me']['canSubscribe'] is False, '真实的canSubscribe 状态是' + \
-        #                                                             response['data']['me']['canSubscribe'] + \
-        #                                                             '，但是期望的是False'
+        with allure.step('输入符合要求的emote prefix名字并检查接口是否报错'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.DaskboardAPI().CheckNamePrefixIsValid(emote_pre_name))
+            assert response['data']['namePrefixIsValid'] is True
+        with allure.step('检查不删除现有emote prefix去更新emote prefix名字失败'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.DaskboardAPI().UserUpdatePrefixName(emote_pre_name))
+            assert response['data']['updateEmoteNamePrefix']['code'] == 2352
+            assert response['data']['updateEmoteNamePrefix']['message'] == 'Update name prefix need clear all emoji'
 
+    @allure.title('test_AddPngEmote')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_01_AddPngEmote(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：CheckEmoteNameIsValid， EmoteAdd
+        1. 检查emote 的名字是否符合要求
+        2. 上传png 格式的emote
+        """
+        name = emote_pre + emote_valid_name
+        with allure.step('输入符合要求的emote名字并检查接口是否报错'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.DaskboardAPI().CheckEmoteNameIsValid(name))
+            assert response['data']['emoteNameIsValid'] is True
+        with allure.step('上传png 格式的emote'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.DaskboardAPI().EmoteAdd(name=name, level='VIP_LEVEL',
+                                                                       mimeType='image/png',
+                                                                       streamer=get_config_data['follow_streamer'],
+                                                                       type='EMOJI', url=png_emote_url))
+            assert not any('err' == item for item in str(response['data'])), '上传格式为png的接口返回值有报错'
+            print(response['data'])
+            time.sleep(30)
+        with allure.step('直播间发送刚上传的png emote'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.LiveRoomAPI().send_chat(message=name, stream_name=get_config_data
+                                       ['follow_streamer'], emoList=[0, 9]))
+            assert response['data']['sendStreamchatMessage']['err'] is None, '发送格式为png的emote报错'
+
+    @allure.title('test_02_EmoteDelete')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_02_EmoteDelete(self, get_config_data, get_follow_streamer_auth_header):
+        """
+        接口：EmoteDelete
+        删除emote
+        """
+        name = emote_pre + emote_valid_name
+        with allure.step('检查是否能成功删除emote'):
+            response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                       Payload.DaskboardAPI().EmoteDelete(level='VIP_LEVEL', name=name,
+                                                                          streamer=get_config_data['follow_streamer'],
+                                                                          type='EMOJI'))
+            assert response['data']['deleteEmote']['err'] is None
 
 
 if __name__ == '__main__':
