@@ -925,8 +925,8 @@ class LiveRoomAPI:
         return payload
 
 
-   @staticmethod
-    def PanelAddNew():
+    @staticmethod
+    def PanelAddNew()# 新增一个panel:
         payload = {
                 "operationName": "PanelAddNew",
                 "variables": {
@@ -944,12 +944,12 @@ class LiveRoomAPI:
         return payload
 
     @staticmethod
-    def PanelUpdateAbout():
+    def PanelUpdateAbout(panel_id):# 编辑保存一个panel:
         payload = {
                 "operationName": "PanelUpdateAbout",
                 "variables": {
                     "input": {
-                    "id": 286,
+                    "id": panel_id,
                     "title": "automation test",
                     "imageURL": "https://images.stg.dlivecdn.com/panel/9a571da9-1677-11ef-a15d-c22d51d48ad0",
                     "imageLinkURL": "https://stg.dlive.tv/automation",
@@ -966,7 +966,7 @@ class LiveRoomAPI:
         return payload
 
     @staticmethod
-    def PanelDeleteAbout(panel_id):
+    def PanelDeleteAbout(panel_id):#删除一个panel
         payload = {
             "operationName": "PanelDeleteAbout",
             "variables": {
@@ -980,6 +980,28 @@ class LiveRoomAPI:
                     "sha256Hash": "ab10e53ad37e8463f7109ccbb9ff04bfb570c63ce99886117281d838d62009b4"
                 }
             }
+        }
+        return payload
+
+    @staticmethod
+    def PanelOrderChange(panel_id1,panel_id2):#变更panel的顺序
+        payload = {
+            "operationName": "PanelOrderChange",
+            "variables": {
+                "input": {
+                "ids": [
+                    panel_id1,
+                    panel_id2
+                ]
+                }
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "c717d3d6a45cbcd42580d44048bbd0fef4e4b484d2a621991b67586f24c68b9e"
+                }
+            },
+            "query": "mutation PanelOrderChange($input: PanelOrderInput!) {\n  panelOrder(input: $input) {\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
@@ -1123,6 +1145,24 @@ class HomePageAPI:
               "query": "query GlobalInformationRecommend($limit: Int!, $category: String) {\n  globalInfo {\n    ...SidebarRecommendation\n    __typename\n  }\n}\n\nfragment SidebarRecommendation on GlobalInfo {\n  recommendChannels(limit: $limit, category: $category) {\n    user {\n      ...VDliveNameFrag\n      ...VDliveAvatarFrag\n      livestream {\n        id\n        watchingCount\n        permlink\n        earnRestriction\n        ageRestriction\n        category {\n          id\n          title\n          __typename\n        }\n        __typename\n      }\n      followers {\n        totalCount\n        __typename\n      }\n      banStatus\n      hostingLivestream {\n        id\n        permlink\n        earnRestriction\n        ageRestriction\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n"
             }
         return payload
+
+    @staticmethod
+    def homepage_global_information_register_recommend():  # 刚注册时候的tui j
+        payload = {
+            "operationName": "GlobalInformationRegisterRecommend",
+            "variables": {
+                "limit": 4,
+                "isLoggedIn": true
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "77f091ac812090165af602b4466c68466496b00a440f48719431fea06cd991c9"
+                }
+            },
+            "query": "query GlobalInformationRegisterRecommend($limit: Int!, $isLoggedIn: Boolean!) {\n  globalInfo {\n    ...RegisterRecommendation\n    __typename\n  }\n}\n\nfragment RegisterRecommendation on GlobalInfo {\n  recommendChannels(limit: $limit) {\n    user {\n      id\n      ...VDliveNameFrag\n      ...VDliveAvatarFrag\n      followers {\n        totalCount\n        __typename\n      }\n      ...VFollowFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VFollowFrag on User {\n  id\n  username\n  displayname\n  isFollowing @include(if: $isLoggedIn)\n  isMe @include(if: $isLoggedIn)\n  followers {\n    totalCount\n    __typename\n  }\n  __typename\n}\n"
+        }
+        return payload 
 
     @staticmethod
     def homepage_nav_search_result(search_text):
