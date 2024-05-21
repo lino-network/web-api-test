@@ -45,6 +45,33 @@ class TestHomePage:
             with allure.step('检查轮播接口的返回值不包含err '):
                 assert 'err' not in response_json
 
+    @allure.title('test_homepage_categories')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_homepage_categories(self, get_config_data, api_headers):  # 检查cate分类列表
+        """
+        接口： homepage_categories
+
+        """
+        with allure.step('检查频道分类列表'):
+            response_json = common.api_post(get_config_data['url'], api_headers,
+                                            Payload.HomePageAPI().homepage_categories())
+
+        categories_list = response_json['data']['categories']['list']
+
+        # 确保 list 不为空
+        assert categories_list, 'Categories list is empty'
+
+        # 检查每一项是否有数据
+        for category in categories_list:
+            assert category['id'], 'Category ID is None'
+            assert category['backendID'] is not None, 'Category backendID is None'
+            assert category['title'], 'Category title is None'
+            assert category['imgUrl'], 'Category imgUrl is None'
+            assert category['watchingCount'] is not None, 'Category watchingCount is None'
+            assert category['__typename'], 'Category __typename is None'
+
+
+
     @allure.title('test_homepage_list_recommendation')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_list_recommendation(self, get_config_data, api_headers):  # 推荐系统
@@ -110,13 +137,13 @@ class TestHomePage:
 
     @allure.title('test_homepage_nav_search_category')
     @allure.severity(allure.severity_level.CRITICAL)
+    def test_homepage_nav_search_category(self, get_config_data, api_headers):
         """
         接口： NavSearchResult
 
         搜索关键字： automation
         检查首页搜索功能
         """
-    def test_homepage_nav_search_category(self, get_config_data, api_headers):
         response = requests.post(get_config_data['url'], headers=api_headers,
                                  json=Payload.HomePageAPI().homepage_nav_search_result("Web3 Games"))
         assert response.status_code == 200
