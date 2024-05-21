@@ -110,6 +110,36 @@ class TestHomePage:
             with allure.step('检查数据无报错'):
                 assert 'err' not in response_json['data']
 
+    @allure.title('test_homepage_global_information_register_recommend')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_homepage_global_information_register_recommend(self, get_config_data, api_headers):  
+        """
+        接口：GlobalInformationRegisterRecommend
+
+        """
+        with allure.step("新注册用户推荐4个频道"):
+            response_json = requests.post(get_config_data['url'], headers=get_follow_streamer_auth_header,
+                                 json=Payload.LoginAPI().homepage_global_information_register_recommend())
+            
+            recommend_channels = response_json['data']['globalInfo']['recommendChannels']
+
+        # 确保推荐用户数量为 4
+        assert len(recommend_channels) == 4, f"Expected 4 recommend channels, but got {len(recommend_channels)}"
+
+        # 检查每个用户的内容
+        for channel in recommend_channels:
+            user = channel['user']
+            assert user['id'], 'User ID is None'
+            assert user['displayname'], 'User displayname is None'
+            assert user['partnerStatus'], 'User partnerStatus is None'
+            assert user['__typename'], 'User __typename is None'
+            assert user['avatar'], 'User avatar is None'
+            assert user['followers']['totalCount'] is not None, 'User followers totalCount is None'
+            assert user['followers']['__typename'], 'User followers __typename is None'
+            assert user['username'], 'User username is None'
+            assert user['isFollowing'] is not None, 'User isFollowing is None'
+            assert user['isMe'] is not None, 'User isMe is None'
+
     @allure.title('test_homepage_nav_search_result')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_homepage_nav_search_result(self, get_config_data, api_headers):
