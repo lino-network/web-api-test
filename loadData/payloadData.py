@@ -926,7 +926,7 @@ class LiveRoomAPI:
 
 
     @staticmethod
-    def PanelAddNew()# 新增一个panel:
+    def PanelAddNew():# 新增一个panel:
         payload = {
                 "operationName": "PanelAddNew",
                 "variables": {
@@ -944,16 +944,16 @@ class LiveRoomAPI:
         return payload
 
     @staticmethod
-    def PanelUpdateAbout(panel_id):# 编辑保存一个panel:
+    def PanelUpdateAbout(panel_id, title, imageURL, imageLinkURL, body):# 编辑保存一个panel:
         payload = {
                 "operationName": "PanelUpdateAbout",
                 "variables": {
                     "input": {
                     "id": panel_id,
-                    "title": "automation test",
-                    "imageURL": "https://images.stg.dlivecdn.com/panel/9a571da9-1677-11ef-a15d-c22d51d48ad0",
-                    "imageLinkURL": "https://stg.dlive.tv/automation",
-                    "body": "automation test describtion"
+                    "title": title,
+                    "imageURL": imageURL,
+                    "imageLinkURL": imageLinkURL,
+                    "body": body
                     }
                 },
                 "extensions": {
@@ -1082,12 +1082,6 @@ class HomePageAPI:
                 "userLanguageCode": "en",
                 # "showMatureContent": true
             },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "02887b79493a97ee84d3119a377208f843e8a35ed25f2dfe0deb1b55c1a5adcd"
-                }
-            },
             "query": "query HomePageLivestream($first: Int, $after: String, $languageID: Int, $categoryID: Int, $showNSFW: Boolean, $order: LivestreamSortOrder, $userLanguageCode: String, $showMatureContent: Boolean) {\n  livestreams(input: {first: $first, after: $after, languageID: $languageID, categoryID: $categoryID, showNSFW: $showNSFW, order: $order, userLanguageCode: $userLanguageCode, showMatureContent: $showMatureContent}) {\n    ...VCategoryLivestreamFrag\n    __typename\n  }\n}\n\nfragment VCategoryLivestreamFrag on LivestreamConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    permlink\n    ageRestriction\n    earnRestriction\n    ...VLivestreamSnapFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VLivestreamSnapFrag on Livestream {\n  id\n  creator {\n    id\n    username\n    displayname\n    myChatBadges\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  watchingCount\n  earnRestriction\n  ageRestriction\n  thumbnailUrl\n  lastUpdatedAt\n  category {\n    id\n    title\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  tags\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
         }
         return payload
@@ -1101,12 +1095,6 @@ class HomePageAPI:
                 "languageID": None,
                 "showMatureContent": True,
                 "showNSFW": True
-              },
-              "extensions": {
-                "persistedQuery": {
-                  "version": 1,
-                  "sha256Hash": "859cd2be7b573e3070733a7ac8ec9c398aa8476026987afb516ee9bdcd4aef57"
-                }
               },
               "query": "query HomePageCategories($first: Int, $after: String, $languageID: Int, $showMatureContent: Boolean, $showNSFW: Boolean) {\n  categories(input: {first: $first, after: $after, languageID: $languageID, showMatureContent: $showMatureContent, showNSFW: $showNSFW}) {\n    ...HomeCategoriesFrag\n    __typename\n  }\n}\n\nfragment HomeCategoriesFrag on CategoryConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    ...VCategoryCardFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VCategoryCardFrag on Category {\n  id\n  backendID\n  title\n  imgUrl\n  watchingCount\n  __typename\n}\n"
             }
@@ -1124,12 +1112,6 @@ class HomePageAPI:
                 "showNSFW": None,
                 "userLanguageCode": "en",
                 "showMatureContent": True
-              },
-              "extensions": {
-                "persistedQuery": {
-                  "version": 1,
-                  "sha256Hash": "51069c2a7814a46fdc4e3bbc6920f18351ded9a1491e57617cbdb6a4cab633c2"
-                }
               },
               "query": "query HomePageListRecommendation($first: Int, $after: String, $languageID: Int, $categoryID: Int, $showNSFW: Boolean, $userLanguageCode: String, $showMatureContent: Boolean) {\n  listRecommendation(input: {first: $first, after: $after, languageID: $languageID, categoryID: $categoryID, showNSFW: $showNSFW, userLanguageCode: $userLanguageCode, showMatureContent: $showMatureContent}) {\n    ...VCategoryLivestreamFrag\n    __typename\n  }\n}\n\nfragment VCategoryLivestreamFrag on LivestreamConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    permlink\n    ageRestriction\n    earnRestriction\n    ...VLivestreamSnapFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VLivestreamSnapFrag on Livestream {\n  id\n  creator {\n    id\n    username\n    displayname\n    myChatBadges\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  watchingCount\n  earnRestriction\n  ageRestriction\n  thumbnailUrl\n  lastUpdatedAt\n  category {\n    id\n    title\n    parent {\n      id\n      title\n      __typename\n    }\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  tags\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
             }
@@ -1152,13 +1134,7 @@ class HomePageAPI:
             "operationName": "GlobalInformationRegisterRecommend",
             "variables": {
                 "limit": 4,
-                "isLoggedIn": true
-            },
-            "extensions": {
-                "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "77f091ac812090165af602b4466c68466496b00a440f48719431fea06cd991c9"
-                }
+                "isLoggedIn": True
             },
             "query": "query GlobalInformationRegisterRecommend($limit: Int!, $isLoggedIn: Boolean!) {\n  globalInfo {\n    ...RegisterRecommendation\n    __typename\n  }\n}\n\nfragment RegisterRecommendation on GlobalInfo {\n  recommendChannels(limit: $limit) {\n    user {\n      id\n      ...VDliveNameFrag\n      ...VDliveAvatarFrag\n      followers {\n        totalCount\n        __typename\n      }\n      ...VFollowFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VFollowFrag on User {\n  id\n  username\n  displayname\n  isFollowing @include(if: $isLoggedIn)\n  isMe @include(if: $isLoggedIn)\n  followers {\n    totalCount\n    __typename\n  }\n  __typename\n}\n"
         }
@@ -1202,9 +1178,7 @@ class HomePageAPI:
             },
             "query": "query CategoryLivestreamsPage($first: Int, $after: String, $languageID: Int, $categoryID: Int!, $showNSFW: Boolean, $order: LivestreamSortOrder, $userLanguageCode: String, $showMatureContent: Boolean) {\n  category(id: $categoryID) {\n    id\n    backendID\n    title\n    imgUrl\n    coverImgUrl\n    watchingCount\n    languages {\n      ...LanguageFrag\n      __typename\n    }\n    __typename\n  }\n  livestreams(input: {first: $first, after: $after, languageID: $languageID, categoryID: $categoryID, showNSFW: $showNSFW, order: $order, userLanguageCode: $userLanguageCode, showMatureContent: $showMatureContent}) {\n    ...VCategoryLivestreamFrag\n    __typename\n  }\n}\n\nfragment VCategoryLivestreamFrag on LivestreamConnection {\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    permlink\n    ageRestriction\n    earnRestriction\n    ...VLivestreamSnapFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VLivestreamSnapFrag on Livestream {\n  id\n  creator {\n    id\n    username\n    displayname\n    myChatBadges\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  watchingCount\n  earnRestriction\n  ageRestriction\n  thumbnailUrl\n  lastUpdatedAt\n  category {\n    id\n    title\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  tags\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment LanguageFrag on Language {\n  id\n  backendID\n  language\n  code\n  __typename\n}\n"
         }
-
         return payload
-
 
 class MatureRelatedAPI:
     @staticmethod
@@ -1239,7 +1213,7 @@ class MyProfileAPI:
         payload = {
           "operationName": "UploadSearchCategory",
           "variables": {
-            "text": "qaTest"
+            "text": categoryName
           },
           "extensions": {
             "persistedQuery": {
@@ -1255,8 +1229,8 @@ class MyProfileAPI:
         payload = {
           "operationName": "UploadGeneratePresignUrl",
           "variables": {
-            "hash": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJtbGluayI6ImF1dG9tYXRpb24rQTY4Wm9uUFNSIiwiZXhwIjoxNzE2NTM1MzEzLCJpc3MiOiJMaW5vQXBwVHJhbnNjb2RlciJ9.PiUCWgdsu8j79thHUzl4Y4eqr37Q3bSvFyhRV_DceW8",
-            "filename": "mp4"
+            "hash": fileName,
+            "filename": hash
           },
           "extensions": {
             "persistedQuery": {

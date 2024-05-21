@@ -741,7 +741,6 @@ class TestLivePage:
             with allure.step('检查PanelDeleteAbout是否有报错'):
                 assert panel_delete_data['err'] is None, 'Error is not None'
 
-
     @allure.title('test_PanelOrderChange')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_PanelOrderChange(self, get_config_data, get_follow_streamer_auth_header):
@@ -750,7 +749,6 @@ class TestLivePage:
 
         检查主播：增加主播panel，调换pannel顺序
         """
-
         # 添加panel 1
         response_json_add_1 = common.api_post(
             get_config_data['url'], 
@@ -763,10 +761,15 @@ class TestLivePage:
         assert panel_id1 is not None, 'Panel ID is None'
 
         # 更新panel 1
+        title = "automation test"
+        imageURL = "https://images.stg.dlivecdn.com/panel/9a571da9-1677-11ef-a15d-c22d51d48ad0"
+        imageLinkURL = "https://stg.dlive.tv/automation"
+        body = "automation test describtion"
         response_json_update = common.api_post(
             get_config_data['url'], 
             get_follow_streamer_auth_header,
-            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id1)
+            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id1, title=title, imageURL=imageURL, imageLinkURL=imageLinkURL,
+                                                   body=body)
         ) 
         # 添加panel 2
         response_json_add_2 = common.api_post(
@@ -783,7 +786,8 @@ class TestLivePage:
         response_json_update = common.api_post(
             get_config_data['url'], 
             get_follow_streamer_auth_header,
-            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id2)
+            Payload.LiveRoomAPI().PanelUpdateAbout(panel_id2, title=title, imageURL=imageURL, imageLinkURL=imageLinkURL,
+                                                   body=body)
         )  
 
         # 更换panel顺序
@@ -797,11 +801,6 @@ class TestLivePage:
 
         with allure.step('检查PanelOrderChange是否有报错'):
             assert panel_order_data['err'] is None, 'Error is not None'
-    
-
-
-
-
 
 
 if __name__ == '__main__':
