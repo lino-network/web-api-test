@@ -926,7 +926,7 @@ class LiveRoomAPI:
 
 
     @staticmethod
-    def PanelAddNew()# 新增一个panel:
+    def PanelAddNew():
         payload = {
                 "operationName": "PanelAddNew",
                 "variables": {
@@ -1403,4 +1403,84 @@ class MyProfileAPI:
         }
         return payload
 
+class StreamerIncentiveAPI:
+    @staticmethod
+    def CheckPointRankWalletAndHistoryTabNotifyClosed(username):
+        payload = {
+            "operationName": "CheckPointRankWalletAndHistoryTabNotifyClosed",
+            "variables": {
+                "username": username
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "87e87033040f75d6fafc0acde789f7fc69cbc5609bc090ac4e1446cbf0c90134"
+                }
+            }
+        }
+        return payload
 
+
+    @staticmethod
+    def ClosePointRankWalletAndHistoryTabNotify(username):
+        payload = {
+            "operationName": "ClosePointRankWalletAndHistoryTabNotify",
+            "variables": {
+                "username": username
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "27bf7f7f03ac1f7e96a4e064c3299045b9f7f495e81b30261ef6a529c0067bb8"
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def EventGetPointTopUsers(username):
+        payload = {
+            "operationName": "EventGetPointTopUsers",# 
+            "variables": {
+                "eventId": 15,
+                "username": username
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "45b6acc9ad37c93ee961c6ccf4e5894a0561c4eacd84cd0c85b0980d14aa6556"
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def GetPontEventRankRewardByUsername():
+        payload = {
+            "operationName": "GetPontEventRankRewardByUsername",#获取历史获奖情况
+            "variables": {
+                "offset": 0,
+                "limit": 10
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "e0f786b4817ece409785b4e1d2c5523621dcd4d747a432d911e10934a2759716"
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def PointEventEarningsByUsername():
+        payload = {
+            "operationName": "PointEventEarningsByUsername",#本次获奖情况
+            "variables": {},
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "2da71f32be7b11bf1507ac302e003ed3bad731ac095953647630dabae74ef233"
+                }
+            }
+        }
+        return payload
