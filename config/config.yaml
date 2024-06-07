@@ -9,6 +9,9 @@ apiData:
   follow_streamer_user: automation@nqmo.com
   follow_streamer_pwd: Pwd@1234
   follow_streamer_permlink: automation+2hatMquVg
+
+  streamer_incentive_user: apple.zhang@tron.network
+  streamer_incentive_pwd: password1234
   streamer_category_id: 18173     # web3 Games
   donate_value: 1
   send_message: for automation test   # send message and emo

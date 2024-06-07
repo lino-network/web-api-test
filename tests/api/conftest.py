@@ -83,4 +83,15 @@ def get_follow_streamer_auth_header(get_config_data):
     return auth_header
 
 
+@pytest.fixture(scope='session')
+def get_streamer_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['follow_streamer_user'],
+                                               get_config_data['follow_streamer_pwd'])
+    return auth_header
 
+
+@pytest.fixture(scope='session')
+def get_incentive_streamer_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['streamer_incentive_user'],
+                                               get_config_data['streamer_incentive_pwd'])
+    return auth_header
