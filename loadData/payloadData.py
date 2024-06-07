@@ -1009,11 +1009,7 @@ class LiveRoomAPI:
 
 
     @staticmethod
-<<<<<<< HEAD
     def PanelAddNew():# 新增一个panel:
-=======
-    def PanelAddNew():
->>>>>>> helen-0520
         payload = {
                 "operationName": "PanelAddNew",
                 "variables": {
