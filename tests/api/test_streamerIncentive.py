@@ -97,6 +97,34 @@ class TestStreamerIncentive:
                 assert earning['logo'] is not None, f"Logo is empty for {earning['displayedSymbol']}"
                 assert earning['total'] is not None, f"Total is empty for {earning['displayedSymbol']}"
 
+    @allure.title('test_GetHtxUid')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_get_htx_uid(self, get_config_data, get_incentive_streamer_auth_header):
+        """
+        接口：GetHtxUid
+        """
+        response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
+                                        Payload.StreamerIncentiveAPI().GetHtxUid("appletv"))
+        assert response_json['data']['getHtxUid']['err'] is None
+        with allure.step('uid不为空'):
+            assert response_json['data']['getHtxUid']['htxUid']is not None
+        print("No errors and htxUid has a value.")
+
+    @allure.title('test_EventGetPointTopUsers')
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_get_set_htx_uid_deadline(self, get_config_data, get_incentive_streamer_auth_header):
+        """
+        接口：GetSetHtxUidDeadline
+        
+        """
+        response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
+                                        Payload.StreamerIncentiveAPI().GetSetHtxUidDeadline())
+        assert response_json['data']['getSetHtxUidDeadline']['err'] is None
+        assert response_json['data']['getSetHtxUidDeadline']['onoff'] == False
+
+
+
+
 
 
 if __name__ == '__main__':
