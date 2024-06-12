@@ -451,7 +451,8 @@ class DaskboardAPI:
               "version": 1,
               "sha256Hash": "6ff967923faf4b9565a0ca0b98bc0b24b6ba8b7c7c6ea9bb15ab109ba18d60e7"
             }
-          }
+          },
+          "query": "query CheckNamePrefixIsValid($namePrefix: String!) {\n  namePrefixIsValid(namePrefix: $namePrefix)\n}\n"
         }
         return payload
 
@@ -1280,15 +1281,16 @@ class MyProfileAPI:
     @staticmethod
     def VideoPermlink():
         payload = {
-          "operationName": "VideoPermlink",
-          "variables": {},
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "47739a80af2c7fa5b81f5431904a9f5dc9b1fdaf2f84de1cbc8bc0dc072f3a52"
+              "operationName": "VideoPermlink",
+              "variables": {},
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "47739a80af2c7fa5b81f5431904a9f5dc9b1fdaf2f84de1cbc8bc0dc072f3a52"
+                }
+              },
+              "query": "mutation VideoPermlink {\n  videoPermlinkGenerate {\n    permlink\n    permlinkToken\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          }
-        }
         return payload
 
     @staticmethod
@@ -1310,44 +1312,46 @@ class MyProfileAPI:
     @staticmethod
     def UploadGeneratePresignUrl(fileName, hash):
         payload = {
-          "operationName": "UploadGeneratePresignUrl",
-          "variables": {
-            "hash": hash,
-            "filename": fileName
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "d5c9666317e2b2bfde1cbf3736c80c01294a6c19ecc7a2f406bc755961561bd8"
+              "operationName": "UploadGeneratePresignUrl",
+              "variables": {
+                "hash": hash,
+                "filename": fileName
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "d5c9666317e2b2bfde1cbf3736c80c01294a6c19ecc7a2f406bc755961561bd8"
+                }
+              },
+              "query": "mutation UploadGeneratePresignUrl($hash: String!, $filename: String!) {\n  presignURLGenerate(hash: $hash, filename: $filename) {\n    presignURL {\n      url\n      key\n      bucketName\n      region\n      __typename\n    }\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          }
-        }
         return payload
 
     @staticmethod
     def UploadAddVideo(permlink, thumbnailUrl, title, content, filename, bucketName, region, categoryId, languageId):
         payload = {
-          "operationName": "UploadAddVideo",
-          "variables": {
-            "video": {
-              "permlink": permlink,
-              "thumbnailUrl": thumbnailUrl,
-              "title": title,
-              "content": content,
-              "filename": filename,
-              "bucketName": bucketName,
-              "region": region,
-              "categoryId": categoryId,
-              "languageId": languageId
+              "operationName": "UploadAddVideo",
+              "variables": {
+                "video": {
+                  "permlink": permlink,
+                  "thumbnailUrl": thumbnailUrl,
+                  "title": title,
+                  "content": content,
+                  "filename": filename,
+                  "bucketName": bucketName,
+                  "region": region,
+                  "categoryId": categoryId,
+                  "languageId": languageId
+                }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "a01d82b6355c1e46274199381a64403773019ed866973a0d51489a473b3d2bd2"
+                }
+              },
+              "query": "mutation UploadAddVideo($video: AddVideoInput!) {\n  videoAdd(video: $video) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "a01d82b6355c1e46274199381a64403773019ed866973a0d51489a473b3d2bd2"
-            }
-          }
-        }
         return payload
 
     @staticmethod
@@ -1387,20 +1391,21 @@ class MyProfileAPI:
     @staticmethod
     def VideoPage(permlink):
         payload = {
-          "operationName": "VideoPage",
-          "variables": {
-            "permlink": permlink,
-            "commentsFirst": 20,
-            "topContributionsFirst": 10,
-            "isLoggedIn": True
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "a437ab1221ff46c180c60529efee5881820feb7b5fb744b0341e4412453777f2"
+              "operationName": "VideoPage",
+              "variables": {
+                "permlink": permlink,
+                "commentsFirst": 20,
+                "topContributionsFirst": 10,
+                "isLoggedIn": True
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "a437ab1221ff46c180c60529efee5881820feb7b5fb744b0341e4412453777f2"
+                }
+              },
+              "query": "query VideoPage($permlink: String!, $commentsFirst: Int, $topContributionsFirst: Int, $commentsAfter: String, $topContributionsAfter: String, $isLoggedIn: Boolean!) {\n  video(permlink: $permlink) {\n    ageRestriction\n    creator {\n      id\n      displayname\n      donateDisabled\n      subscribeDisabled\n      __typename\n    }\n    createdAt\n    content\n    thumbnailUrl\n    resolution {\n      resolution\n      url\n      __typename\n    }\n    upNext {\n      list {\n        ...VVideoPBUpNextItemFrag\n        __typename\n      }\n      __typename\n    }\n    comments(first: $commentsFirst, after: $commentsAfter) {\n      ...VVideoPBCommentFrag\n      __typename\n    }\n    topContributions(first: $topContributionsFirst, after: $topContributionsAfter) {\n      ...VVideoPBUpNextTopContributorFrag\n      __typename\n    }\n    ...VideoPBHeaderFrag\n    ...VVideoPBInfoFrag\n    tags\n    __typename\n  }\n}\n\nfragment VVideoPBInfoFrag on VideoPB {\n  category {\n    title\n    imgUrl\n    id\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  content\n  permlink\n  title\n  createdAt\n  creator {\n    id\n    displayname\n    __typename\n  }\n  ...VDonationGiftFrag\n  __typename\n}\n\nfragment VDonationGiftFrag on Post {\n  permlink\n  category {\n    id\n    title\n    __typename\n  }\n  language {\n    id\n    language\n    __typename\n  }\n  creator {\n    id\n    username\n    __typename\n  }\n  __typename\n}\n\nfragment VideoPBHeaderFrag on VideoPB {\n  totalReward\n  viewCount\n  creator {\n    id\n    username\n    displayname\n    about\n    followers {\n      totalCount\n      __typename\n    }\n    ...VDliveAvatarFrag\n    ...VDliveNameFrag\n    ...VFollowFrag\n    ...VSubscriptionFrag\n    __typename\n  }\n  ...VPostInfoShareFrag\n  __typename\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n\nfragment VFollowFrag on User {\n  id\n  username\n  displayname\n  isFollowing @include(if: $isLoggedIn)\n  isMe @include(if: $isLoggedIn)\n  followers {\n    totalCount\n    __typename\n  }\n  __typename\n}\n\nfragment VSubscriptionFrag on User {\n  id\n  username\n  displayname\n  lastStreamedAt\n  mySubscription @include(if: $isLoggedIn) {\n    isSubscribing\n    nextBillingAt\n    lemonSub\n    subType\n    subscribedAt\n    subStreak\n    lastBilledDate\n    status\n    month\n    subStreakStartedAt\n    __typename\n  }\n  isSubscribing @include(if: $isLoggedIn)\n  ...EmojiFrag\n  canSubscribe\n  isMe @include(if: $isLoggedIn)\n  subSetting {\n    badgeColor\n    badgeText\n    textColor\n    streakTextColor\n    benefits\n    backgroundImage\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiFrag on User {\n  id\n  emoji {\n    ...EmojiGlobalFrag\n    ...EmojiVipFrag\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiGlobalFrag on AllEmojis {\n  global {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment EmojiVipFrag on AllEmojis {\n  vip {\n    totalCount\n    list {\n      name\n      username\n      sourceURL\n      mimeType\n      level\n      type\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment VPostInfoShareFrag on Post {\n  permlink\n  title\n  content\n  category {\n    id\n    backendID\n    title\n    __typename\n  }\n  creator {\n    id\n    username\n    displayname\n    __typename\n  }\n  __typename\n}\n\nfragment VVideoPBUpNextItemFrag on VideoPB {\n  creator {\n    id\n    displayname\n    __typename\n  }\n  permlink\n  title\n  totalReward\n  thumbnailUrl\n  length\n  createdAt\n  category {\n    id\n    title\n    __typename\n  }\n  viewCount\n  __typename\n}\n\nfragment VVideoPBCommentFrag on CommentConnection {\n  totalCount\n  pageInfo {\n    endCursor\n    hasNextPage\n    __typename\n  }\n  list {\n    ...VVideoPBCommentItemFrag\n    __typename\n  }\n  __typename\n}\n\nfragment VVideoPBCommentItemFrag on Comment {\n  upvotes\n  downvotes\n  author {\n    displayname\n    avatar\n    __typename\n  }\n  content\n  createdAt\n  myVote\n  commentCount\n  permlink\n  __typename\n}\n\nfragment VVideoPBUpNextTopContributorFrag on ContributionConnection {\n  list {\n    amount\n    contributor {\n      ...VDliveAvatarFrag\n      ...VDliveNameFrag\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
             }
-          }
-        }
         return payload
 
     @staticmethod
@@ -1446,18 +1451,19 @@ class MyProfileAPI:
     @staticmethod
     def AddCommentVote(permlink, method):
         payload = {
-          "operationName": "AddCommentVote",
-          "variables": {
-            "permlink": permlink,
-            "action": method
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "2a2d3ea04265201522133f5460924c336f990b47051c05c2eb25b1370ff9701f"
+              "operationName": "AddCommentVote",
+              "variables": {
+                "permlink": permlink,
+                "action": method
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "2a2d3ea04265201522133f5460924c336f990b47051c05c2eb25b1370ff9701f"
+                }
+              },
+              "query": "mutation AddCommentVote($permlink: String!, $action: CommentVoteAction!) {\n  commentVote(permlink: $permlink, action: $action) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          }
-        }
         return payload
 
 class StreamerIncentiveAPI:
@@ -1537,6 +1543,36 @@ class StreamerIncentiveAPI:
                 "persistedQuery": {
                 "version": 1,
                 "sha256Hash": "2da71f32be7b11bf1507ac302e003ed3bad731ac095953647630dabae74ef233"
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def GetHtxUid(username):
+        payload = {
+            "operationName": "GetHtxUid",
+            "variables": {
+                "username": username
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "bc83bbd7d71e557f99d60fd171d506d4173404c1a8abcedb6955e5aaa3635071"
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def GetSetHtxUidDeadline():
+        payload = {
+            "operationName": "GetSetHtxUidDeadline",
+            "variables": {},
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "9aabbdc0a44b7174ed6e7f74bd69dfac1174d03d1c19a69033ea18e1959fb64e"
                 }
             }
         }

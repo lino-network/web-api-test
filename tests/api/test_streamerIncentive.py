@@ -37,14 +37,11 @@ class TestStreamerIncentive:
         with allure.step('Error occurred while closing Point Rank Wallet and History Tab notification'):
             assert response_json['data']['closePointRankWalletAndHistoryTabNotify']['err'] is None
 
-
     @allure.title('test_EventGetPointTopUsers')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_event_get_point_top_user(self, get_config_data, get_incentive_streamer_auth_header):
         """
         接口：EventGetPointTopUsers
-        
-
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
                                         Payload.StreamerIncentiveAPI().EventGetPointTopUsers("appletv"))
@@ -77,9 +74,7 @@ class TestStreamerIncentive:
             with allure.step(f"Check metadata with id {meta['id']}"):
                 assert all(meta[key] is not None for key in meta if key != 'operator'), f"Field is empty for metadata with id {meta['id']}"
 
-
-
-    @allure.title('test_PointEventEarningsByUsername')
+    @allure.title('test_get_event_rank_reward_by_user')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_get_event_rank_reward_by_user(self, get_config_data, get_incentive_streamer_auth_header):
         """
@@ -110,7 +105,7 @@ class TestStreamerIncentive:
             assert response_json['data']['getHtxUid']['htxUid']is not None
         print("No errors and htxUid has a value.")
 
-    @allure.title('test_EventGetPointTopUsers')
+    @allure.title('test_get_set_htx_uid_deadline')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_get_set_htx_uid_deadline(self, get_config_data, get_incentive_streamer_auth_header):
         """
