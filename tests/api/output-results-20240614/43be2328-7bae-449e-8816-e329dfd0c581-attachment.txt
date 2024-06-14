@@ -1,0 +1,1 @@
+{'addEmote': {'emote': {'name': 'ftwqrgauto', 'username': 'automation', 'sourceURL': 'https://images.stg.dlivecdn.com/emoji/ftwqrgauto', 'mimeType': 'image/png', 'level': 'VIP_LEVEL', 'type': 'EMOJI', '__typename': 'Emote'}, 'err': None, '__typename': 'AddEmoteResponse'}}

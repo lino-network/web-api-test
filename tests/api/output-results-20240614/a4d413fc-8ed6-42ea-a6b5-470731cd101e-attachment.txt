@@ -1,0 +1,4 @@
+origin lemon is: 2702
+donate lemon is: 1
+{'data': {'donate': {'id': '53f800a9-5dea-4396-a49f-2432c4ea77fc', 'recentCount': 1, 'expireDuration': 0, 'err': None}}}
+after donate lemon is: 2701

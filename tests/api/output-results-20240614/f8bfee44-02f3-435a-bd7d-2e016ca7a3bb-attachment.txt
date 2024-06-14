@@ -1,0 +1,1 @@
+{'data': {'subscribeWithCashback': {'err': {'code': 7004, '__typename': 'Error'}, 'cashbacked': None, '__typename': 'SubscribeWithCashbackResponse'}}}

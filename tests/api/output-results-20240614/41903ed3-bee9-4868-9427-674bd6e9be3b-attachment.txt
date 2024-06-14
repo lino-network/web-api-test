@@ -1,0 +1,1 @@
+[{'username': 'dlive-degnujtptx', 'id': 'user:dlive-degnujtptx', 'avatar': 'https://images.stg.dlivecdn.com/avatar/c1e413da-aec2-11ee-acb9-4aed4c90c80a', 'effect': None, '__typename': 'User', 'displayname': 'automation_viewer1', 'partnerStatus': 'AFFILIATE'}]

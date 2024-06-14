@@ -1,0 +1,1 @@
+[{'id': 'category:18174', 'backendID': 18174, 'title': 'web1', 'imgUrl': 'https://images.stg.dlivecdn.com/category/ui5rinzjf3olrh5z5kw', '__typename': 'Category'}]
