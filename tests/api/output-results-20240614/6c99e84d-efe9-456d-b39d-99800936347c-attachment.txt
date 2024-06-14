@@ -1,1 +1,0 @@
-{'data': {'me': {'id': 'user:dlive-degnujtptx', 'wallet': {'balance': '270200000'}}}}

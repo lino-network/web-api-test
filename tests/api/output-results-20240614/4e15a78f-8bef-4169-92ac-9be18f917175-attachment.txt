@@ -1,7 +1,0 @@
-当前订阅时间：Jun 14, 2024
-下次续费时间：Jul 14, 2024
-mo2
-Before subscription lemon is: 299858
-{'data': {'subscribeWithCashback': {'err': None, 'cashbacked': None, '__typename': 'SubscribeWithCashbackResponse'}}}
-开始订阅的日期为：Jun 14, 2024
-Before subscription lemon is: 299858

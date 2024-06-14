@@ -1,2 +1,0 @@
-2222
-{'badgeText': 'autoTest', 'badgeColor': '#FF0066', 'textColor': '#800080', 'streakTextColor': '#FFD300', '__typename': 'SubSetting', 'benefits': ['automationTest_10Jun17'], 'backgroundImage': 'https://images.stg.dlivecdn.com/thumbnail/bd939713-ea48-11ed-a524-425e9654e40d'}
