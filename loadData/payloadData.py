@@ -1296,17 +1296,18 @@ class MyProfileAPI:
     @staticmethod
     def UploadSearchCategory(categoryName):
         payload = {
-          "operationName": "UploadSearchCategory",
-          "variables": {
-            "text": categoryName
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "29e85a6ed7256fb31aadd10a2e1c590de507634a150123786a16a7d16c01ab6b"
+              "operationName": "UploadSearchCategory",
+              "variables": {
+                "text": categoryName
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "29e85a6ed7256fb31aadd10a2e1c590de507634a150123786a16a7d16c01ab6b"
+                }
+              },
+              "query": "query UploadSearchCategory($text: String!) {\n  search(text: $text) {\n    categories {\n      list {\n        backendID\n        title\n        id\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          }
-        }
         return payload
 
     @staticmethod
@@ -1368,24 +1369,26 @@ class MyProfileAPI:
               "version": 1,
               "sha256Hash": "df2b8483dbe1fb13ef47e3cf6af8d230571061d7038625587c7ed066bdbdddd3"
             }
-          }
+          },
+          "query": "query LivestreamProfileVideo($displayname: String!, $sortedBy: VideoSortOrder, $first: Int, $after: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    videos(sortedBy: $sortedBy, first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        ...ProfileVideoSnapFrag\n        __typename\n      }\n      __typename\n    }\n    username\n    __typename\n  }\n}\n\nfragment ProfileVideoSnapFrag on Video {\n  permlink\n  thumbnailUrl\n  title\n  totalReward\n  createdAt\n  viewCount\n  length\n  creator {\n    id\n    displayname\n    __typename\n  }\n  __typename\n}\n"
         }
         return payload
 
     @staticmethod
     def DeleteVideo(permlink):
         payload = {
-          "operationName": "DeleteVideo",
-          "variables": {
-            "permlink": permlink
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "caaf5423d39fe7e0c7b9863d5737a8edb86f5bca6f2d3ed53d4922642859eaaf"
+              "operationName": "DeleteVideo",
+              "variables": {
+                "permlink": permlink
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "caaf5423d39fe7e0c7b9863d5737a8edb86f5bca6f2d3ed53d4922642859eaaf"
+                }
+              },
+              "query": "mutation DeleteVideo($permlink: String!) {\n  videoDelete(permlink: $permlink) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          }
-        }
         return payload
 
     @staticmethod
@@ -1432,7 +1435,8 @@ class MyProfileAPI:
               "version": 1,
               "sha256Hash": "22b60b73c62955d4904e3d193fed9496a8afc0c40ab1f3ca5f52a7a2f1ca75ce"
             }
-          }
+          },
+          "query": "mutation AddWatch($permlink: String!) {\n  watch(permlink: $permlink) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
         }
         return payload
 
@@ -1466,6 +1470,7 @@ class MyProfileAPI:
             }
         return payload
 
+
 class StreamerIncentiveAPI:
     @staticmethod
     def CheckPointRankWalletAndHistoryTabNotifyClosed(username):
@@ -1483,27 +1488,27 @@ class StreamerIncentiveAPI:
         }
         return payload
 
-
     @staticmethod
     def ClosePointRankWalletAndHistoryTabNotify(username):
         payload = {
-            "operationName": "ClosePointRankWalletAndHistoryTabNotify",
-            "variables": {
+              "operationName": "ClosePointRankWalletAndHistoryTabNotify",
+              "variables": {
                 "username": username
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "27bf7f7f03ac1f7e96a4e064c3299045b9f7f495e81b30261ef6a529c0067bb8"
+                  "version": 1,
+                  "sha256Hash": "27bf7f7f03ac1f7e96a4e064c3299045b9f7f495e81b30261ef6a529c0067bb8"
                 }
+              },
+              "query": "mutation ClosePointRankWalletAndHistoryTabNotify($username: String!) {\n  closePointRankWalletAndHistoryTabNotify(username: $username) {\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
     def EventGetPointTopUsers(username):
         payload = {
-            "operationName": "EventGetPointTopUsers",# 
+            "operationName": "EventGetPointTopUsers",
             "variables": {
                 "eventId": 15,
                 "username": username
@@ -1520,32 +1525,34 @@ class StreamerIncentiveAPI:
     @staticmethod
     def GetPontEventRankRewardByUsername():
         payload = {
-            "operationName": "GetPontEventRankRewardByUsername",#获取历史获奖情况
-            "variables": {
+              "operationName": "GetPontEventRankRewardByUsername",
+              "variables": {
                 "offset": 0,
                 "limit": 10
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "e0f786b4817ece409785b4e1d2c5523621dcd4d747a432d911e10934a2759716"
+                  "version": 1,
+                  "sha256Hash": "831db26a386e1c99c47aa214f2cf9fbf8ee6f99ac911d99956b509a82ba24c88"
                 }
+              },
+              "query": "query GetPontEventRankRewardByUsername($offset: Int!, $limit: Int!) {\n  GetPontEventRankRewardByUsername(offset: $offset, limit: $limit) {\n    metas {\n      id\n      displayname\n      htxuid\n      point\n      desc\n      operator\n      eventId\n      created\n      updated\n      reward {\n        tokenId\n        displayedSymbol\n        logo\n        reward\n        status\n        txHash\n        __typename\n      }\n      __typename\n    }\n    total\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
     def PointEventEarningsByUsername():
         payload = {
-            "operationName": "PointEventEarningsByUsername",#本次获奖情况
-            "variables": {},
-            "extensions": {
+              "operationName": "PointEventEarningsByUsername",
+              "variables": {},
+              "extensions": {
                 "persistedQuery": {
-                "version": 1,
-                "sha256Hash": "2da71f32be7b11bf1507ac302e003ed3bad731ac095953647630dabae74ef233"
+                  "version": 1,
+                  "sha256Hash": "2da71f32be7b11bf1507ac302e003ed3bad731ac095953647630dabae74ef233"
                 }
+              },
+              "query": "query PointEventEarningsByUsername {\n  PointEventEarningsByUsername {\n    earnings {\n      tokenId\n      displayedSymbol\n      logo\n      total\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
