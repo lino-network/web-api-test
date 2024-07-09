@@ -95,3 +95,9 @@ def get_incentive_streamer_auth_header(get_config_data):
     auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['streamer_incentive_user'],
                                                get_config_data['streamer_incentive_pwd'])
     return auth_header
+
+@pytest.fixture(scope='session')
+def get_auto_viewer_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['viewer_user'],
+                                               get_config_data['viewer_pwd'])
+    return auth_header

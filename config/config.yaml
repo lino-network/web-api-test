@@ -9,6 +9,8 @@ apiData:
   follow_streamer_user: automation@nqmo.com
   follow_streamer_pwd: Pwd@1234
   follow_streamer_permlink: automation+2hatMquVg
+  viewer_user: automationviewer@nqmo.com
+  viewer_pwd: Pwd@1234
 
   streamer_incentive_user: apple.zhang@tron.network
   streamer_incentive_pwd: password1234

@@ -1584,3 +1584,73 @@ class StreamerIncentiveAPI:
             }
         }
         return payload
+
+
+
+class MyInfoAPI:
+    @staticmethod
+    def MeSubscribing():
+        payload = {
+            "operationName": "MeSubscribing",
+            "variables": {
+                "first": 20
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "18129274ce05949ed82e94fd855132ea8a811c74dae6bd7f279bf1519b41b6c3"
+                }
+            }
+        }
+        return payload
+    @staticmethod
+    def UserUnsubscribe(streamer):
+        payload = {
+            "operationName": "UserUnsubscribe",
+            "variables": {
+                "streamer": streamer
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "628f90aa017d2307a685102f735758934e31ed3098259a2401f3d38326214ac5"
+                }
+            },
+            "query": "mutation UserUnsubscribe($streamer: String!) {\n  unsubscribe(streamer: $streamer) {\n    err {\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+    @staticmethod
+    def getWalletAddressByOwner(streamer):
+        payload = {
+            "operationName": "getWalletAddressByOwner",
+            "variables": {
+                "owner": streamer
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "b6446d5902209a18e34e5a20aded38daacfbee5b100aaed3e1244d85e0241c82"
+                }
+            },
+            "query": "query getWalletAddressByOwner($owner: String!) {\n  getWalletAddressByOwner(owner: $owner) {\n    wallets {\n      name\n      address\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
+
+    @staticmethod
+    def ListWithdrawTxesByStreamer(streamer):
+        payload = {
+            "operationName": "ListWithdrawTxesByStreamer",
+            "variables": {
+                "owner": streamer,
+                "offset": 0,
+                "count": 20
+            },
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "198c947605038a34208610e77fad4f204c326405a7e7b04457fdadb89ec7c4ab"
+                }
+            },
+            "query": "query ListWithdrawTxesByStreamer($owner: String!, $offset: Int!, $count: Int!) {\n  ListWithdrawTxesByStreamer(owner: $owner, offset: $offset, count: $count) {\n    id\n    streamer\n    address\n    token\n    amount\n    txHash\n    senderAddress\n    confirmed\n    checked\n    createdAt\n    updatedAt\n    __typename\n  }\n}\n"
+        }
+        return payload
