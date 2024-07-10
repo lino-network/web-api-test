@@ -474,25 +474,25 @@ class DaskboardAPI:
 
     @staticmethod
     def EmoteDelete(name, level, type, streamer):
-        paylaod = {
-          "operationName": "EmoteDelete",
-          "variables": {
-            "input": {
-              "name": name,
-              "level": level,
-              "type": type,
-              "streamer": streamer
+        payload = {
+              "operationName": "EmoteDelete",
+              "variables": {
+                "input": {
+                  "name": name,
+                  "level": level,
+                  "type": type,
+                  "streamer": streamer
+                }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "80cb5931bcaa0a880e81995278c65814d8ad1ae667119bef69fae61661c1c894"
+                }
+              },
+              "query": "mutation EmoteDelete($input: DeleteEmoteInput!) {\n  deleteEmote(input: $input) {\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-          },
-          "extensions": {
-            "persistedQuery": {
-              "version": 1,
-              "sha256Hash": "80cb5931bcaa0a880e81995278c65814d8ad1ae667119bef69fae61661c1c894"
-            }
-          }
-        }
-        return paylaod
-
+        return payload
 
 
 class LiveRoomAPI:
@@ -1012,59 +1012,62 @@ class LiveRoomAPI:
     @staticmethod
     def PanelAddNew():# 新增一个panel:
         payload = {
-                "operationName": "PanelAddNew",
-                "variables": {
-                    "input": {
-                    "type": "DEFAULT"
-                    }
-                },
-                "extensions": {
-                    "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "0017e94aaedb38658861726199464ae176797a4eb85c85298fb1c0278997b383"
-                    }
+              "operationName": "PanelAddNew",
+              "variables": {
+                "input": {
+                  "type": "DEFAULT"
                 }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "0017e94aaedb38658861726199464ae176797a4eb85c85298fb1c0278997b383"
+                }
+              },
+              "query": "mutation PanelAddNew($input: PanelAddInput!) {\n  panelAdd(input: $input) {\n    panel {\n      id\n      type\n      title\n      imageURL\n      imageLinkURL\n      body\n      __typename\n    }\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
         return payload
 
     @staticmethod
     def PanelUpdateAbout(panel_id, title, imageURL, imageLinkURL, body):# 编辑保存一个panel:
         payload = {
-                "operationName": "PanelUpdateAbout",
-                "variables": {
-                    "input": {
-                    "id": panel_id,
-                    "title": title,
-                    "imageURL": imageURL,
-                    "imageLinkURL": imageLinkURL,
-                    "body": body
-                    }
-                },
-                "extensions": {
-                    "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "748dc56653c26e07c75fd2ff4f07f02f7207ca6d66e5714899c8984aff138be4"
-                    }
+              "operationName": "PanelUpdateAbout",
+              "variables": {
+                "input": {
+                  "id": panel_id,
+                  "title": title,
+                  "imageURL": imageURL,
+                  "imageLinkURL": imageLinkURL,
+                  "body": body
                 }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "748dc56653c26e07c75fd2ff4f07f02f7207ca6d66e5714899c8984aff138be4"
+                }
+              },
+              "query": "mutation PanelUpdateAbout($input: PanelUpdateInput!) {\n  panelUpdate(input: $input) {\n    panel {\n      id\n      type\n      title\n      imageURL\n      imageLinkURL\n      body\n      __typename\n    }\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
         return payload
 
     @staticmethod
     def PanelDeleteAbout(panel_id):#删除一个panel
         payload = {
-            "operationName": "PanelDeleteAbout",
-            "variables": {
+              "operationName": "PanelDeleteAbout",
+              "variables": {
                 "input": {
-                    "id": panel_id
+                  "id": panel_id
                 }
-            },
-            "extensions": {
+              },
+              "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "ab10e53ad37e8463f7109ccbb9ff04bfb570c63ce99886117281d838d62009b4"
+                  "version": 1,
+                  "sha256Hash": "ab10e53ad37e8463f7109ccbb9ff04bfb570c63ce99886117281d838d62009b4"
                 }
+              },
+              "query": "mutation PanelDeleteAbout($input: PanelDeleteInput!) {\n  panelDelete(input: $input) {\n    err {\n      message\n      code\n      __typename\n    }\n    __typename\n  }\n}\n"
             }
-        }
         return payload
 
     @staticmethod
