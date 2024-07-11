@@ -44,7 +44,7 @@ class TestVideoFunction:
             presignURL = url_resp['data']['presignURLGenerate']['presignURL']
             bucketName = presignURL['bucketName']
             key = presignURL['key']
-            region = presignURL['url']
+            region = presignURL['region']
         with allure.step('检查上传video是否成功'):
             video_respon = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                            Payload.MyProfileAPI().UploadAddVideo(permlink=permlink,
