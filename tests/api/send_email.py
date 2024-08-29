@@ -83,7 +83,7 @@ def send_email(subject, description, to_emails, attachment_path):
     msg['Subject'] = subject
 
     # 添加邮件正文
-    msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(description, 'plain'))
 
     # 添加附件
     with open(attachment_path, 'rb') as attachment:
