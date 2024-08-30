@@ -5,6 +5,10 @@ from email.mime.text import MIMEText
 from email import encoders
 import sys
 import os
+curlPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curlPath)[0]
+print(rootPath)
+sys.path.append(os.path.split(rootPath)[0])
 import subprocess
 import time
 import re
