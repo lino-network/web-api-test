@@ -28,8 +28,18 @@ def create_directory_if_not_exists(directory_path):
 
 
 def get_report_server(report_path):
+    # 定义命令和参数
+    command = 'allure'  # 你的命令
+
+    # 判断操作系统
+    if sys.platform.startswith('win'):
+        # Windows
+        command += '.bat'  # Windows下使用.bat扩展名
+    elif sys.platform.startswith('darwin'):
+        # macOS
+        command += ''  # macOS下不需要扩展名
     # 执行 allure serve 命令
-    process = subprocess.Popen(['allure', 'serve', report_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen([command, 'serve', report_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # 获取输出并解析服务器地址
     while True:
