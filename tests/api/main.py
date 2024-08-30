@@ -1,9 +1,10 @@
 import os
 import sys
 from datetime import datetime
-
-from awscli.customizations.codedeploy.systems import System
-
+curlPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curlPath)[0]
+print(rootPath)
+sys.path.append(os.path.split(rootPath)[0])
 from tests.api.send_email import create_directory_if_not_exists, open_allure_report_and_screenshot
 from tests.api.send_email import get_report_server
 from tests.api.send_email import send_email
