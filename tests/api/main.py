@@ -24,7 +24,7 @@ if __name__ == '__main__':
     os.system('pytest --alluredir=' + results)
     os.system('allure generate ' + results + ' -o ' + report + ' --clean')
 
-    path = report_folder + '/screenshot_' + str(currentDateAndTime) + '.png'  # 截图保存的路径
+    path = report_folder + '/screenshot_' + str(currentTime) + '.png'  # 截图保存的路径
     url1 = get_report_server(results)
     open_allure_report_and_screenshot(url1, path)
 
