@@ -1657,3 +1657,140 @@ class MyInfoAPI:
             "query": "query ListWithdrawTxesByStreamer($owner: String!, $offset: Int!, $count: Int!) {\n  ListWithdrawTxesByStreamer(owner: $owner, offset: $offset, count: $count) {\n    id\n    streamer\n    address\n    token\n    amount\n    txHash\n    senderAddress\n    confirmed\n    checked\n    createdAt\n    updatedAt\n    __typename\n  }\n}\n"
         }
         return payload
+
+class AppHomepage:
+    @staticmethod
+    def ios_categories():
+        payload = {
+            "operationName": "categories",
+            "query": "query categories($input: CategoriesOption) {\n  categories(input: $input) {\n    __typename\n    pageInfo {\n      __typename\n      ...PageInfoF\n    }\n    list {\n      __typename\n      ...CategoryF\n    }\n  }\n}\nfragment PageInfoF on PageInfo {\n  __typename\n  endCursor\n  hasNextPage\n}\nfragment CategoryF on Category {\n  __typename\n  id\n  backendID\n  title\n  imgUrl\n  watchingCount\n}",
+            "variables": {
+                "input": {
+                    "first": 50
+                }
+            }
+        }
+        return payload
+    @staticmethod
+    def ios_Livestreams():
+        payload = {
+            "operationName": "Livestreams",
+            "query": "query Livestreams($input: LivestreamsOption!) {\n  livestreams(input: $input) {\n    __typename\n    ...GraphPreviewLivestreamConnection\n  }\n}\nfragment GraphPreviewLivestreamConnection on LivestreamConnection {\n  __typename\n  list {\n    __typename\n    ...GraphPreviewLivestream\n  }\n  pageInfo {\n    __typename\n    ...GraphPageInfo\n  }\n}\nfragment GraphPreviewLivestream on Livestream {\n  __typename\n  permlink\n  title\n  thumbnailUrl\n  totalReward\n  watchingCount\n  createdAt\n  ageRestriction\n  earnRestriction\n  tags\n  category {\n    __typename\n    title\n    id\n    parent {\n      __typename\n      id\n      title\n    }\n  }\n  creator {\n    __typename\n    ...GraphMinimumUser\n  }\n}\nfragment GraphMinimumUser on User {\n  __typename\n  username\n  displayname\n  partnerStatus\n  avatar\n  effect\n  bttReceiverAddress\n  followers {\n    __typename\n    totalCount\n  }\n}\nfragment GraphPageInfo on PageInfo {\n  __typename\n  endCursor\n  hasNextPage\n}",
+            "variables": {
+                "input": {
+                    "after": None,
+                    "categoryID": None,
+                    "first": 50,
+                    "order": "TRENDING",
+                    "showMatureContent": True,
+                    "showNSFW": True,
+                    "userLanguageCode": "zh-Hant"
+                }
+            }
+        }
+        return payload
+class AppChatroom:
+    @staticmethod
+    def ios_sendChat(stream_name,message,emoList: []):
+        payload ={
+            "operationName": "sendChat",
+            "query": "mutation sendChat($input: SendStreamchatMessageInput!) {\n  sendStreamchatMessage(input: $input) {\n    __typename\n    message {\n      __typename\n      ...GraphChat\n    }\n    err {\n      __typename\n      ...GraphError\n    }\n  }\n}\nfragment GraphChat on Chat {\n  __typename\n  ... on ChatText {\n    __typename\n    ...GraphChatText\n  }\n  ... on ChatGift {\n    __typename\n    ...GraphChatGift\n  }\n  ... on ChatHost {\n    __typename\n    ...GraphChatHost\n  }\n  ... on ChatSubscription {\n    __typename\n    ...GraphChatSubscription\n  }\n  ... on ChatFollow {\n    __typename\n    ...GraphChatFollow\n  }\n  ... on ChatModerator {\n    __typename\n    ...GraphChatModerator\n  }\n  ... on ChatBan {\n    __typename\n    ...GraphChatBan\n  }\n  ... on ChatUnBan {\n    __typename\n    ...GraphChatUnBan\n  }\n  ... on ChatEmoteAdd {\n    __typename\n    ...GraphChatEmoteAdd\n  }\n  ... on ChatTimeout {\n    __typename\n    ...GraphChatTimeout\n  }\n  ... on ChatTCValueAdd {\n    __typename\n    ...GraphChatTCValueAdd\n  }\n  ... on ChatGiftSub {\n    __typename\n    ...GraphChatGiftSub\n  }\n  ... on ChatGiftSubReceive {\n    __typename\n    ...GraphChatGiftSubReceive\n  }\n  ... on ChatExtendSub {\n    __typename\n    ...GraphChatExtendSub\n  }\n  ... on ChatClip {\n    __typename\n    ...GraphChatClip\n  }\n  ... on ChatSubStreak {\n    __typename\n    ...GraphChatStreak\n  }\n  ... on ChatChangeMode {\n    __typename\n    mode\n  }\n  ... on ChatDelete {\n    __typename\n    ids\n  }\n  ... on ChatLive {\n    __typename\n    type\n  }\n  ... on ChatOffline {\n    __typename\n    type\n  }\n  ... on ChatOffline {\n    __typename\n    type\n  }\n}\nfragment GraphChatText on ChatText {\n  __typename\n  id\n  createdAt\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  content\n  subLength\n  emojis\n}\nfragment GraphChatSender on StreamchatUser {\n  __typename\n  username\n  displayname\n  partnerStatus\n  avatar\n  badges\n  effect\n  badgesStr\n}\nfragment GraphChatGift on ChatGift {\n  __typename\n  id\n  createdAt\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  gift\n  amount\n  recentCount\n  expireDuration\n  message\n  cryptocurrency {\n    __typename\n    symbol\n    avatar\n    decimals\n  }\n}\nfragment GraphChatHost on ChatHost {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  viewer\n  role\n  roomRole\n  subscribing\n}\nfragment GraphChatSubscription on ChatSubscription {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  month\n  role\n  roomRole\n  subscribing\n}\nfragment GraphChatFollow on ChatFollow {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n}\nfragment GraphChatModerator on ChatModerator {\n  __typename\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  add\n  id\n}\nfragment GraphChatBan on ChatBan {\n  __typename\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  bannedBy {\n      __typename\n      ...GraphChatSender\n  }\n  bannedByRoomRole\n  id\n}\nfragment GraphChatUnBan on ChatUnBan {\n  __typename\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  unbannedBy {\n    __typename\n    ...GraphChatSender\n  }\n  unbannedByRoomRole\n  id\n}\nfragment GraphChatEmoteAdd on ChatEmoteAdd {\n  __typename\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  id\n  emote\n}\nfragment GraphChatTimeout on ChatTimeout {\n  __typename\n  id\n  minute\n  role\n  roomRole\n  subscribing\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n}\nfragment GraphChatTCValueAdd on ChatTCValueAdd {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  amount\n  totalAmount\n}\nfragment GraphChatGiftSub on ChatGiftSub {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  receiver\n  count\n}\nfragment GraphChatGiftSubReceive on ChatGiftSubReceive {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  role\n  roomRole\n  subscribing\n  gifter\n}\nfragment GraphChatExtendSub on ChatExtendSub {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  month\n  length\n  role\n  roomRole\n  subscribing\n}\nfragment GraphChatClip on ChatClip {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  url\n  role\n  roomRole\n  subscribing\n}\nfragment GraphChatStreak on ChatSubStreak {\n  __typename\n  id\n  sender {\n    __typename\n    ...GraphChatSender\n  }\n  length\n  role\n  roomRole\n  subscribing\n}\nfragment GraphError on Error {\n  __typename\n  code\n  message\n}",
+            "variables": {
+                "input": {
+                    "emojis": emoList,
+                    "message": message,
+                    "pwd": "Q9WxR3GrEU",
+                    "roomRole": "Member",
+                    "streamer": stream_name,
+                    "subscribing": False 
+                }
+            }
+        }
+        return payload
+
+class Android:
+    @staticmethod
+    def android_LiveCarousel():
+        #首页轮播
+        payload ={
+            "operationName": "LiveCarousel",
+            "variables": {
+                "input": {
+                    "first": 5,
+                    "after": "-1",
+                    "languageID": 106,
+                    "showNSFW": True,
+                    "showMatureContent": True
+                }
+            },
+            "query": "query LiveCarousel($input: LivestreamsOption) { liveCarousel(input: $input) { __typename list { __typename id position live { __typename ...StreamListFragment } } } } fragment StreamListFragment on Livestream { __typename thumbnailUrl title watchingCount totalReward category { __typename title id parent { __typename id } } tags creator { __typename ...UserFragment } } fragment UserFragment on User { __typename username displayname avatar partnerStatus role }"
+        }
+        return payload
+
+    @staticmethod
+    def android_ListRecommendation():
+        #推荐系统
+        payload ={
+            "operationName": "ListRecommendation",
+            "variables": {
+                "input": {
+                    "first": 8,
+                    "after": "0",
+                    "categoryID": None,
+                    "showNSFW": True,
+                    "order": "TRENDING",
+                    "userLanguageCode": "zh-cn",
+                    "showMatureContent": True
+                }
+            },
+            "query": "query ListRecommendation($input: LivestreamsOption) { listRecommendation(input: $input) { __typename pageInfo { __typename ...PageInfoFragment } list { __typename ...StreamListFragment } } } fragment PageInfoFragment on PageInfo { __typename endCursor hasNextPage } fragment StreamListFragment on Livestream { __typename thumbnailUrl title watchingCount totalReward category { __typename title id parent { __typename id } } tags creator { __typename ...UserFragment } } fragment UserFragment on User { __typename username displayname avatar partnerStatus role }"
+        }
+        return payload
+
+    @staticmethod
+    def android_StreamsQuery():
+        #推荐系统
+        payload ={
+            "operationName": "StreamsQuery",
+            "variables": {
+                "input": {
+                    "first": 20,
+                    "after": None,
+                    "categoryID": None,
+                    "showNSFW": True,
+                    "order": "TRENDING",
+                    "userLanguageCode": "zh-cn",
+                    "showMatureContent": True
+                }
+            },
+            "query": "query StreamsQuery($input: LivestreamsOption) { livestreams(input: $input) { __typename pageInfo { __typename ...PageInfoFragment } list { __typename ...StreamListFragment } } } fragment PageInfoFragment on PageInfo { __typename endCursor hasNextPage } fragment StreamListFragment on Livestream { __typename thumbnailUrl title watchingCount totalReward category { __typename title id parent { __typename id } } tags creator { __typename ...UserFragment } } fragment UserFragment on User { __typename username displayname avatar partnerStatus role }"
+        }
+        return payload
+
+    @staticmethod
+    def android_CategoriesQuery():
+        payload ={
+            "operationName": "CategoriesQuery",
+            "variables": {
+                "input": {
+                    "first": 15,
+                    "showMatureContent": True,
+                    "showNSFW": True,
+                    "userLanguageCode": "zh-cn"
+                }
+            },
+            "query": "query CategoriesQuery($input: CategoriesOption) { categories(input: $input) { __typename list { __typename ...CategoryFragment } } } fragment CategoryFragment on Category { __typename backendID title imgUrl watchingCount }"
+        }
+        return payload
+
+    @staticmethod
+    def android_UserPost(streamername):
+        payload ={
+            "operationName": "UserPost",
+            "variables": {
+                "displayname": streamername
+            },
+            "query": "query UserPost($displayname: String!) { userByDisplayName(displayname: $displayname) { __typename ...PostUserFragment } } fragment PostUserFragment on User { __typename private { __typename subscribers { __typename totalCount } } username displayname avatar partnerStatus role myRoomRole bttReceiverAddress followers { __typename totalCount } isFollowing canSubscribe mySubscription { __typename isSubscribing canCheerStreak subStreak } subSetting { __typename badgeText badgeColor textColor streakTextColor } chatMode emoteMode { __typename NoMineEmote NoGlobalEmote NoAllEmote } chatInterval chatDisabled chatVerifiedOnly followChatDelay livestream { __typename ...StreamFragment } hostingLivestream { __typename ...StreamHostFragment } rerun { __typename entries { __typename pastbroadcast { __typename ...RerunFragment } } startSecond watchingCount } recentDonations(limit: 10) { __typename ...DonationFragment } banStatus deactivated offlineImage ongoingGiftSub { __typename gifter { __typename ...UserFragment } count } lastStreamedAt subscribeDisabled donateDisabled } fragment StreamFragment on Livestream { __typename permlink thumbnailUrl title watchingCount totalReward createdAt language { __typename language } ageRestriction earnRestriction category { __typename title } } fragment StreamHostFragment on Livestream { __typename permlink thumbnailUrl language { __typename language } creator { __typename username displayname } } fragment DonationFragment on DonationBlock { __typename user { __typename ...UserFragment } count type expiresAt expirationTime } fragment UserFragment on User { __typename username displayname avatar partnerStatus role } fragment RerunFragment on PastBroadcast { __typename permlink thumbnailUrl title playbackUrl category { __typename title } }"
+        }
+        return payload
+

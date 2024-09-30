@@ -1,9 +1,7 @@
 import json
 import os
-
 import pytest
 import requests
-
 import loadData.payloadData as Payload
 import allure
 import tests.common as common
