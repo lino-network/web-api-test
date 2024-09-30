@@ -1794,3 +1794,50 @@ class Android:
         }
         return payload
 
+
+    @staticmethod
+    def android_UserPanel(streamername):
+        payload ={
+            "operationName": "UserPanel",
+            "variables": {
+                "displayname": streamername
+            },
+            "query": "query UserPanel($displayname: String!) { userByDisplayName(displayname: $displayname) { __typename panels { __typename ...PanelFragment } } } fragment PanelFragment on Panel { __typename title imageURL imageLinkURL body }"
+        }
+        return payload
+
+
+    @staticmethod
+    def android_ChannelEmote(streamername):
+        payload ={
+            "operationName": "ChannelEmote",
+            "variables": {
+                "username": streamername
+            },
+            "query": "query ChannelEmote($username: String!) { user(username: $username) { __typename emote { __typename vip { __typename list { __typename ...EmoteFragment } } channel { __typename list { __typename ...EmoteFragment } } } } } fragment EmoteFragment on Emote { __typename name level type username sourceURL }"
+        }
+        return payload
+
+
+    @staticmethod
+    def android_SCMessages(streamername):
+        payload ={
+            "operationName": "SCMessages",
+            "variables": {
+                "username": streamername
+            },
+            "query": "query SCMessages($username: String!) { user(username: $username) { __typename chats(count: 20) { __typename ...ChatFragment } } } fragment ChatFragment on Chat { __typename type ... on ChatText { ...ChatTextFragment } ... on ChatGift { ...ChatGiftFragment } ... on ChatFollow { ...ChatFollowFragment } ... on ChatSubscription { ...ChatSubFragment } ... on ChatExtendSub { ...ChatResubFragment } ... on ChatSubStreak { ...ChatSubStreakFragment } ... on ChatGiftSub { ...ChatGiftSubFragment } ... on ChatGiftSubReceive { ...ChatGiftSubReceiveFragment } ... on ChatHost { ...ChatHostFragment } ... on ChatChangeMode { mode } ... on ChatDelete { ids } ... on ChatLive { type } ... on ChatOffline { type } ... on ChatEmoteAdd { ...ChatEmoteAddFragment } ... on ChatTimeout { ...ChatTimeoutFragment } ... on ChatBan { ...ChatBanFragment } ... on ChatUnBan { ...ChatUnBanFragment } ... on ChatModerator { ...ChatModeratorFragment } ... on ChatTCValueAdd { ...ChatTCValueAddFragment } ... on ChatClip { ...ChatClipFragment } } fragment ChatTextFragment on ChatText { __typename id sender { __typename ...SCUserFragment } role roomRole createdAt subscribing content subLength emojis } fragment SCUserFragment on StreamchatUser { __typename username displayname avatar partnerStatus badges badgesStr } fragment ChatGiftFragment on ChatGift { __typename id createdAt sender { __typename ...SCUserFragment } role roomRole subscribing gift amount recentCount expireDuration message cryptocurrency { __typename decimals avatar symbol } } fragment ChatFollowFragment on ChatFollow { __typename id sender { __typename ...SCUserFragment } role roomRole subscribing } fragment ChatSubFragment on ChatSubscription { __typename id sender { __typename ...SCUserFragment } month role roomRole subscribing } fragment ChatResubFragment on ChatExtendSub { __typename id sender { __typename ...SCUserFragment } month length role roomRole subscribing } fragment ChatSubStreakFragment on ChatSubStreak { __typename id sender { __typename ...SCUserFragment } length role roomRole subscribing } fragment ChatGiftSubFragment on ChatGiftSub { __typename id sender { __typename ...SCUserFragment } role roomRole subscribing receiver count } fragment ChatGiftSubReceiveFragment on ChatGiftSubReceive { __typename id sender { __typename ...SCUserFragment } role roomRole subscribing gifter } fragment ChatHostFragment on ChatHost { __typename sender { __typename ...SCUserFragment } viewer role roomRole subscribing } fragment ChatEmoteAddFragment on ChatEmoteAdd { __typename sender { __typename ...SCUserFragment } role roomRole subscribing emote } fragment ChatTimeoutFragment on ChatTimeout { __typename sender { __typename ...SCUserFragment } minute } fragment ChatBanFragment on ChatBan { __typename sender { __typename ...SCUserFragment } bannedBy { __typename displayname } } fragment ChatUnBanFragment on ChatUnBan { __typename sender { __typename ...SCUserFragment } unbannedBy { __typename displayname } } fragment ChatModeratorFragment on ChatModerator { __typename sender { __typename ...SCUserFragment } add } fragment ChatTCValueAddFragment on ChatTCValueAdd { __typename sender { __typename ...SCUserFragment } role roomRole subscribing amount totalAmount } fragment ChatClipFragment on ChatClip { __typename id sender { __typename ...SCUserFragment } url role roomRole subscribing }"
+        }
+        return payload
+
+    @staticmethod
+    def android_TotalContributorQuery(streamername):
+        payload ={
+            "operationName": "TotalContributorQuery",
+            "variables": {
+                "username": streamername,
+                "rule": "THIS_MONTH"
+            },
+            "query": "query TotalContributorQuery($username: String!, $rule: ContributionSummaryRule) { user(username: $username) { __typename topContributions(rule: $rule, first: 10) { __typename list { __typename ...ContributionFragment } } } } fragment ContributionFragment on Contribution { __typename contributor { __typename ...UserFragment } amount } fragment UserFragment on User { __typename username displayname avatar partnerStatus role }"
+        }
+        return payload
