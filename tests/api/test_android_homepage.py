@@ -354,6 +354,154 @@ class TestAndroidHomePage:
                         for field in required_fields:
                             assert field in contributor and contributor[field] is not None, f"{field} should not be None"
 
+    @allure.title('test_channel_emote')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_channel_emote(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： ChannelEmote
+        检查频道表情接口
+        """
+        with allure.step('检查 ChannelEmote 接口'):
+            streamer_name = "automation"
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_ChannelEmote(streamer_name))
+
+
+    @allure.title('test_android_Myinfo')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_Myinfo(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： MyInfo
+        检查用户信息接口，获取自己的信息，首页每次打开只要缓存自己是登陆状态就会请求，刷新自己的缓存信息
+        """
+        with allure.step('检查 MyInfo 接口'):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_MyInfo())
+            print(response_json)
+
+            with allure.step('检查是否没有错误'):
+                assert 'err' not in response_json
+
+            with allure.step('检查返回的 me 对象'):
+                me = response_json['data']['me']
+                assert me is not None
+
+                required_fields = [
+                    'username', 'displayname', 'avatar',
+                    'partnerStatus', 'role', 'myChatBadges',
+                    'myChatBadgesStr', 'private', 'subCashbacked'
+                ]
+
+                for field in required_fields:
+                    assert field in me and me[field] is not None, f"{field} should not be None"
+
+                # 检查私有信息字段
+                private_info = me['private']
+                assert private_info is not None
+
+                private_required_fields = [
+                    'accessToken', 'email', 'emailVerified', 'hasSubscribed'
+                ]
+
+                for field in private_required_fields:
+                    assert field in private_info and private_info[field] is not None, f"{field} should not be None"
+
+
+
+    @allure.title('test_android_list_badge_resource')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_list_badge_resource(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： ListBadgeResource
+        检查徽章资源列表接口
+        """
+
+        with allure.step('检查 ListBadgeResource 接口'):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_ListBadgeResource())
+            print(response_json)
+
+            with allure.step('检查是否没有错误'):
+                assert 'err' not in response_json
+
+            with allure.step('检查返回的 listBadgeResource 对象'):
+                badge_resources = response_json['data']['listBadgeResource']
+                assert badge_resources is not None  # 确保徽章资源列表不为 None
+
+                with allure.step('检查徽章资源不为空'):
+                    assert len(badge_resources) > 0  # 确保徽章资源列表有内容
+
+                with allure.step('检查每个徽章资源的字段'):
+                    required_fields = ['description', 'url', 'name']
+
+                    for badge in badge_resources:
+                        for field in required_fields:
+                            assert field in badge and badge[field] is not None, f"{field} should not be None"
+
+    @allure.title('test_android_my_emoji')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_my_emoji(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： MyEmoji
+        检查用户表情接口
+        """
+
+        with allure.step("请求 MyEmoji 接口"):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_MyEmoji())
+            print(response_json)
+
+        with allure.step('检查是否没有错误'):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 me 对象"):
+            me = response_json['data']['me']
+            assert me is not None
+
+            emoji = me['emoji']
+            assert emoji is not None
+
+            with allure.step("检查 emoji 的结构"):
+                assert 'global' in emoji
+                assert 'vip' in emoji
+
+                global_emojis = emoji['global']['list']
+                assert global_emojis is not None and len(global_emojis) > 0
+
+                for emote in global_emojis:
+                    assert 'name' in emote and emote['name'] is not None
+
+                vip_emojis = emoji['vip']['list']
+                assert vip_emojis is not None  # VIP 可以为空列表
+
+    @allure.title('test_channel_emoji')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_channel_emoji(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： ChannelEmoji
+        检查频道表情接口
+        """
+        payload = Payload.Android.android_ChannelEmoji()  # 生成 Payload
+
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_ChannelEmoji())
+        print(response_json)
+
+        with allure.step('检查是否没有错误'):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 user 对象"):
+            user = response_json['data']['user']
+            assert user is not None
+            assert user['displayname'] == "automation"
+            assert 'isSubscribing' in user
+
+            emoji = user['emoji']
+            assert emoji is not None
+            assert emoji['vip']['list'] is not None  # 验证 VIP 表情列表存在
+            assert len(emoji['vip']['list']) == 3  # 检查 VIP 表情数量是否为 0
+
+
 
 if __name__ == '__main__':
     print('e2rwf')
