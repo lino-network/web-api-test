@@ -576,9 +576,9 @@ class TestAndroidHomePage:
                         assert field in contributor and contributor[field] is not None, f"{field} should not be None"
 
 
-    @allure.title('test_send_chat_message_with_emoji')
+    @allure.title('test_android_send_chat_message_with_emoji')
     @allure.severity(allure.severity_level.NORMAL)
-    def test_send_chat_message_with_emoji(self, get_config_data, get_viewer1_login_auth_header):
+    def test_android_send_chat_message_with_emoji(self, get_config_data, get_viewer1_login_auth_header):
         """
         接口： SendSCMsg
         检查发送带表情的聊天消息
@@ -599,9 +599,9 @@ class TestAndroidHomePage:
             assert message['emojis'] == [0, 2]  # 验证发送的表情有效性
 
 
-    @allure.title('test_send_chat_message_without_emoji')
+    @allure.title('test_android_send_chat_message_without_emoji')
     @allure.severity(allure.severity_level.NORMAL)
-    def test_send_chat_message_without_emoji(self, get_config_data, get_viewer1_login_auth_header):
+    def test_android_send_chat_message_without_emoji(self, get_config_data, get_viewer1_login_auth_header):
         """
         接口： SendSCMsg
         检查发送普通聊天消息
@@ -619,6 +619,128 @@ class TestAndroidHomePage:
 
             assert message['content'] == "test message"
             assert message['emojis'] == []  # 验证表情为空
+
+
+    @allure.title('test_android_sub_detail')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_sub_detail(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： SubDetail
+        检查订阅详细信息接口
+        """
+        streamer_name = "automation"  # 要查询的主播名称
+        payload = Payload.Android.android_SubDetail(streamername=streamer_name)  # 生成 Payload
+
+        with allure.step("请求 SubDetail 接口"):
+            response_json = common.api_post(
+                get_config_data['url'], 
+                get_viewer1_login_auth_header, 
+                payload
+            )
+            print(response_json)
+
+        with allure.step("检查接口返回是否没有错误"):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 user 对象"):
+            user = response_json['data']['user']
+            assert user is not None
+            
+            # 检查 user 的关键字段
+            assert 'avatar' in user and user['avatar'] is not None
+            assert 'androidRecurringSubProductIDs' in user and user['androidRecurringSubProductIDs'] is not None
+            assert 'subSetting' in user and user['subSetting'] is not None
+
+            sub_setting = user['subSetting']
+            assert 'benefits' in sub_setting and sub_setting['benefits'] is not None
+            assert 'backgroundImage' in sub_setting and sub_setting['backgroundImage'] is not None
+
+        with allure.step("检查返回的 me 对象"):
+            me = response_json['data']['me']
+            assert me is not None
+            assert 'hadLemonBack' in me  # 确保 hadLemonBack 存在
+
+
+    @allure.title('test_android_gift_sub_sku')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_gift_sub_sku(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： GiftSubSku
+        检查赠送订阅 SKU 接口
+        """
+        streamer_name = "automation"  # 要查询的主播名称
+        payload = Payload.Android.android_GiftSubSku(streamername=streamer_name)  # 生成 Payload
+
+        with allure.step("请求 GiftSubSku 接口"):
+            response_json = common.api_post(
+                get_config_data['url'], 
+                get_viewer1_login_auth_header, 
+                payload
+            )
+            print(response_json)
+
+        with allure.step("检查接口返回是否没有错误"):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 androidGiftSubProductID 和 user 对象"):
+            assert 'androidGiftSubProductID' in response_json['data']
+            assert isinstance(response_json['data']['androidGiftSubProductID'], list)
+            assert len(response_json['data']['androidGiftSubProductID']) > 0  # 确保 SKU 列表不为空
+
+            user = response_json['data']['user']
+            assert user is not None
+
+            assert 'avatar' in user and user['avatar'] is not None
+            assert 'subSetting' in user
+            assert user['subSetting'] is not None
+
+            # 检查 subSetting 的背景图像
+            assert 'backgroundImage' in user['subSetting'] and user['subSetting']['backgroundImage'] is not None
+
+
+    @allure.title('test_android_gift_sub_sku')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_gift_sub_sku(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： GiftSubSku
+        检查赠送订阅 SKU 接口
+        """
+        streamer_name = "automation"  # 要查询的主播名称
+        payload = Payload.Android.android_GiftSubSku(streamername=streamer_name)  # 生成 Payload
+
+        with allure.step("请求 GiftSubSku 接口"):
+            response_json = common.api_post(
+                get_config_data['url'], 
+                get_viewer1_login_auth_header, 
+                payload
+            )
+            print(response_json)
+
+        with allure.step("检查接口返回是否没有错误"):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 androidGiftSubProductID 和 user 对象"):
+            expected_skus = [
+                "tv.dlive.giftsubscription_1m_1", 
+                "tv.dlive.giftsubscription_1m_5", 
+                "tv.dlive.giftsubscription_1m_10", 
+                "tv.dlive.giftsubscription_1m_20", 
+                "tv.dlive.giftsubscription_1m_50"
+            ]
+            
+            # 断言返回的 SKU 列表等于预期值
+            assert response_json['data']['androidGiftSubProductID'] == expected_skus
+
+            user = response_json['data']['user']
+            assert user is not None
+
+            assert 'avatar' in user and user['avatar'] is not None
+            assert 'subSetting' in user
+            assert user['subSetting'] is not None
+
+            # 检查 subSetting 的背景图像
+            assert 'backgroundImage' in user['subSetting'] and user['subSetting']['backgroundImage'] is not None
+
 
 
 if __name__ == '__main__':
