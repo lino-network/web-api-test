@@ -2,12 +2,11 @@ import os
 import sys
 from datetime import datetime
 
-from tests.api.get_trend1 import test_allure
-
 curlPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curlPath)[0]
 print(rootPath)
 sys.path.append(os.path.split(rootPath)[0])
+from tests.api.get_trend1 import get_allure
 from tests.api.send_email import create_directory_if_not_exists, open_allure_report_and_screenshot
 from tests.api.send_email import get_report_server
 from tests.api.send_email import send_email
@@ -32,7 +31,7 @@ if __name__ == '__main__':
     allure_xml_path1 = results
     # 需要生成测试报告的路径
     allure_path1 = report
-    test_allure(test_path1, allure_xml_path1, allure_path1)
+    get_allure(test_path1, allure_xml_path1, allure_path1)
     aa = os.listdir(allure_path1)
     for i in aa:
         if i == '.DS_Store':

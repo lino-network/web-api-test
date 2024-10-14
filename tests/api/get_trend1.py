@@ -72,7 +72,7 @@ def update_file(buildOrder, allure_path):
 
 
 # 调用
-def test_allure(test_path, allure_xml_path, allure_path):
+def get_allure(test_path, allure_xml_path, allure_path):
     print(allure_path)
     buildOrder, old_data = get_dir(allure_path)
     # 先使用command生成xml文件
