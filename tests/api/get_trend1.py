@@ -2,7 +2,7 @@ import os
 import json
 import ast
 
-from tests.api.get_report import get_report_server, open_allure_report_and_screenshot
+# from tests.api.get_report import get_report_server, open_allure_report_and_screenshot
 
 
 # 获取下一个文件夹的名称，以及最近一个趋势的数据
