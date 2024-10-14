@@ -366,6 +366,44 @@ class TestAndroidHomePage:
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
                                             Payload.Android.android_ChannelEmote(streamer_name))
 
+        with allure.step("检查接口返回是否没有错误"):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 user 对象"):
+            user = response_json['data']['user']
+            assert user is not None
+
+            emoji = user['emote']
+            assert emoji is not None
+
+            with allure.step("检查 emoji 的结构"):
+                assert 'vip' in emoji
+                assert 'channel' in emoji
+
+                # 检查 VIP 表情列表
+                vip_emotes = emoji['vip']['list']
+                assert vip_emotes is not None
+
+                if len(vip_emotes) > 0:  # 如果有 VIP 表情，检查每个表情
+                    for emote in vip_emotes:
+                        assert 'name' in emote and emote['name'] is not None
+                        assert 'level' in emote and emote['level'] is not None
+                        assert 'type' in emote and emote['type'] is not None
+                        assert 'username' in emote and emote['username'] == streamer_name
+                        assert 'sourceURL' in emote and emote['sourceURL'] is not None
+
+                # 检查频道表情列表
+                channel_emotes = emoji['channel']['list']
+                assert channel_emotes is not None
+
+                if len(channel_emotes) > 0:  # 如果有频道表情，检查每个表情
+                    for emote in channel_emotes:
+                        assert 'name' in emote and emote['name'] is not None
+                        assert 'level' in emote and emote['level'] is not None
+                        assert 'type' in emote and emote['type'] is not None
+                        assert 'username' in emote and emote['username'] == streamer_name
+                        assert 'sourceURL' in emote and emote['sourceURL'] is not None
+
 
     @allure.title('test_android_Myinfo')
     @allure.severity(allure.severity_level.NORMAL)
@@ -474,17 +512,15 @@ class TestAndroidHomePage:
                 vip_emojis = emoji['vip']['list']
                 assert vip_emojis is not None  # VIP 可以为空列表
 
-    @allure.title('test_channel_emoji')
+    @allure.title('test_android_channel_emoji')
     @allure.severity(allure.severity_level.NORMAL)
-    def test_channel_emoji(self, get_config_data, get_viewer1_login_auth_header):
+    def test_android_channel_emoji(self, get_config_data, get_viewer1_login_auth_header):
         """
         接口： ChannelEmoji
         检查频道表情接口
         """
-        payload = Payload.Android.android_ChannelEmoji()  # 生成 Payload
-
         response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
-                                            Payload.Android.android_ChannelEmoji())
+                                            Payload.Android.android_ChannelEmoji("automation"))
         print(response_json)
 
         with allure.step('检查是否没有错误'):
@@ -501,6 +537,88 @@ class TestAndroidHomePage:
             assert emoji['vip']['list'] is not None  # 验证 VIP 表情列表存在
             assert len(emoji['vip']['list']) == 3  # 检查 VIP 表情数量是否为 0
 
+    @allure.title('test_android_stream_contributor_query')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_android_stream_contributor_query(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： StreamContributorQuery
+        检查直播贡献者统计信息接口
+        """
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_StreamContributorQuery("automation"))           
+
+        with allure.step('检查接口返回是否没有错误'):
+            assert 'err' not in response_json
+
+        with allure.step('检查返回的 user 对象'):
+            user = response_json['data']['user']
+            assert user is not None
+
+            top_contributions = user['topContributions']
+            assert top_contributions is not None
+
+            with allure.step('检查 topContributions 不为空'):
+                contributions_list = top_contributions['list']
+                assert contributions_list is not None
+
+                # 检查返回的列表长度合法，最多不会超过10个
+                assert len(contributions_list) <= 10, f"Expected at most 10 contributions, but got {len(contributions_list)}"
+
+            with allure.step('检查每个贡献的字段'):
+                for contribution in contributions_list:
+                    assert 'contributor' in contribution and contribution['contributor'] is not None
+                    assert 'amount' in contribution and contribution['amount'] is not None
+
+                    contributor = contribution['contributor']
+                    required_fields = ['username', 'displayname', 'avatar', 'partnerStatus', 'role']
+
+                    for field in required_fields:
+                        assert field in contributor and contributor[field] is not None, f"{field} should not be None"
+
+
+    @allure.title('test_send_chat_message_with_emoji')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_send_chat_message_with_emoji(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： SendSCMsg
+        检查发送带表情的聊天消息
+        """
+        payload = Payload.Android.android_SendSCMsg("automation", "CRY ", ["0", "2"], "Member", False, "")  # 生成 Payload
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_SendSCMsg("automation", "CRY ", [0, 2], "Member", False, ""))  
+
+        with allure.step("检查接口返回是否没有错误"):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 message 对象"):
+            message = response_json['data']['sendStreamchatMessage']['message']
+            assert message is not None
+            assert message['__typename'] == "ChatText"
+
+            assert message['content'] == "CRY "
+            assert message['emojis'] == [0, 2]  # 验证发送的表情有效性
+
+
+    @allure.title('test_send_chat_message_without_emoji')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_send_chat_message_without_emoji(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： SendSCMsg
+        检查发送普通聊天消息
+        """
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.Android.android_SendSCMsg("automation", "test message", [], "Member", False, "") )  
+
+        with allure.step("检查接口返回是否没有错误"):
+            assert 'err' not in response_json
+
+        with allure.step("检查返回的 message 对象"):
+            message = response_json['data']['sendStreamchatMessage']['message']
+            assert message is not None
+            assert message['__typename'] == "ChatText"
+
+            assert message['content'] == "test message"
+            assert message['emojis'] == []  # 验证表情为空
 
 
 if __name__ == '__main__':
