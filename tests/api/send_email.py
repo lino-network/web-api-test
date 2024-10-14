@@ -39,7 +39,7 @@ def get_report_server(report_path):
         # macOS
         command += ''  # macOS下不需要扩展名
     # 执行 allure serve 命令
-    process = subprocess.Popen([command, 'serve', report_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen([command, 'open', report_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # 获取输出并解析服务器地址
     while True:
