@@ -1,5 +1,7 @@
 import json
 import os
+import time
+
 import pytest
 import requests
 import loadData.payloadData as Payload
@@ -134,7 +136,6 @@ class TestAndroidHomePage:
                             parent = category['parent']
                             assert 'id' in parent and parent['id'] is not None
 
-
     @allure.title('test_user_post')
     @allure.severity(allure.severity_level.NORMAL)
     def test_android_user_post(self, get_config_data, get_viewer1_login_auth_header):
@@ -217,7 +218,6 @@ class TestAndroidHomePage:
                         for field in required_fields:
                             assert field in panel and panel[field] is not None, f"{field} should not be None"
 
-
     @allure.title('test_channel_emote')
     @allure.severity(allure.severity_level.NORMAL)
     def test_channel_emote(self, get_config_data, get_viewer1_login_auth_header):
@@ -270,7 +270,6 @@ class TestAndroidHomePage:
                         assert 'type' in emote_item and emote_item['type'] is not None
                         assert 'username' in emote_item and emote_item['username'] == streamer_name
                         assert 'sourceURL' in emote_item and emote_item['sourceURL'] is not None
-
 
     @allure.title('test_android_SCMessages')
     @allure.severity(allure.severity_level.NORMAL)
@@ -404,7 +403,6 @@ class TestAndroidHomePage:
                         assert 'username' in emote and emote['username'] == streamer_name
                         assert 'sourceURL' in emote and emote['sourceURL'] is not None
 
-
     @allure.title('test_android_Myinfo')
     @allure.severity(allure.severity_level.NORMAL)
     def test_android_Myinfo(self, get_config_data, get_viewer1_login_auth_header):
@@ -443,8 +441,6 @@ class TestAndroidHomePage:
 
                 for field in private_required_fields:
                     assert field in private_info and private_info[field] is not None, f"{field} should not be None"
-
-
 
     @allure.title('test_android_list_badge_resource')
     @allure.severity(allure.severity_level.NORMAL)
@@ -575,7 +571,6 @@ class TestAndroidHomePage:
                     for field in required_fields:
                         assert field in contributor and contributor[field] is not None, f"{field} should not be None"
 
-
     @allure.title('test_android_send_chat_message_with_emoji')
     @allure.severity(allure.severity_level.NORMAL)
     def test_android_send_chat_message_with_emoji(self, get_config_data, get_viewer1_login_auth_header):
@@ -598,7 +593,6 @@ class TestAndroidHomePage:
             assert message['content'] == "CRY "
             assert message['emojis'] == [0, 2]  # 验证发送的表情有效性
 
-
     @allure.title('test_android_send_chat_message_without_emoji')
     @allure.severity(allure.severity_level.NORMAL)
     def test_android_send_chat_message_without_emoji(self, get_config_data, get_viewer1_login_auth_header):
@@ -606,20 +600,20 @@ class TestAndroidHomePage:
         接口： SendSCMsg
         检查发送普通聊天消息
         """
+        time.sleep(10)
         response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
                                             Payload.Android.android_SendSCMsg("automation", "test message", [], "Member", False, "") )  
 
         with allure.step("检查接口返回是否没有错误"):
             assert 'err' not in response_json
-
         with allure.step("检查返回的 message 对象"):
             message = response_json['data']['sendStreamchatMessage']['message']
+            print('andriod message:' + str(response_json['data']))
             assert message is not None
             assert message['__typename'] == "ChatText"
 
             assert message['content'] == "test message"
             assert message['emojis'] == []  # 验证表情为空
-
 
     @allure.title('test_android_sub_detail')
     @allure.severity(allure.severity_level.NORMAL)
@@ -660,7 +654,6 @@ class TestAndroidHomePage:
             assert me is not None
             assert 'hadLemonBack' in me  # 确保 hadLemonBack 存在
 
-
     @allure.title('test_android_gift_sub_sku')
     @allure.severity(allure.severity_level.NORMAL)
     def test_android_gift_sub_sku(self, get_config_data, get_viewer1_login_auth_header):
@@ -696,7 +689,6 @@ class TestAndroidHomePage:
 
             # 检查 subSetting 的背景图像
             assert 'backgroundImage' in user['subSetting'] and user['subSetting']['backgroundImage'] is not None
-
 
     @allure.title('test_android_gift_sub_sku')
     @allure.severity(allure.severity_level.NORMAL)
@@ -740,7 +732,6 @@ class TestAndroidHomePage:
 
             # 检查 subSetting 的背景图像
             assert 'backgroundImage' in user['subSetting'] and user['subSetting']['backgroundImage'] is not None
-
 
 
 if __name__ == '__main__':
