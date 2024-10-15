@@ -17,9 +17,9 @@ class TestStreamerIncentive:
         检查红点
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
-                                        Payload.StreamerIncentiveAPI().CheckPointRankWalletAndHistoryTabNotifyClosed("appletv"))
+                                        Payload.StreamerIncentiveAPI().CheckPointRankWalletAndHistoryTabNotifyClosed("vptest"))
         print(response_json)
-        with allure.step('Check Point Rank Wallet and History Tab notification is not closed for user appletv'):
+        with allure.step('Check Point Rank Wallet and History Tab notification is not closed for user vptest'):
             assert response_json['data']['checkPointRankWalletAndHistoryTabNotifyClosed']['isClosed'] == True
 
 
@@ -32,7 +32,7 @@ class TestStreamerIncentive:
 
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
-                                        Payload.StreamerIncentiveAPI().ClosePointRankWalletAndHistoryTabNotify("appletv"))
+                                        Payload.StreamerIncentiveAPI().ClosePointRankWalletAndHistoryTabNotify("vptest"))
 
         with allure.step('Error occurred while closing Point Rank Wallet and History Tab notification'):
             assert response_json['data']['closePointRankWalletAndHistoryTabNotify']['err'] is None
@@ -44,7 +44,7 @@ class TestStreamerIncentive:
         接口：EventGetPointTopUsers
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
-                                        Payload.StreamerIncentiveAPI().EventGetPointTopUsers("appletv"))
+                                        Payload.StreamerIncentiveAPI().EventGetPointTopUsers("vptest"))
 
         assert response_json['data']['getPointEventTopUsers']['err'] is None
         users = response_json['data']['getPointEventTopUsers']['users']
@@ -99,7 +99,7 @@ class TestStreamerIncentive:
         接口：GetHtxUid
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
-                                        Payload.StreamerIncentiveAPI().GetHtxUid("appletv"))
+                                        Payload.StreamerIncentiveAPI().GetHtxUid("vptest"))
         assert response_json['data']['getHtxUid']['err'] is None
         with allure.step('uid不为空'):
             assert response_json['data']['getHtxUid']['htxUid']is not None
