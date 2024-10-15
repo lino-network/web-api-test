@@ -1513,17 +1513,21 @@ class StreamerIncentiveAPI:
         payload = {
             "operationName": "EventGetPointTopUsers",
             "variables": {
-                "eventId": 15,
-                "username": username
+                "eventId": 31,
+                "username": username,
+                "pageNum": 1,
+                "pageSize": 20
             },
             "extensions": {
                 "persistedQuery": {
                 "version": 1,
-                "sha256Hash": "45b6acc9ad37c93ee961c6ccf4e5894a0561c4eacd84cd0c85b0980d14aa6556"
+                "sha256Hash": "68ac32b02dba21397e8dfbbc009d80889fb07b069c26aa5e108676604854a9a7"
                 }
             }
         }
         return payload
+
+
 
     @staticmethod
     def GetPontEventRankRewardByUsername():
@@ -1563,14 +1567,15 @@ class StreamerIncentiveAPI:
         payload = {
             "operationName": "GetHtxUid",
             "variables": {
-                "username": username
+                "username": "automation"
             },
             "extensions": {
                 "persistedQuery": {
-                    "version": 1,
-                    "sha256Hash": "bc83bbd7d71e557f99d60fd171d506d4173404c1a8abcedb6955e5aaa3635071"
+                "version": 1,
+                "sha256Hash": "bc83bbd7d71e557f99d60fd171d506d4173404c1a8abcedb6955e5aaa3635071"
                 }
-            }
+            },
+            "query": "query GetHtxUid($username: String!) {\n  getHtxUid(username: $username) {\n    err {\n      message\n      __typename\n    }\n    htxUid\n    __typename\n  }\n}\n"
         }
         return payload
 
@@ -1587,7 +1592,20 @@ class StreamerIncentiveAPI:
             }
         }
         return payload
-
+    @staticmethod
+    def GetPurchaseLemonDiscount():
+        payload = {
+            "operationName": "GetPurchaseLemonDiscount",
+            "variables": {},
+            "extensions": {
+                "persistedQuery": {
+                "version": 1,
+                "sha256Hash": "34ee7536dbebf86ce94c5ab0ee15a9f3114e3c0ae5481cd05e703d9102751069"
+                }
+            },
+            "query": "query GetPurchaseLemonDiscount {\n  GetPurchaseFirstLemonDiscount {\n    isFirstLemon\n    Web {\n      Item\n      Discount\n      DiscountPrice\n      __typename\n    }\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n  GetPurchaseLemonDiscountChristmas {\n    DiscountIsBeginning\n    DiscountBeginTime\n    DiscountEndTime\n    EndCountdown\n    MyCard {\n      Item\n      Discount\n      DiscountPrice\n      __typename\n    }\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n  GetPurchaseLemonDiscountHalloween {\n    DiscountIsBeginning\n    DiscountBeginTime\n    DiscountEndTime\n    EndCountdown\n    Web {\n      Item\n      Discount\n      DiscountPrice\n      __typename\n    }\n    Coinbase {\n      Item\n      Discount\n      DiscountPrice\n      __typename\n    }\n    err {\n      code\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+        }
+        return payload
 
 
 class MyInfoAPI:
@@ -1839,5 +1857,101 @@ class Android:
                 "rule": "THIS_MONTH"
             },
             "query": "query TotalContributorQuery($username: String!, $rule: ContributionSummaryRule) { user(username: $username) { __typename topContributions(rule: $rule, first: 10) { __typename list { __typename ...ContributionFragment } } } } fragment ContributionFragment on Contribution { __typename contributor { __typename ...UserFragment } amount } fragment UserFragment on User { __typename username displayname avatar partnerStatus role }"
+        }
+        return payload
+
+
+    @staticmethod
+    def android_MyInfo():
+        #获取自己的信息，首页每次打开只要缓存自己是登陆状态就会请求，刷新自己的缓存信息
+        payload ={
+            "operationName": "MyInfo",
+            "variables": {},
+            "query": "query MyInfo { me { __typename ...MeFragment } } fragment MeFragment on User { __typename username displayname avatar partnerStatus role myChatBadges myChatBadgesStr private { __typename accessToken email emailVerified hasSubscribed } subCashbacked }"
+        }
+        return payload
+
+
+    @staticmethod
+    def android_ListBadgeResource():
+        payload ={
+            "operationName": "ListBadgeResource",
+            "variables": {},
+            "query": "query ListBadgeResource { listBadgeResource { __typename description url name } }"
+        }
+        return payload
+
+    @staticmethod
+    def android_MyEmoji():
+        payload ={
+            "operationName": "MyEmoji",
+            "variables": {},
+            "query": "query MyEmoji { me { __typename emoji { __typename global { __typename list { __typename name } } vip { __typename list { __typename name } } } private { __typename subedStreamerEmojis { __typename list { __typename ...EmojiFragment } } } } } fragment EmojiFragment on StreamerEmotes { __typename streamer { __typename displayname avatar } emotes { __typename name } }"
+        }
+        return payload
+
+    @staticmethod
+    def android_ChannelEmoji(streamername):
+        payload ={
+            "operationName": "ChannelEmoji",
+            "variables": {
+                "username": streamername
+            },
+            "query": "query ChannelEmoji($username: String!) { user(username: $username) { __typename displayname isSubscribing emoji { __typename vip { __typename list { __typename name } } } } }"
+        }
+        return payload
+
+    @staticmethod
+    def android_StreamContributorQuery(streamername):
+        payload ={
+            "operationName": "StreamContributorQuery",
+            "variables": {
+                "username": streamername,
+                "rule": "THIS_STREAM",
+                "permlink": ""
+            },
+            "query": "query StreamContributorQuery($username: String!, $rule: ContributionSummaryRule, $permlink: String!) { user(username: $username) { __typename topContributions(first: 10, rule: $rule, permlink: $permlink) { __typename list { __typename ...ContributionFragment } } } } fragment ContributionFragment on Contribution { __typename contributor { __typename ...UserFragment } amount } fragment UserFragment on User { __typename username displayname avatar partnerStatus role }"
+        }
+        return payload
+
+
+    @staticmethod
+    def android_SendSCMsg(streamername, message, emojis, roomRole="Member", subscribing=False, pwd=""):
+        payload = {
+            "operationName": "SendSCMsg",
+            "variables": {
+                "input": {
+                    "streamer": streamername,
+                    "message": message,
+                    "roomRole": roomRole,
+                    "subscribing": subscribing,
+                    "emojis": emojis,  # 这里接收表情列表
+                    "pwd": pwd
+                }
+            },
+            "query": "mutation SendSCMsg($input: SendStreamchatMessageInput!) { sendStreamchatMessage(input: $input) { __typename err { __typename ...ErrorFragment } message { __typename type ... on ChatText { ...ChatTextFragment } } } } fragment ErrorFragment on Error { __typename code message } fragment ChatTextFragment on ChatText { __typename id sender { __typename ...SCUserFragment } role roomRole createdAt subscribing content subLength emojis } fragment SCUserFragment on StreamchatUser { __typename username displayname avatar partnerStatus badges badgesStr }"
+        }
+        return payload
+
+
+    @staticmethod
+    def android_SubDetail(streamername):
+        payload = {
+            "operationName": "SubDetail",
+            "variables": {
+                "username": streamername
+            },
+            "query": "query SubDetail($username: String!) { user(username: $username) { __typename avatar androidRecurringSubProductIDs subSetting { __typename badgeText badgeColor textColor benefits backgroundImage } mySubscription { __typename lemonSub topic status subStreak subType nextBillingAt } } me { __typename hadLemonBack } }"
+        }
+        return payload
+
+    @staticmethod
+    def android_GiftSubSku(streamername):
+        payload = {
+            "operationName": "GiftSubSku",
+            "variables": {
+                "username": streamername
+            },
+            "query": "query GiftSubSku($username: String!) { androidGiftSubProductID user(username: $username) { __typename avatar subSetting { __typename backgroundImage } } }"
         }
         return payload
