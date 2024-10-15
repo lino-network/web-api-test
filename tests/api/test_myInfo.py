@@ -48,7 +48,7 @@ class TestMyInfo:
         检查appletv钱包里的内容不为空
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
-                                        Payload.MyInfoAPI().getWalletAddressByOwner("appletv"))
+                                        Payload.MyInfoAPI().getWalletAddressByOwner("vptest"))
         wallets = response_json["data"]["getWalletAddressByOwner"]["wallets"]
         for wallet in wallets:
             assert "name" in wallet
@@ -62,10 +62,9 @@ class TestMyInfo:
     def test_List_Withdraw_Txes_By_Streamer(self, get_config_data, get_incentive_streamer_auth_header):
         """
         接口：ListWithdrawTxesByStreamer
-        检查appletv钱包里的内容不为空
         """
         response_json = common.api_post(get_config_data['url'], get_incentive_streamer_auth_header,
-                                        Payload.MyInfoAPI().ListWithdrawTxesByStreamer("appletv"))
+                                        Payload.MyInfoAPI().ListWithdrawTxesByStreamer("helenstreamer"))
         withdraw_txes = response_json["data"]["ListWithdrawTxesByStreamer"]
 
         for tx in withdraw_txes:
