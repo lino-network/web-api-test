@@ -1,5 +1,7 @@
 import json
 import os
+import time
+
 import pytest
 import requests
 import loadData.payloadData as Payload
@@ -57,8 +59,6 @@ class TestIOSHomePage:
             with allure.step('检查是否没有错误'):
                 assert 'err' not in response_json
 
-
-
     @allure.title('test_ios_sendChat')
     @allure.severity(allure.severity_level.NORMAL)
     def test_ios_sendChat(self, get_config_data, get_viewer1_login_auth_header):
@@ -80,6 +80,175 @@ class TestIOSHomePage:
             assert response_json['data']['sendStreamchatMessage']['err'] is None
         with allure.step('检查返回的信息就是发送的信息'):
             assert response_json['data']['sendStreamchatMessage']['message']['content'] == message
+
+    @allure.title('test_ios_AdvertisesInfo_carousel_mid')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_AdvertisesInfo_carousel_mid(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：AdvertisesInfo
+
+        测试轮播的广告接口没报错
+
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('测试轮播的广告接口没报错'):
+            p = ["carousel_mid"]
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.IOS().ios_AdvertisesInfo(p))
+            with allure.step('检查返回值不报错'):
+                assert "err "not in response_json['data']['Advertises']
+
+    @allure.title('test_ios_AdvertisesInfo_livestream')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_AdvertisesInfo_livestream(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：AdvertisesInfo
+
+        测试直播流的广告接口没报错
+
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('测试直播流的广告接口没报错'):
+            p = ["livestream"]
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.IOS().ios_AdvertisesInfo(p))
+            with allure.step('检查返回值不报错'):
+                assert "err "not in response_json['data']['Advertises']
+
+    @allure.title('test_ios_liveCarousel')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_liveCarousel(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： liveCarousel
+        检查IOS 轮播接口是否有报错
+
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('测试轮播接口没报错'):
+            p = ["livestream"]
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.IOS().ios_liveCarousel())
+            with allure.step('检查返回值不报错'):
+                assert "err "not in response_json['data']['liveCarousel']
+
+    @allure.title('test_ios_listRecommendation')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_listRecommendation(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：listRecommendation
+
+        检查 channel you like 模块接口不报错
+
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('检查 channel you like 模块接口不报错'):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.IOS().ios_listRecommendation())
+            with allure.step('检查返回值不报错'):
+                assert "err " not in response_json['data']['listRecommendation']
+
+    @allure.title('test_ios_checkUsersAccountLemon')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_checkUsersAccountLemon(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：fetchMyBalance
+
+        检查用户的账户lemon 接口是否报错
+
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('检查用户的账户lemon 接口是否报错'):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.IOS().ios_fetchMyBalance())
+            with allure.step('检查返回值不报错'):
+                assert "err " not in response_json['data']['me']
+
+    @allure.title('test_ios_myEmotes')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_myFavoritetorEmotes(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口：myEmotes
+        检查登录用户的 Emotes对不对
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        with allure.step('检查登录用户的 Emotes对不对'):
+            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                            Payload.IOS().ios_myEmotes())
+            with allure.step('检查返回值不报错'):
+                assert "err " not in response_json['data']['me']
+            with allure.step('检查最喜欢的表情在list里面'):
+                list1 = response_json['data']['me']['emote']['mine']['list']
+                is_exist = False
+                for i in list1:
+                    if i['name'] == '3a9f7388900813c_300300':
+                        is_exist = True
+                        assert 'dlive-degnujtptx' == i['username']
+                        assert 'USER_LEVEL' == i['level']
+                        assert 'EMOTE' == i['type']
+                assert is_exist is True, '最喜欢的表情在list里面'
+
+    @allure.title('test_ios_IsFirstLemonPurchase')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_IsFirstLemonPurchase(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： test_ios_IsFirstLemonPurchase
+        检查用户是否购买过lemon，接口是否报错
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                        Payload.IOS().ios_IsFirstLemonPurchase(get_config_data['viewer1_username']))
+        with allure.step('接口没报错'):
+            assert response_json['data']['IsFirstLemonPurchase']['err'] is None
+        with allure.step('检查用没有购买过lemon'):
+            assert response_json['data']['IsFirstLemonPurchase']['isFirstLemonPurchase'] is True
+
+    @allure.title('test_ios_isFirstThirdLogin')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_isFirstThirdLogin(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： isFirstThirdLogin
+        检查用户是否第一次登录，接口是否报错
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                        Payload.IOS().ios_isFirstThirdLogin(get_config_data['viewer1_username']))
+        with allure.step('检查用户是否第一次登录'):
+            assert response_json['data']['isFirstThirdLogin']['isFirstThirdLogin'] is False
+
+    @allure.title('test_ios_systemMessage')
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_ios_systemMessage(self, get_config_data, get_viewer1_login_auth_header):
+        """
+        接口： systemMessage
+        检查系统消息接口是否报错
+        :param get_config_data:
+        :param get_viewer1_login_auth_header:
+        :return:
+        """
+        response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                                        Payload.IOS().ios_systemMessage())
+        with allure.step('检查系统消息接口无报错'):
+            assert 'err' not in response_json['data']['globalInfo']
+
+
+
+
 '''
     @allure.title('test_current_user')
     @allure.severity(allure.severity_level.NORMAL)
