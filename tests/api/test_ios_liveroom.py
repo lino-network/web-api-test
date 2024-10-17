@@ -14,7 +14,7 @@ import tests.common as common
 class TestIOSLivingPage:
     @allure.title('test_ios_CheckIfCanFreeSub')
     @allure.severity(allure.severity_level.NORMAL)
-    def test_ios_CheckIfCanFreeSub(self, get_config_data, get_viewer1_login_auth_header):
+    def test_ios_CheckIfCanFreeSub(self, get_config_data, get_viewer1_login_auth_header, get_follow_streamer_auth_header):
         """
         接口： freeSubOffer
         检查用户:viewer1_username具备首次免费订阅的资格
@@ -27,7 +27,7 @@ class TestIOSLivingPage:
         with allure.step('检查未订阅过的用户:viewer1_username具备首次免费订阅的资格'):
             assert response_json['data']['freeSubOffer']['err'] is None
             assert response_json['data']['freeSubOffer']['canFree'] is True
-        response_json1 = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+        response_json1 = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                          Payload.IOS().ios_freeSubOffer(get_config_data['follow_streamer']))
         with allure.step('检查已经订阅过的用户:automation不具备首次免费订阅的资格'):
             assert response_json1['data']['freeSubOffer']['err'] is None
@@ -138,6 +138,6 @@ class TestIOSLivingPage:
             print('检查打赏后用户的账户lemon是： ' + str(after_balance))
 
         with allure.step('检查打赏后账户剩余的lemon数值正确'):
-            assert after_balance + 1 == before_balance
+            assert int(after_balance) + 1 == int(before_balance)
 
 
