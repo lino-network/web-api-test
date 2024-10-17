@@ -1955,3 +1955,184 @@ class Android:
             "query": "query GiftSubSku($username: String!) { androidGiftSubProductID user(username: $username) { __typename avatar subSetting { __typename backgroundImage } } }"
         }
         return payload
+
+
+class IOS:
+    @staticmethod
+    def ios_AdvertisesInfo(positions: list):
+        payload = {
+            "operationName": "AdvertisesInfo",
+            "query": "query AdvertisesInfo($info: AdvertisesInfo!) {\n  Advertises(info: $info) {\n    __typename\n    position\n    showmaker {\n      __typename\n      id\n      thumbnailUrl\n      redirectLink\n      inappLink\n      mobilethumbnailUrl\n      introduce\n      advertiseVendor\n      stayTime\n      extends\n    }\n  }\n}",
+            "variables": {
+                "info": {
+                    "positions": positions
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_liveCarousel(languageID=106, showMatureContent=True, showNSFW=True):
+        payload = {
+            "operationName": "HomepageLivestreams4",
+            "query": "query HomepageLivestreams4($input: LivestreamsOption!) {\n  liveCarousel(input: $input) {\n    __typename\n    list {\n      __typename\n      position\n      ...GraphCarouselInfo\n    }\n  }\n}\nfragment GraphCarouselInfo on CarouselInfo {\n  __typename\n  live {\n    __typename\n    ...GraphPreviewLivestream\n  }\n}\nfragment GraphPreviewLivestream on Livestream {\n  __typename\n  permlink\n  title\n  thumbnailUrl\n  totalReward\n  watchingCount\n  createdAt\n  ageRestriction\n  earnRestriction\n  tags\n  category {\n    __typename\n    title\n    id\n    parent {\n      __typename\n      id\n      title\n    }\n  }\n  creator {\n    __typename\n    ...GraphMinimumUser\n  }\n}\nfragment GraphMinimumUser on User {\n  __typename\n  username\n  displayname\n  partnerStatus\n  avatar\n  effect\n  bttReceiverAddress\n  followers {\n    __typename\n    totalCount\n  }\n}",
+            "variables": {
+                "input": {
+                    "after": "-1",
+                    "first": 5,
+                    "languageID": languageID,
+                    "showMatureContent": showMatureContent,
+                    "showNSFW": showNSFW
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_listRecommendation(showMatureContent=True, showNSFW=True, userLanguageCode="zh-Hans"):
+        payload = {
+            "operationName": "HomepageLivestreams3",
+            "query": "query HomepageLivestreams3($input: LivestreamsOption!) {\n  listRecommendation(input: $input) {\n    __typename\n    ...GraphLivestreamConnection\n  }\n}\nfragment GraphLivestreamConnection on LivestreamConnection {\n  __typename\n  list {\n    __typename\n    ...GraphPreviewLivestream\n  }\n  pageInfo {\n    __typename\n    ...GraphPageInfo\n  }\n}\nfragment GraphPreviewLivestream on Livestream {\n  __typename\n  permlink\n  title\n  thumbnailUrl\n  totalReward\n  watchingCount\n  createdAt\n  ageRestriction\n  earnRestriction\n  tags\n  category {\n    __typename\n    title\n    id\n    parent {\n      __typename\n      id\n      title\n    }\n  }\n  creator {\n    __typename\n    ...GraphMinimumUser\n  }\n}\nfragment GraphMinimumUser on User {\n  __typename\n  username\n  displayname\n  partnerStatus\n  avatar\n  effect\n  bttReceiverAddress\n  followers {\n    __typename\n    totalCount\n  }\n}\nfragment GraphPageInfo on PageInfo {\n  __typename\n  endCursor\n  hasNextPage\n}",
+            "variables": {
+                "input": {
+                    "after": "0",
+                    "first": 8,
+                    "order": "TRENDING",
+                    "showMatureContent": showMatureContent,
+                    "showNSFW": showNSFW,
+                    "userLanguageCode": userLanguageCode
+                }
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_fetchMyBalance():
+        payload = {
+            "operationName": "fetchMyBalance",
+            "query": "query fetchMyBalance {\n  me {\n    __typename\n    wallet {\n      __typename\n      balance\n    }\n  }\n}"
+        }
+        return payload
+
+    @staticmethod
+    def ios_myEmotes():
+        payload = {
+            "operationName": "myEmotes",
+            "query": "query myEmotes {\n  me {\n    __typename\n    emote {\n      __typename\n      mine {\n        __typename\n        list {\n          __typename\n          ...GraphEmote\n        }\n      }\n    }\n  }\n}\nfragment GraphEmote on Emote {\n  __typename\n  name\n  username\n  level\n  type\n}",
+            "variables": None
+        }
+        return payload
+
+    @staticmethod
+    def ios_IsFirstLemonPurchase(username):
+        payload = {
+            "operationName": "IsFirstLemonPurchase",
+            "query": "query IsFirstLemonPurchase($username: String!) {\n  IsFirstLemonPurchase(username: $username) {\n    __typename\n    isFirstLemonPurchase\n    err {\n      __typename\n      ...ErrorF\n    }\n  }\n}\nfragment ErrorF on Error {\n  __typename\n  code\n  message\n}",
+            "variables": {
+                "username": username
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_isFirstThirdLogin(username):
+        payload = {
+            "operationName": "isFirstThirdLogin",
+            "query": "query isFirstThirdLogin($username: String!) {\n  isFirstThirdLogin(username: $username) {\n    __typename\n    isFirstThirdLogin\n  }\n}",
+            "variables": {
+                "username": username
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_systemMessage(languageCode='zh'):
+        payload = {
+            "operationName": "systemMessage",
+            "query": "query systemMessage($languageCode: String) {\n  globalInfo {\n    __typename\n    systemMessage(languageCode: $languageCode)\n  }\n}",
+            "variables": {
+                "languageCode": languageCode
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_freeSubOffer(username):
+        payload = {
+            "operationName": "freeSubOffer",
+            "query": "query freeSubOffer($username: String!) {\n  freeSubOffer(username: $username) {\n    __typename\n    canFree\n    err {\n      __typename\n      ...ErrorF\n    }\n  }\n}\nfragment ErrorF on Error {\n  __typename\n  code\n  message\n}",
+            "variables": {
+                "username": "dlive-degnujtptx"
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_follow(streamer):
+        payload = {
+            "operationName": "follow",
+            "query": "mutation follow($streamer: String!) {\n  follow(streamer: $streamer) {\n    __typename\n    err {\n      __typename\n      ...GraphError\n    }\n  }\n}\nfragment GraphError on Error {\n  __typename\n  code\n  message\n}",
+            "variables": {
+                "streamer": streamer
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_unfollow(streamer):
+        payload = {
+            "operationName": "unfollow",
+            "query": "mutation unfollow($streamer: String!) {\n  unfollow(streamer: $streamer) {\n    __typename\n    err {\n      __typename\n      ...GraphError\n    }\n  }\n}\nfragment GraphError on Error {\n  __typename\n  code\n  message\n}",
+            "variables": {
+                "streamer": streamer
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_FollowingList(username):
+        payload = {
+            "operationName": "FollowingList",
+            "query": "query FollowingList($username: String!, $sortedBy: RelationSortOrder, $first: Int, $after: String, $isLoggedIn: Boolean!) {\n  user(username: $username) {\n    __typename\n    following(sortedBy: $sortedBy, first: $first, after: $after) {\n      __typename\n      pageInfo {\n        __typename\n        ...GraphPageInfo\n      }\n      list {\n        __typename\n        ...GraphMinimumUser\n        ...IsFollowing @include(if: $isLoggedIn)\n        ...IsLive\n      }\n    }\n  }\n}\nfragment GraphPageInfo on PageInfo {\n  __typename\n  endCursor\n  hasNextPage\n}\nfragment GraphMinimumUser on User {\n  __typename\n  username\n  displayname\n  partnerStatus\n  avatar\n  effect\n  bttReceiverAddress\n  followers {\n    __typename\n    totalCount\n  }\n}\nfragment IsFollowing on User {\n  __typename\n  isFollowing\n}\nfragment IsLive on User {\n  __typename\n  livestream {\n    __typename\n    permlink\n  }\n}",
+            "variables": {
+                "after": None,
+                "first": 24,
+                "isLoggedIn": True,
+                "sortedBy": "NEW",
+                "username": username
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_FollowersList(username):
+        payload = {
+            "operationName": "FollowersList",
+            "query": "query FollowersList($username: String!, $sortedBy: RelationSortOrder, $first: Int, $after: String, $isLoggedIn: Boolean!) {\n  user(username: $username) {\n    __typename\n    followers(sortedBy: $sortedBy, first: $first, after: $after) {\n      __typename\n      pageInfo {\n        __typename\n        ...GraphPageInfo\n      }\n      list {\n        __typename\n        ...GraphMinimumUser\n        ...IsFollowing @include(if: $isLoggedIn)\n        ...IsLive\n      }\n    }\n  }\n}\nfragment GraphPageInfo on PageInfo {\n  __typename\n  endCursor\n  hasNextPage\n}\nfragment GraphMinimumUser on User {\n  __typename\n  username\n  displayname\n  partnerStatus\n  avatar\n  effect\n  bttReceiverAddress\n  followers {\n    __typename\n    totalCount\n  }\n}\nfragment IsFollowing on User {\n  __typename\n  isFollowing\n}\nfragment IsLive on User {\n  __typename\n  livestream {\n    __typename\n    permlink\n  }\n}",
+            "variables": {
+                "after": None,
+                "first": 24,
+                "isLoggedIn": True,
+                "sortedBy": "NEW",
+                "username": username
+            }
+        }
+        return payload
+
+    @staticmethod
+    def ios_addDonation(count, permlink, dtype='LEMON', message=None):
+        payload = {
+            "operationName": "addDonation",
+            "query": "mutation addDonation($input: DonateInput!) {\n  donate(input: $input) {\n    __typename\n    ...GraphDonateResonse\n  }\n}\nfragment GraphDonateResonse on DonateResponse {\n  __typename\n  id\n  recentCount\n  expireDuration\n  err {\n    __typename\n    ...GraphError\n  }\n}\nfragment GraphError on Error {\n  __typename\n  code\n  message\n}",
+            "variables": {
+                "input": {
+                    "count": count,
+                    "message": message,
+                    "permlink": permlink,
+                    "type": dtype
+                }
+            }
+        }
+        return payload
+
+
