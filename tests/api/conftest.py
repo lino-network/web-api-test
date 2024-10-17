@@ -77,6 +77,13 @@ def get_viewer1_login_auth_header(get_config_data):
 
 
 @pytest.fixture(scope='session')
+def get_18_popup_login_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['18_popup_loginEmail'],
+                                               get_config_data['18_popup_pwd'])
+    return auth_header
+
+
+@pytest.fixture(scope='session')
 def get_follow_streamer_auth_header(get_config_data):
     auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['follow_streamer_user'],
                                                get_config_data['follow_streamer_pwd'])
@@ -96,8 +103,10 @@ def get_incentive_streamer_auth_header(get_config_data):
                                                get_config_data['streamer_incentive_pwd'])
     return auth_header
 
+
 @pytest.fixture(scope='session')
 def get_auto_viewer_auth_header(get_config_data):
     auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['viewer_user'],
                                                get_config_data['viewer_pwd'])
     return auth_header
+

@@ -29,15 +29,15 @@ class TestCategoryAndMatureTagPage:
 
     @allure.title('test_userNeverClick18Popup+')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_userNeverClick18Popup(self, get_config_data, get_viewer1_login_auth_header):
+    def test_userNeverClick18Popup(self, get_config_data, get_18_popup_login_auth_header):
         """
         接口：CheckMaturePopupClosedByUsername
         检查没有点击过18+ 的用户进入Mature 的直播间有18+ 的弹框
         """
         with allure.step("检查没有点击过18+ 的用户进入Mature 的直播间有18+ 的弹框"):
-            resp = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+            resp = common.api_post(get_config_data['url'], get_18_popup_login_auth_header,
                                    Payload.MatureRelatedAPI().CheckMaturePopupClosedByUsername(
-                                       get_config_data['viewer1_username']))
+                                       get_config_data['18_popup_username']))
             data = resp['data']['checkMaturePopupClosedByUsername']
             assert data['isClosed'] is False, '没有点击过18+ 的用户，进入Mature 的直播间没有18+ 的弹框'
             assert data['err'] is None, '没有点击过18+ 的用户，报错信息是： ' + data['err']

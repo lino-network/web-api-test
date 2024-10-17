@@ -11,13 +11,16 @@ apiData:
   follow_streamer_permlink: automation+2hatMquVg
   viewer_user: automationviewer@nqmo.com
   viewer_pwd: Pwd@1234
+  18_popup_loginEmail: m18@nqmo.com
+  18_popup_pwd: password1234
+  18_popup_username: m18
 
   streamer_incentive_user: vptest@nqmo.com
   streamer_incentive_pwd: password1234
   streamer_category_id: 18173     # web3 Games
   donate_value: 1
   send_message: for automation test   # send message and emo
-  subscription_streamer: appletv         # 每次执行需要填写新的主播的名字，因为每次订阅过了就不能重新订阅了, 用username,
+  subscription_streamer: haha37         # 每次执行需要填写新的主播的名字，因为每次订阅过了就不能重新订阅了, 用username,
                                         # 被订阅者：automation@nqmo.com
   replay_streamer: Helenstreamer
   replay_streamer_permlink: helenstreamer+jEme9U0IR
