@@ -29,6 +29,7 @@ class TestIOSLivingPage:
             assert response_json['data']['freeSubOffer']['canFree'] is True
         response_json1 = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                          Payload.IOS().ios_freeSubOffer(get_config_data['follow_streamer']))
+        print(response_json1)
         with allure.step('检查已经订阅过的用户:automation不具备首次免费订阅的资格'):
             assert response_json1['data']['freeSubOffer']['err'] is None
             assert response_json1['data']['freeSubOffer']['canFree'] is False
@@ -130,7 +131,7 @@ class TestIOSLivingPage:
             assert donate_json['data']['donate']['recentCount'] is 1
             assert donate_json['data']['donate']['expireDuration'] is 0
             assert donate_json['data']['donate']['err'] is None
-
+        time.sleep(10)
         response_json1 = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
                                         Payload.IOS().ios_fetchMyBalance())
         after_balance = response_json1['data']['me']['wallet']['balance'][:-5]
