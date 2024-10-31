@@ -535,6 +535,7 @@ class TestLivePage:
             ban_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                        Payload.LiveRoomAPI().BanStreamChatUser(streamer, user))
             assert ban_resp['data']['streamchatUserBan']['err'] is None
+        time.sleep(10)
         with allure.step('检查用户被ban 之后不能发信息'):
             response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
                                             Payload.LiveRoomAPI().send_chat(streamer,
