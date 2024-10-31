@@ -540,6 +540,7 @@ class TestLivePage:
                                             Payload.LiveRoomAPI().send_chat(streamer,
                                                                             ban_message, [0, 2]))
             print(response_json)
+            time.sleep(10)
             assert response_json['data']['sendStreamchatMessage']['err']['code'] == 6001
             assert response_json['data']['sendStreamchatMessage']['err']['message'] == verify_message
         with allure.step('检查unban 用户之后能发信息'):
