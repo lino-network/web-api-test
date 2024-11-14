@@ -23,7 +23,7 @@ video_comment = 'automationComment' + currentTime
 class TestVideoFunction:
     @allure.title('test_uploadVideo')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_uploadVideo(self, get_config_data, get_follow_streamer_auth_header):
+    def test_01_uploadVideo(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口： VideoPermlink，UploadGeneratePresignUrl
         上传video
@@ -58,7 +58,7 @@ class TestVideoFunction:
 
     @allure.title('test_LivestreamProfileVideo')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_LivestreamProfileVideo(self, get_config_data, get_follow_streamer_auth_header):
+    def test_02_LivestreamProfileVideo(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：LivestreamProfileVideo
         检查上传的video视频能在直播间Video可见
@@ -73,7 +73,7 @@ class TestVideoFunction:
 
     @allure.title('test_VideoPage')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_VideoPage(self, get_config_data, get_follow_streamer_auth_header):
+    def test_03_VideoPage(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：VideoPage
         检查上传的video 视频信息是否正确
@@ -110,7 +110,7 @@ class TestVideoFunction:
 
     @allure.title('test_AddWatch')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_AddWatch(self, get_config_data, get_follow_streamer_auth_header):
+    def test_04_AddWatch(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：AddWatch
         检查video 视频AddWatch接口不报错
@@ -129,7 +129,7 @@ class TestVideoFunction:
 
     @allure.title('test_AddVideoComment')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_AddVideoComment(self, get_config_data, get_follow_streamer_auth_header):
+    def test_05_AddVideoComment(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：AddComment
         在video 视频下面添加comment
@@ -153,7 +153,7 @@ class TestVideoFunction:
 
     @allure.title('test_AddCommentVote')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_AddCommentVote(self, get_config_data, get_follow_streamer_auth_header):
+    def test_06_AddCommentVote(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：AddCommentVote
         检查vote评论是是否正确
@@ -187,7 +187,7 @@ class TestVideoFunction:
 
     @allure.title('test_DeleteVideoComment')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_DeleteVideoComment(self, get_config_data, get_follow_streamer_auth_header):
+    def test_07_DeleteVideoComment(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：DeleteVideoComment
         在video 视频下面删除comment
@@ -199,14 +199,17 @@ class TestVideoFunction:
         if permlink is None:
             assert False, '找不到相应的permlink'
         else:
+            time.sleep(15)
             with allure.step('获取要删除的评论的permlink'):
                 comment_list_resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                                     Payload.MyProfileAPI.VideoPage(permlink))
                 comment_list = comment_list_resp['data']['video']['comments']['list']
                 is_comment_exist = False
+                print('video_comment:' + video_comment)
                 for i in comment_list:
                     if i['content'] == video_comment:
                         comment_permlink = i['permlink']
+                        print('1111')
                         is_comment_exist = True
                         break
                 if is_comment_exist:
@@ -219,7 +222,7 @@ class TestVideoFunction:
 
     @allure.title('test_DeleteVideo')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_DeleteVideo(self, get_config_data, get_follow_streamer_auth_header):
+    def test_08_DeleteVideo(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：DeleteVideo
         删除Video
@@ -254,7 +257,7 @@ class TestVideoFunction:
 
     @allure.title('test_UploadSearchCategory')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_UploadSearchCategory(self, get_config_data, get_follow_streamer_auth_header):
+    def test_09_UploadSearchCategory(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口: UploadSearchCategory
         在Upload video 页面搜索Category
