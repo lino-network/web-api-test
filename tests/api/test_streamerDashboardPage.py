@@ -180,11 +180,15 @@ class TestStreamerDashboardPage:
 
         添加hosting
         """
-        user = get_config_data['hosting_streamer']
         streamer = get_config_data['follow_streamer']
+        hosting_search = '1'
+        with allure.step('查找要添加的hosting ID'):
+            hosting_resp = resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                                  Payload.DaskboardAPI().DashboardHostSearch(hosting_search))
+            hosting_perlink = hosting_resp['data']['search']['host']['list'][0]['username']
         with allure.step('添加hosting'):
             resp = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                   Payload.DaskboardAPI().StreamHostSet(user))
+                                   Payload.DaskboardAPI().StreamHostSet(hosting_perlink))
             assert resp['data']['hostSet']['err'] is None
             hostingID = resp['data']['hostSet']['livestream']['permlink']
             with allure.step('检查添加的hosting 以后显示在hosting 列表'):
@@ -234,6 +238,7 @@ class TestStreamerDashboardPage:
         with allure.step('检查不删除现有emote prefix去更新emote prefix名字失败'):
             response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                        Payload.DaskboardAPI().UserUpdatePrefixName(emote_pre_name))
+            print(response)
             assert response['data']['updateEmoteNamePrefix']['code'] == 2352
             assert response['data']['updateEmoteNamePrefix']['message'] == 'Update name prefix need clear all emoji'
 

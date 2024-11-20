@@ -339,8 +339,8 @@ class TestLivePage:
                 with allure.step('这个直播间暂时没有人做出贡献'):
                     print('这个直播间暂时没有人做出贡献')
             if l == 1:
-                with allure.step('这个直播间只有一个人做出贡献而且贡献值是' + str(amount_list['amount'][:-5])):
-                    print('这个直播间只有一个人做出贡献而且贡献值是' + str(amount_list['amount'][:-5]))
+                with allure.step('这个直播间只有一个人做出贡献而且贡献值是' + str(amount_list[0]['amount'][:-5])):
+                    print('这个直播间只有一个人做出贡献而且贡献值是' + str(amount_list[0]['amount'][:-5]))
             if l > 1:
                 with allure.step('这个直播间有多人做出贡献'):
                     a = 1
@@ -510,19 +510,19 @@ class TestLivePage:
     @allure.title('test_ban_unban_chat_user')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_ban_unban_chat_user(self, get_config_data, get_follow_streamer_auth_header,
-                                 get_viewer1_login_auth_header):
+                                 get_unban_auth_header):
         """
         接口：BanStreamChatUser, UnbanStreamChatUser, SendMessage
         测试主播：automation ban和unban 用户并发送信息
         """
         streamer = get_config_data['follow_streamer']
-        user = get_config_data['viewer1_username']
+        user = get_config_data['unban_user_userName']
         before_ban_user_message = ' before ban test ban user'
         ban_message = 'ban user test'
         after_unban_user_message = 'after ban test unban user'
         verify_message = 'message.AddMessage banned from stream chat'
         with allure.step('检查用户被ban 之前能发信息'):
-            before_response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+            before_response_json = common.api_post(get_config_data['url'], get_unban_auth_header,
                                                    Payload.LiveRoomAPI().send_chat(streamer, before_ban_user_message,
                                                                                    [0, 2]))
             print(before_response_json)
@@ -537,7 +537,7 @@ class TestLivePage:
             assert ban_resp['data']['streamchatUserBan']['err'] is None
         time.sleep(10)
         with allure.step('检查用户被ban 之后不能发信息'):
-            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+            response_json = common.api_post(get_config_data['url'], get_unban_auth_header,
                                             Payload.LiveRoomAPI().send_chat(streamer,
                                                                             ban_message, [0, 2]))
             print(response_json)
@@ -549,7 +549,7 @@ class TestLivePage:
                                          Payload.LiveRoomAPI().UnbanStreamChatUser(streamer, user))
             with allure.step("主播：" + streamer + "unban 用户" + user + '返回值无报错'):
                 assert unban_resp['data']['streamchatUserUnban']['err'] is None
-            after_response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+            after_response_json = common.api_post(get_config_data['url'], get_unban_auth_header,
                                                   Payload.LiveRoomAPI().send_chat(streamer,
                                                                                   after_unban_user_message, [0, 2]))
             print(after_response_json)
@@ -559,14 +559,14 @@ class TestLivePage:
 
     @allure.title('test_setModerator')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_Moderator1_add(self, get_config_data, get_follow_streamer_auth_header, get_viewer1_login_auth_header):
+    def test_Moderator1_add(self, get_config_data, get_follow_streamer_auth_header, get_moderator_auth_header):
         """
         接口：AddModerator, DeleteChat
-        测试主播：automation 设置 automation_viewer1 as moderator
+        测试主播：automation 设置 moderator as moderator
         """
         streamer = get_config_data['follow_streamer']
         streamer_displayName = get_config_data['follow_displayName']
-        user = get_config_data['viewer1_username']
+        user = get_config_data['moderator_user_userName']
         with allure.step('设置直播间Moderator'):
             response_json = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                             Payload.LiveRoomAPI().AddModerator(streamer, user))
@@ -575,6 +575,7 @@ class TestLivePage:
             with allure.step('检查Moderator 用户在Moderator 列表'):
                 response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
                                            Payload.LiveRoomAPI().StreamChatModerators(streamer_displayName))
+                print(response)
                 m_list = response['data']['userByDisplayName']['chatModerators']['list']
                 for i in m_list:
                     if i['username'] == user:
@@ -582,24 +583,24 @@ class TestLivePage:
                         break
         with allure.step('Moderator是否可以删除主播的信息'):
             message = 'add Moderator'
-            response_json = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+            response_json = common.api_post(get_config_data['url'], get_moderator_auth_header,
                                             Payload.LiveRoomAPI().send_chat(streamer, message, [0, 2]))
             message_id = response_json['data']['sendStreamchatMessage']['message']['id']
             with allure.step('Moderator开始删除信息'):
-                response_json1 = common.api_post(get_config_data['url'], get_viewer1_login_auth_header,
+                response_json1 = common.api_post(get_config_data['url'], get_moderator_auth_header,
                                                  Payload.LiveRoomAPI().DeleteChat(streamer, message_id))
                 assert response_json1['data']['chatDelete']['err'] is None, 'Moderator删除信息失败'
 
     @allure.title('test_RemoveModerator')
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_Moderator2_detele(self, get_config_data, get_follow_streamer_auth_header, get_viewer1_login_auth_header):
+    def test_Moderator2_detele(self, get_config_data, get_follow_streamer_auth_header):
         """
         接口：RemoveModerator, DeleteChat
         测试主播：automation moderator： automation_viewer1
         """
         streamer = get_config_data['follow_streamer']
         streamer_displayName = get_config_data['follow_displayName']
-        user = get_config_data['viewer1_username']
+        user = get_config_data['moderator_user_userName']
         moderator_exists = False
         with allure.step('检查删除之前Moderator在Moderator列中'):
             b_response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,

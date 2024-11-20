@@ -304,6 +304,23 @@ class DaskboardAPI:
         return payload
 
     @staticmethod
+    def DashboardHostSearch(text):
+        payload = {
+              "operationName": "DashboardHostSearch",
+              "variables": {
+                "text": text
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "a013a69ab899e51b75850edce0fece1db0a1ce16a28d74207f31a555cb60fb80"
+                }
+              },
+              "query": "query DashboardHostSearch($text: String!) {\n  search(text: $text) {\n    host {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        id\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
+            }
+        return payload
+
+    @staticmethod
     def MEDashboard(username):
         payload = {
           "operationName": "MeDashboard",
@@ -468,7 +485,8 @@ class DaskboardAPI:
               "version": 1,
               "sha256Hash": "fbef591b5e440c8910cf0a76dbc9ac836f29f2dea731a2f6f7dd5e410d83f134"
             }
-          }
+          },
+          "query": "mutation UserUpdatePrefixName($namePrefix: String!) {\n  updateEmoteNamePrefix(namePrefix: $namePrefix) {\n    message\n    code\n    __typename\n  }\n}\n"
         }
         return payload
 
@@ -911,14 +929,28 @@ class LiveRoomAPI:
     @staticmethod
     def StreamChatModerators(displayname):
         payload = {
-            "operationName": "StreamChatModerators",
-            "variables": {
+              "operationName": "StreamChatModerators",
+              "variables": {
                 "displayname": displayname,
                 "first": 20,
                 "search": ""
-            },
-            "query": "query StreamChatModerators($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatModerators(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
-        }
+              },
+              "extensions": {
+                "persistedQuery": {
+                  "version": 1,
+                  "sha256Hash": "5b6cc13824bc7c806b20a8b91f729d8b0c174d2670057dcb5b3b9ca8e821b773"
+                }
+              }
+            }
+        # payload = {
+        #     "operationName": "StreamChatModerators",
+        #     "variables": {
+        #         "displayname": displayname,
+        #         "first": 20,
+        #         "search": ""
+        #     },
+        #     "query": "query StreamChatModerators($displayname: String!, $first: Int, $after: String, $search: String) {\n  userByDisplayName(displayname: $displayname) {\n    id\n    chatModerators(first: $first, after: $after, search: $search) {\n      pageInfo {\n        endCursor\n        hasNextPage\n        __typename\n      }\n      list {\n        username\n        ...VDliveAvatarFrag\n        ...VDliveNameFrag\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment VDliveAvatarFrag on User {\n  id\n  avatar\n  effect\n  __typename\n}\n\nfragment VDliveNameFrag on User {\n  id\n  displayname\n  partnerStatus\n  __typename\n}\n"
+        # }
 
         return payload
 
@@ -1115,6 +1147,7 @@ class LoginAPI:
             "query": "query isFirstThirdLogin($username: String!) {isFirstThirdLogin(username: $username) {isFirstThirdLogin __typename}}"
         }
         return payload
+
 
 
 class HomePageAPI:
@@ -2062,7 +2095,7 @@ class IOS:
             "operationName": "freeSubOffer",
             "query": "query freeSubOffer($username: String!) {\n  freeSubOffer(username: $username) {\n    __typename\n    canFree\n    err {\n      __typename\n      ...ErrorF\n    }\n  }\n}\nfragment ErrorF on Error {\n  __typename\n  code\n  message\n}",
             "variables": {
-                "username": "dlive-degnujtptx"
+                "username": username
             }
         }
         return payload
@@ -2134,5 +2167,30 @@ class IOS:
             }
         }
         return payload
+
+
+class PersonlHomepage:
+    @staticmethod
+    def ProfileVideos(displayName):
+        payload = {
+            "operationName": "ProfileVideos",
+            "variables": {
+                "displayName": displayName,
+                "sortedBy": "New",
+                "first": 12,
+                "videoOffset": 0,
+                "pdOffset": 0
+            },
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "f49244d4a303c359460301a774a82cf23d4acf27496375fa03cdb15dcee88eaf"
+                }
+            }
+        }
+        return payload
+
+
+
 
 
