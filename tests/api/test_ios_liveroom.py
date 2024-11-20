@@ -27,12 +27,12 @@ class TestIOSLivingPage:
         with allure.step('检查未订阅过的用户:viewer1_username具备首次免费订阅的资格'):
             assert response_json['data']['freeSubOffer']['err'] is None
             assert response_json['data']['freeSubOffer']['canFree'] is True
-        response_json1 = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
-                                         Payload.IOS().ios_freeSubOffer(get_config_data['follow_streamer']))
-        print(response_json1)
+        response = common.api_post(get_config_data['url'], get_follow_streamer_auth_header,
+                                   Payload.IOS().ios_freeSubOffer(get_config_data['follow_streamer']))
+        print(response)
         with allure.step('检查已经订阅过的用户:automation不具备首次免费订阅的资格'):
-            assert response_json1['data']['freeSubOffer']['err'] is None
-            assert response_json1['data']['freeSubOffer']['canFree'] is False
+            assert response['data']['freeSubOffer']['err'] is None
+            assert response['data']['freeSubOffer']['canFree'] is False
 
     @allure.title('test_ios_FollowStreamer')
     @allure.severity(allure.severity_level.NORMAL)

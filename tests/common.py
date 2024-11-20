@@ -12,7 +12,6 @@ def api_post(url, header, payload):
 
 def get_login_auth_header(url, username, password):
     response = api_post(url, payloadData.normal_header(), payloadData.login(username, password))
-    print(response)
     auth_token = response['data']['loginWithEmail']['me']['private']['accessToken']
     return {'authorization': auth_token}
 

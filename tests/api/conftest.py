@@ -110,3 +110,18 @@ def get_auto_viewer_auth_header(get_config_data):
                                                get_config_data['viewer_pwd'])
     return auth_header
 
+
+@pytest.fixture(scope='session')
+def get_unban_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['unban_user_email'],
+                                               get_config_data['unban_user_Pwd'])
+    return auth_header
+
+
+@pytest.fixture(scope='session')
+def get_moderator_auth_header(get_config_data):
+    auth_header = common.get_login_auth_header(get_config_data['url'], get_config_data['moderator_user_email'],
+                                               get_config_data['moderator_user_Pwd'])
+    return auth_header
+
+
