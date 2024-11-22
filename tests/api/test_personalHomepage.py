@@ -37,9 +37,9 @@ class TestLivePage:
         with allure.step('检查接口无报错'):
             assert 'err' not in response['data']['userByDisplayName']
         with allure.step('检查个人主页返回的总的video'):
-            personl_count = len(response['data']['userByDisplayName']['centerVideos']['list'])
+            personl_count = response['data']['userByDisplayName']['centerVideos']['totalCount']
         with allure.step('检查个人主页显示的video数目是replay+video的总数'):
-            assert v_count + r_count == personl_count
+            assert len(v_count) + len(r_count) == int(personl_count)
 
 
 

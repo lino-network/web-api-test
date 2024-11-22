@@ -34,7 +34,7 @@ class TestMyInfo:
 
         """
         response_json = common.api_post(get_config_data['url'], get_auto_viewer_auth_header, Payload.MyInfoAPI().UserUnsubscribe("errorstreamer"))
-        
+        print(response_json)
         metadata = response_json['data']['unsubscribe']
         assert metadata['err']['code'] == 7001
         assert metadata['err']['__typename'] == 'Error'
@@ -55,7 +55,6 @@ class TestMyInfo:
             assert "address" in wallet
             assert wallet["name"] != ""
             assert wallet["address"] != ""
-
 
     @allure.title('test_List_Withdraw_Txes_By_Streamer')
     @allure.severity(allure.severity_level.NORMAL)
