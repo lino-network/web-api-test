@@ -19,10 +19,10 @@ class TestHomePage:
         """
         with allure.step('检查轮播接口'):
             response_json = common.api_post(get_config_data['url'], api_headers,
-                                            Payload.HomePageAPI().homepage_carousels())
+                                            Payload.HomePageAPI().LiveCarousel())
             print(response_json)
             with allure.step('检查轮播的位置是否为5'):
-                assert len(response_json['data']['carousels']) == 5
+                assert int(response_json['data']['liveCarousel']['totalCount']) == 5
             with allure.step('检查轮播接口的返回值不包含err '):
                 assert 'err' not in response_json
 
